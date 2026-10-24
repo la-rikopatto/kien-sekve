@@ -98,6 +98,10 @@
         .sel-box select { width: 100%; appearance: none; -webkit-appearance: none; background: #fff; border: 1px solid #e5e7eb; color: #374151; padding: 16px 20px; border-radius: 12px; font: inherit; font-size: 1rem; font-weight: 700; letter-spacing: .025em; outline: none; transition: all .15s; }
         .sel-box select:has(option[value=""]:checked) { color: #9ca3af; font-weight: 500; }
         .sel-box select:focus { box-shadow: 0 0 0 2px #dbeafe; }
+        #scope-clear { position: absolute; top: 50%; right: 48px; transform: translateY(-50%); width: 26px; height: 26px; border: 0; border-radius: 50%; background: #e5e7eb; color: #6b7280; font-size: .72rem; font-weight: 700; line-height: 26px; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        #scope-clear[hidden] { display: none; }
+        #scope-clear:active { transform: translateY(-50%) scale(.92); }
+        .sel-box select:has(option[value="l"]:checked) { padding-right: 84px; text-overflow: ellipsis; }
         .caret { pointer-events: none; position: absolute; top: 0; bottom: 0; right: 0; display: flex; align-items: center; padding: 0 20px; color: #9ca3af; }
         .caret svg { width: 1rem; height: 1rem; fill: currentColor; }
         #draw-btn { width: 100%; border: 0; cursor: pointer; font: inherit; font-size: 1.125rem; font-weight: 700; letter-spacing: .1em; color: #fff; padding: 16px 0; border-radius: 12px; background: #007AFF; box-shadow: 0 4px 14px rgba(0,122,255,.39); transition: all .1s; }
@@ -439,6 +443,7 @@
         html.dark h1 { color: #6b7280; }
         html.dark .sel-box { box-shadow: none; }
         html.dark .sel-box select { background: #1c1e23; border-color: #2c2f36; color: #e5e7eb; }
+        html.dark #scope-clear { background: #2c2f36; color: #9ca3af; }
         html.dark .sel-box select:has(option[value=""]:checked) { color: #6b7280; }
         html.dark .sel-box select:focus { box-shadow: 0 0 0 2px #1e3a5f; }
         html.dark .caret { color: #6b7280; }
@@ -512,6 +517,52 @@
         /* 表示の切り替えボタン */
         #theme-btn { position: absolute; top: -2px; right: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         html.dark #theme-btn { color: #6b7280; }
+        #hist-btn { position: absolute; top: -2px; left: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        html.dark #hist-btn { color: #6b7280; }
+        #hist-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
+        #hist-modal[hidden] { display: none; }
+        #hist-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #hist-modal .sm-panel { height: 78dvh; transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #hist-modal.on .sm-backdrop { opacity: 1; }
+        #hist-modal.on .sm-panel { transform: none; }
+        #hm-close { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
+        html.dark #hm-close { background: #2a2d33; color: #9ca3af; }
+        #hm-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 0 10px 12px; }
+        .hm-day { position: sticky; top: 0; z-index: 1; background: #fff; font-size: .78rem; font-weight: 800; color: #9ca3af; letter-spacing: .06em; padding: 12px 8px 6px; }
+        html.dark .hm-day { background: #1c1e23; color: #6b7280; }
+        .hm-row { display: flex; align-items: center; gap: 12px; padding: 9px 8px; border-radius: 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .12s; }
+        .hm-row:active { background: #f3f4f6; }
+        html.dark .hm-row:active { background: #23262d; }
+        .hm-row .tm { width: 3.1em; flex: none; font-size: .75rem; font-weight: 700; color: #9ca3af; font-variant-numeric: tabular-nums; }
+        .hm-row .tx { flex: 1; min-width: 0; }
+        .hm-row .nm { font-size: 1.02rem; font-weight: 800; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        html.dark .hm-row .nm { color: #f3f4f6; }
+        .hm-row .nm small { font-size: .72rem; font-weight: 500; color: #9ca3af; margin-left: .5em; }
+        .hm-row .pl { font-size: .74rem; color: #6b7280; margin-top: 1px; }
+        html.dark .hm-row .pl { color: #9ca3af; }
+        .hm-row .cl { display: flex; gap: 3px; flex: none; max-width: 34%; flex-wrap: wrap; justify-content: flex-end; }
+        .hm-row .cl i { width: 9px; height: 9px; border-radius: 50%; }
+        .hm-row .tag { font-size: .65rem; font-weight: 800; color: #007AFF; background: #eff6ff; border-radius: 6px; padding: 1px 5px; margin-left: 6px; vertical-align: 2px; }
+        html.dark .hm-row .tag { background: #1e2a3d; }
+        #hm-foot[hidden] { display: none; }
+        .hm-empty { text-align: center; color: #c4c8cf; font-size: .88rem; padding: 70px 0; line-height: 1.9; }
+        html.dark .hm-empty { color: #4b5058; }
+        .hm-empty svg { display: block; margin: 0 auto 14px; color: #d8dbe0; }
+        html.dark .hm-empty svg { color: #34373e; }
+        #hist-modal.on .hm-empty svg { animation: hm-spin 1.1s cubic-bezier(.3,.7,.3,1) .15s backwards; }
+        #hist-modal.on .hm-empty div { animation: hm-up .5s cubic-bezier(.2,.8,.2,1) backwards; }
+        #hist-modal.on .hm-empty div:nth-of-type(2) { animation-delay: .32s; }
+        #hist-modal.on .hm-empty div:nth-of-type(1) { animation-delay: .24s; }
+        @keyframes hm-spin { from { opacity: 0; transform: rotate(-200deg) scale(.6); } }
+        @keyframes hm-up { from { opacity: 0; transform: translateY(8px); } }
+        #hist-modal.on .hm-row, #hist-modal.on .hm-day { animation: hm-up .38s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: calc(.1s + var(--i, 0) * 28ms); }
+        @media (prefers-reduced-motion: reduce) { #hist-modal.on .hm-empty svg, #hist-modal.on .hm-empty div, #hist-modal.on .hm-row, #hist-modal.on .hm-day { animation: none; } }
+        #hm-clear { background: #f3f4f6; color: #ef4444; transition: background .2s, color .2s; }
+        #hm-clear.armed { background: #fde2e2; color: #dc2626; }   /* 二度目を待つ間：淡い赤の地に赤い字（まぶしくしない） */
+        html.dark #hm-clear.armed { background: #3b2226; color: #f87171; }
+        html.dark #hm-clear { background: #2a2d33; color: #f87171; }
+        #hist-modal .pm-foot { padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+        @media (prefers-reduced-motion: reduce) { #hist-modal .sm-backdrop, #hist-modal .sm-panel { transition: none !important; } }
     </style>
 </head>
 <body>
@@ -521,6 +572,7 @@
     <div class="wrap">
         <h1>次はどこへ</h1>
         <button id="theme-btn" type="button" aria-label="表示モード"></button>
+        <button id="hist-btn" type="button" aria-label="抽選の履歴"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg></button>
 
         <div class="sel-box">
             <select id="region-select">
@@ -542,6 +594,7 @@
             <select id="category-select">
                 <option value="" selected>範囲を選んでください</option>
             </select>
+            <button id="scope-clear" type="button" aria-label="路線をやめる" hidden>✕</button>
             <div class="caret"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg></div>
         </div>
         <button id="multi-edit" type="button" hidden>選ぶ都道府県を編集</button>
@@ -597,6 +650,15 @@
             <div class="lm-search"><input id="lm-input" type="search" placeholder="路線名で探す（例：山手、ほくりく）" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
             <div class="lm-wrap"><div id="lm-list"></div><div id="lm-index"></div></div>
             <div class="pm-foot"><button id="lm-clear" type="button">クリア</button><button id="lm-ok" type="button">決定</button></div>
+        </div>
+    </div>
+
+    <div id="hist-modal" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true">
+            <div class="sm-head"><span style="flex:1">抽選の履歴</span><button id="hm-close" class="mm-x" type="button" aria-label="閉じる">✕</button></div>
+            <div id="hm-list"></div>
+            <div class="pm-foot" id="hm-foot"><button id="hm-clear" type="button">履歴を消す</button></div>
         </div>
     </div>
 
@@ -759,6 +821,7 @@
             const o = selectEl.querySelector('option[value="m"]');
             if (o) o.textContent = multiLabel();
             multiEdit.hidden = selectEl.value !== 'm';
+            const sc = document.getElementById('scope-clear'); if (sc) sc.hidden = selectEl.value !== 'l';
             // 路線：欄に出ているときだけ「路線：○○」。選択肢の一覧の中ではいつも「路線から選ぶ…」
             const lo = selectEl.querySelector('option[value="l"]');
             if (lo) lo.textContent = selectEl.value === 'l' && lineScope && lineScope.length ? '路線：' + displayName(lineScope[0], false) + (lineScope.length > 1 ? ' ほか' + (lineScope.length - 1) + '路線' : '') : '路線から選ぶ…';
@@ -811,17 +874,19 @@
         multiEdit.addEventListener('click', openPrefModal);
         // 路線を選んである状態でもう一度「路線：○○」を選んだら一覧を開きたい。同じ項目を選び直しても change が来ないので、
         // 選択肢を開くときだけ一時的に空にしておき、何も選ばずに閉じたら元に戻す
-        let lineHold = false;
-        // iPhone は指が触れた時点の選択で選択肢を作るので、focus ではなく触れた瞬間（touchstart / pointerdown）に空にする
-        const holdLine = () => { if (selectEl.value === 'l' && !selectEl.disabled) { lineHold = true; selectEl.value = ''; syncMultiOption(); } };
-        selectEl.addEventListener('touchstart', holdLine, { passive: true });
-        selectEl.addEventListener('pointerdown', holdLine);
-        selectEl.addEventListener('mousedown', holdLine);
-        // 「範囲を選んでください」を選んだのか、何も選ばずに閉じたのかは iPhone では見分けられない。
-        // 欄の表示と実際の抽選がずれないよう、どちらも「路線をやめた」として扱う（選んでいた路線は覚えておき、次に開くと選んだ状態で出る）
-        selectEl.addEventListener('blur', () => { if (lineHold) { lineHold = false; prevScope = selectEl.value; syncMultiOption(); } });
+        // 路線で抽選しているとき：欄を押すと（選択肢は出さずに）路線の一覧を開く。やめるときは欄の右の ✕ を押す
+        const openLinesInstead = e => {
+            if (selectEl.value !== 'l' || selectEl.disabled) return;
+            e.preventDefault(); selectEl.blur(); openLineModal();
+        };
+        selectEl.addEventListener('touchstart', openLinesInstead, { passive: false });
+        selectEl.addEventListener('mousedown', openLinesInstead);
+        const scopeClear = document.getElementById('scope-clear');
+        scopeClear.addEventListener('click', () => {
+            if (isDrawing) return;
+            lineScope = null; rebuildScope(); selectEl.value = ''; prevScope = ''; syncMultiOption(); resetToStart();   // 路線の選択はすっかり消す（次に開くと何も選んでいない状態）
+        });
         selectEl.addEventListener('change', () => {
-            if (lineHold) { lineHold = false; if (selectEl.value === 'l') prevScope = 'l'; }
             if (selectEl.value === 'l') { selectEl.value = prevScope; syncMultiOption(); openLineModal(); return; }   // 路線は一覧を開くだけ。「決定」を押すまで欄は元のまま
             prevScope = selectEl.value;
             if (selectEl.value === 'm') { openPrefModal(); } syncMultiOption(); resetToStart();
@@ -1108,7 +1173,7 @@
         function openLineModal() {
             clearTimeout(lmTimer);
             lmInput.value = '';
-            lmSel = new Set(lineScope ? lineScope.map(l => l.idx) : []);   // 前に選んだ路線は、やめたあとでも選んだ状態で出す
+            lmSel = new Set(selectEl.value === 'l' && lineScope ? lineScope.map(l => l.idx) : []);   // いま路線で抽選しているときだけ、その路線に印を付けて出す
             renderLineList();
             lineModal.hidden = false;
             void lineModal.offsetWidth; lineModal.classList.add('on');
@@ -4100,7 +4165,7 @@
             // 線路を選んでいる間は背景の線も遮罩の一部：押せば選択が解けるだけ（線路詳情を開くのは徽章だけ）
             if (rvOpen || rvBusy || isDrawing || selectedKey) return;
             const t = e.target;
-            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #theme-btn')) return;
+            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #hist-modal, #hist-btn, #theme-btn')) return;
             let best = null, bd = 14;
             bgLinesContainer.querySelectorAll('.bg-line').forEach(el => {
                 const r = el.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2));
@@ -4476,6 +4541,104 @@
             if (multiResults) listBtn.textContent = multiResults.length + '連の結果を見る';
         }
 
+        // ---- 抽選の履歴：止まった駅（連抽はその全部）をこの端末に覚えておき、あとで一覧から開ける ----
+        const HIST_KEY = 'tsugi-history', HIST_MAX = 100;
+        const histModal = document.getElementById('hist-modal'), hmList = document.getElementById('hm-list');
+        let histTimer = 0;
+        function loadHist() { try { const a = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+        function saveHist(a) { try { localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(0, HIST_MAX))); } catch (e) {} }
+        function addHist(stations, n) {
+            const t = Date.now(), a = loadHist();
+            const add = stations.map((st, i) => ({ id: st.id, t, n: n > 1 ? n : 0, k: i }));
+            saveHist(add.concat(a));
+        }
+        function dayLabel(t) {
+            const d = new Date(t), now = new Date();
+            const day = x => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+            const diff = Math.round((day(now) - day(d)) / 864e5);
+            if (diff === 0) return '今日';
+            if (diff === 1) return '昨日';
+            return (d.getFullYear() !== now.getFullYear() ? d.getFullYear() + '年' : '') + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+        }
+        function renderHist() {
+            const a = loadHist().filter(h => stationById.get(h.id));
+            hmList.innerHTML = '';
+            document.getElementById('hm-foot').hidden = !a.length;
+            if (!a.length) { hmList.innerHTML = '<div class="hm-empty"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg><div>まだ履歴がありません</div><div>抽選すると、ここに残ります</div></div>'; return; }
+            let lastDay = '', ai = 0;
+            const stg = el => { el.style.setProperty('--i', Math.min(ai++, 14)); };   // 上から順にふわっと出す（下の方は待たせない）
+            a.forEach(h => {
+                const st = stationById.get(h.id), dl = dayLabel(h.t);
+                if (dl !== lastDay) { const g = document.createElement('div'); g.className = 'hm-day'; g.textContent = dl; stg(g); hmList.appendChild(g); lastDay = dl; }
+                const d = new Date(h.t), nm = splitBracket(st.kanji), ym = splitBracket(st.yomi);
+                const r = document.createElement('div'); r.className = 'hm-row'; stg(r);
+                r.innerHTML = '<span class="tm"></span><div class="tx"><div class="nm"></div><div class="pl"></div></div><span class="cl"></span>';
+                r.querySelector('.tm').textContent = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+                const n = r.querySelector('.nm'); n.textContent = nm.main + (nm.sub || '');
+                if (ym.main) { const sm = document.createElement('small'); sm.textContent = ym.main; n.appendChild(sm); }
+                if (h.n) { const tg = document.createElement('span'); tg.className = 'tag'; tg.textContent = h.n + '連'; n.appendChild(tg); }
+                r.querySelector('.pl').textContent = station2place(st);
+                const cl = r.querySelector('.cl'); st.lines.slice(0, 6).forEach(l => { const i = document.createElement('i'); i.style.background = l.bg; cl.appendChild(i); });
+                r.addEventListener('click', () => pickFromHist(st));
+                hmList.appendChild(r);
+            });
+        }
+        function showHist(show) {
+            clearTimeout(histTimer);
+            if (typeof disarm === 'function') { clearTimeout(armTimer); disarm(); }
+            if (show) {
+                renderHist(); hmList.scrollTop = 0;
+                slotCard.classList.add('away');
+                histModal.hidden = false; void histModal.offsetWidth; histModal.classList.add('on');
+            } else {
+                histModal.classList.remove('on'); slotCard.classList.remove('away');
+                histTimer = setTimeout(() => { histModal.hidden = true; }, 420);
+            }
+        }
+        let histPicking = false;
+        async function pickFromHist(st) {
+            if (histPicking) return;
+            if (st === currentStation) { showHist(false); return; }
+            histPicking = true; clearTimeout(histTimer);
+            histModal.classList.remove('on');
+            await sheetDownThenSwap(histModal.querySelector('.sm-panel'), anim => {
+                histModal.hidden = true; anim.cancel();
+                multiResults = null; setListBtn();
+                showStationDirect(st);
+            });
+            histPicking = false;
+        }
+        document.getElementById('hist-btn').addEventListener('click', () => { if (!isDrawing && !rvOpen) showHist(true); });
+        document.getElementById('hm-close').addEventListener('click', () => showHist(false));
+        histModal.querySelector('.sm-backdrop').addEventListener('click', () => showHist(false));
+        // 履歴を消す：一度目は「もう一度押すと消えます」に変わって赤くなる（少し揺れる）。二度目で、行が上から順に左へ消え、ボタンは下へ沈んで消える
+        let confirmClear = false, armTimer = 0, clearing = false;
+        const hmClear = document.getElementById('hm-clear'), hmFoot = document.getElementById('hm-foot');
+        function disarm() { confirmClear = false; hmClear.classList.remove('armed'); hmClear.textContent = '履歴を消す'; }
+        hmClear.addEventListener('click', async () => {
+            if (clearing) return;
+            if (!confirmClear) {
+                confirmClear = true; hmClear.classList.add('armed'); hmClear.textContent = 'もう一度押すと消えます';
+                if (!reduceMotion() && hmClear.animate) hmClear.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(-3px)' }, { transform: 'translateX(0)' }], { duration: 320, easing: 'ease-out' });
+                haptic(8);
+                clearTimeout(armTimer); armTimer = setTimeout(disarm, 2500);
+                return;
+            }
+            clearTimeout(armTimer); clearing = true;
+            saveHist([]);
+            if (!reduceMotion() && hmList.animate) {
+                const top = hmList.getBoundingClientRect().bottom;
+                const els = [...hmList.children].filter(el => el.getBoundingClientRect().top < top);   // 見えている行だけ動かす
+                const outs = els.map((el, k) => el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateX(-28px)' }], { duration: 240, delay: k * 22, easing: 'cubic-bezier(.4,0,.8,.4)', fill: 'forwards' }).finished);
+                const fo = hmFoot.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(24px)' }], { duration: 280, delay: 60, easing: 'cubic-bezier(.4,0,.8,.4)', fill: 'forwards' });
+                await Promise.all(outs.concat(fo.finished)).catch(() => {});
+                fo.cancel();
+            }
+            disarm();
+            renderHist();   // 空になった案内は、そのまま出てくる動きが付く
+            clearing = false;
+        });
+
         btn.addEventListener('click', () => {
             if (lpFired) { lpFired = false; return; }   // 長押しのあとに来る「押した」は無視（メニューを出しただけ）
             startDraw(1);
@@ -4531,6 +4694,7 @@
 
                 if (step >= totalSteps) {
                     sfxWin();
+                    addHist(results || [pick], results ? results.length : 1);
                     finishDraw();
                     if (results) { setMultiHistory(0); showMultiModal(true); }   // 止まった音と同時に一覧を出す
                     return;
