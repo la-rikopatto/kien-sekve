@@ -19,7 +19,7 @@
     <meta property="og:description" content="知らない駅で降りてみよう">
     <meta name="description" content="知らない駅で降りてみよう">
     <meta property="og:url" content="https://la-rikopatto.github.io/kien-sekve/">
-    <meta property="og:image" content="https://la-rikopatto.github.io/kien-sekve/og.png">
+    <meta property="og:image" content="https://la-rikopatto.github.io/kien-sekve/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -103,12 +103,76 @@
         #draw-btn { width: 100%; border: 0; cursor: pointer; font: inherit; font-size: 1.125rem; font-weight: 700; letter-spacing: .1em; color: #fff; padding: 16px 0; border-radius: 12px; background: #007AFF; box-shadow: 0 4px 14px rgba(0,122,255,.39); transition: all .1s; }
         #draw-btn:hover { background: #2563eb; }
         #draw-btn:active { transform: scale(.98); }
+        #draw-wrap { position: relative; width: 100%; }
+        #draw-btn { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+        /* 長押しで出る 5連・10連 の選択：ボタンのすぐ上に浮かぶ */
+        #multi-menu { position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%); display: flex; gap: 6px; padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.05); z-index: 30; animation: mm-in .22s cubic-bezier(.2,.9,.3,1.2); }
+        #multi-menu[hidden] { display: none; }
+        #multi-menu::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 7px solid transparent; border-top-color: #fff; }
+        #multi-menu button { border: 0; font: inherit; font-size: 1rem; font-weight: 800; letter-spacing: .05em; color: #fff; background: #007AFF; padding: 10px 22px; border-radius: 10px; cursor: pointer; transition: transform .1s; }
+        #multi-menu button:active { transform: scale(.96); }
+        @keyframes mm-in { from { opacity: 0; transform: translateX(-50%) translateY(6px) scale(.92); } to { opacity: 1; transform: translateX(-50%); } }
+        #list-btn { flex: 1 0 100%; }
+        #line-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
+        #line-modal[hidden] { display: none; }
+        #line-modal .sm-panel { height: 82dvh; max-height: 82dvh; transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #line-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #line-modal.on .sm-backdrop { opacity: 1; }
+        #line-modal.on .sm-panel { transform: none; }
+        #lm-close { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
+        .lm-search { padding: 10px 16px 6px; }
+        #lm-input { width: 100%; box-sizing: border-box; font: inherit; font-size: 1rem; padding: 10px 14px; border: 1px solid #e5e7eb; border-radius: 12px; outline: none; background: #f9fafb; color: #111827; -webkit-appearance: none; }
+        #lm-input:focus { border-color: #007AFF; background: #fff; }
+        .lm-wrap { position: relative; flex: 1 1 auto; min-height: 0; display: flex; }
+        #lm-list { position: relative; flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 0 40px 16px 10px; }
+        /* 右端の地方の索引：押す・なぞると、その地方へ飛ぶ */
+        #lm-index { position: absolute; right: 6px; top: 0; bottom: 0; width: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3px; touch-action: none; -webkit-user-select: none; user-select: none; }
+        #lm-index span { display: block; box-sizing: border-box; width: 22px; font-size: .62rem; font-weight: 800; color: #007AFF; line-height: 1.1; text-align: center; padding: 4px 0; border-radius: 7px; cursor: pointer; transition: background .12s, color .12s; }   /* 一字ずつ改行して縦に並べる（縦書き指定だと端末によって幅がはみ出す） */
+        #lm-index span.on { color: #fff; background: #007AFF; }
+        .lm-group { display: flex; align-items: center; justify-content: space-between; }
+        .lm-group button { border: 0; background: transparent; color: #007AFF; font: inherit; font-size: .75rem; font-weight: 700; letter-spacing: 0; cursor: pointer; padding: 2px 0 2px 10px; }
+        .lm-row .ck { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d1d5db; box-sizing: border-box; flex: none; display: flex; align-items: center; justify-content: center; transition: background .12s, border-color .12s; }
+        .lm-row.sel .ck { background: #007AFF; border-color: #007AFF; }
+        .lm-row.sel .ck::after { content: ''; width: 9px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: translateY(-1px) rotate(-45deg); }
+        #lm-clear { background: #f3f4f6; color: #4b5563; }
+        #lm-ok { background: #007AFF; color: #fff; flex: 2; }
+        #lm-ok:disabled { opacity: .45; }
+        #line-modal .pm-foot { padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
+        .lm-group { position: sticky; top: 0; z-index: 1; background: #fff; font-size: .78rem; font-weight: 800; color: #9ca3af; letter-spacing: .08em; padding: 12px 8px 6px; }
+        .lm-row { display: flex; align-items: center; gap: 12px; padding: 9px 8px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .12s; }
+        .lm-row:active { background: #f3f4f6; }
+        .lm-row .bar { width: 6px; height: 30px; border-radius: 3px; flex: none; }
+        .lm-row .tx { flex: 1; min-width: 0; }
+        .lm-row .nm { font-weight: 700; font-size: .98rem; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lm-row .sb { font-size: .72rem; color: #9ca3af; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .lm-empty { text-align: center; color: #9ca3af; font-size: .9rem; padding: 40px 0; }
+        @media (prefers-reduced-motion: reduce) { #line-modal .sm-backdrop, #line-modal .sm-panel { transition: none !important; } }
+        #multi-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
+        #multi-modal[hidden] { display: none; }
+        #multi-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #multi-modal .sm-panel { transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #multi-modal.on .sm-backdrop { opacity: 1; }
+        #multi-modal.on .sm-panel { transform: none; }
+        #mm-title { flex: 1; font-size: 1rem; }
+        #mm-close { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
+        #mm-list { list-style: none; margin: 0; padding: 6px 10px calc(16px + env(safe-area-inset-bottom)); overflow-y: auto; }
+        #mm-list li { display: flex; align-items: center; gap: 12px; padding: 10px 10px; border-radius: 12px; cursor: pointer; transition: background .15s, transform .1s; -webkit-tap-highlight-color: transparent; }
+        #mm-list li:active { transform: scale(.985); }
+        #mm-list li.cur { background: #eff6ff; }
+        #multi-modal.on #mm-list li { animation: mm-row .35s cubic-bezier(.2,.9,.3,1) backwards; animation-delay: calc(.1s + var(--i) * 35ms); }
+        @keyframes mm-row { from { opacity: 0; transform: translateY(10px); } }
+        #mm-list .no { width: 1.4em; text-align: right; font-size: .8rem; font-weight: 700; color: #9ca3af; font-variant-numeric: tabular-nums; flex: none; }
+        #mm-list .tx { flex: 1; min-width: 0; }
+        #mm-list .nm { font-size: 1.05rem; font-weight: 800; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #mm-list .nm small { font-size: .72rem; font-weight: 500; color: #9ca3af; margin-left: .5em; }
+        #mm-list .pl { font-size: .75rem; color: #6b7280; margin-top: 1px; }
+        #mm-list .cl { display: flex; gap: 3px; flex: none; max-width: 40%; flex-wrap: wrap; justify-content: flex-end; }
+        #mm-list .cl i { width: 10px; height: 10px; border-radius: 50%; }
+        @media (prefers-reduced-motion: reduce) { #multi-modal .sm-backdrop, #multi-modal .sm-panel { transition: none !important; } #multi-modal.on #mm-list li { animation: none; } }
         #actions { width: 100%; display: flex; gap: 8px; transition: opacity .3s; }
         .act { flex: 1; text-align: center; text-decoration: none; cursor: pointer; font: inherit; font-size: .875rem; font-weight: 700; letter-spacing: .025em; color: #374151; background: #fff; border: 1px solid #e5e7eb; padding: 12px 0; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,.05); transition: all .15s; }
         .act:active { transform: scale(.98); }
-        .act.is-done { color: #6b7280; background: #f3f4f6; font-size: .8rem; }
         .foot { height: 16px; font-size: .75rem; color: #d1d5db; letter-spacing: .1em; }
-        #reset-btn { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; margin-left: 8px; cursor: pointer; }
 
         html, body { height: 100%; }
         body { height: 100dvh; min-height: 0; padding: 10px 0; overflow-x: hidden; overflow-y: auto; }
@@ -130,6 +194,12 @@
         #lines-layer { position: absolute; left: 0; top: 0; width: 100%; height: calc(50% - var(--name-h) / 2 - 22px);   /* カード上端から読みの上端までの真ん中に線路を置く */ padding: 6px 14px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; overflow: visible; }   /* 徽章は上の空き（カード上端〜読み）の真ん中。新幹線は下の空き（場所〜カード下端）の真ん中 */   /* 下半分の新幹線の徽章を見せるため切らない（上の徽章は縮めて収める） */
         .lines-inner { display: flex; flex-wrap: wrap; justify-content: center; align-content: center; align-items: center; gap: 6px; transform-origin: center center; }
         .lines-inner .row-break { flex: 0 0 100%; height: 0; }
+        /* 路線を決めた抽選の間：決めた徽章を真ん中に固定し、ほかの線路はそのまわりに */
+        .pin-row { position: relative; width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 6px; }
+        .pin-side { display: flex; gap: 6px; align-items: center; min-width: 0; }
+        .pin-side.l { justify-content: flex-end; }
+        .pin-side.r { justify-content: flex-start; }
+        .pin-up { position: absolute; left: 0; right: 0; bottom: calc(100% + 6px); display: flex; flex-wrap: wrap-reverse; justify-content: center; align-items: center; gap: 5px; }
         .line-badge.sk { display: inline-flex; align-items: center; gap: .38em; padding-right: 8px; }
         .line-badge .sk-ic { height: .95em; width: auto; flex: none; }
         #lines-layer.compact .sk-row .line-badge { font-size: .75rem; padding: 3.5px 8px 4.5px 10px; border-radius: 6px; }   /* 上の徽章が多くて小さくしても、下の新幹線は場所が足りるので元の大きさ */
@@ -162,8 +232,11 @@
         html, body { height: auto; }
         body { min-height: 100dvh; overflow-y: visible; }
         /* 点击线路：选中高亮，其余变灰 */
-        .line-badge { cursor: pointer; transition: filter .2s, opacity .2s, transform .15s, box-shadow .15s; -webkit-tap-highlight-color: transparent; user-select: none; }
+        .line-badge { cursor: pointer; transition: filter .2s, opacity .2s, transform .3s cubic-bezier(.33,0,.2,1), box-shadow .15s; -webkit-tap-highlight-color: transparent; user-select: none; }
         .line-badge.dim { filter: grayscale(1); opacity: .38; }
+        .line-badge.pressing { transform: scale(.98) !important; filter: brightness(.94); transition-duration: .07s; }   /* 押している間は少し縮んで暗くなる */
+        .line-badge.sel.pressing { transform: scale(1.02) !important; }   /* 選んである徽章は、選んだときの大きさから少しだけ縮む（急に小さくならないように） */
+        html.dark .line-badge.pressing { filter: brightness(1.25); }
         /* 線路を選んでいる間は、画面全体に薄い遮罩をかけ、選んだ徽章だけを遮罩の上に浮かせて光らせる（遮罩を押すと選択が解ける） */
         /* 遮罩は一枚の大きな膜ではなく、背景・カード・ほかの部品それぞれを同じ濃さで暗くする（選んだ線路の徽章と背景の線だけは暗くしない） */
         #bg-lines::after, #slot-card::after { content: ''; position: absolute; inset: 0; background: rgba(15, 23, 42, .16); opacity: 0; pointer-events: none; transition: opacity .25s ease; }
@@ -252,6 +325,9 @@
         .rv-head.stack #rv-slot { order: 1; flex: 1 1 0; min-width: 0; }
         .rv-head.stack #rv-close { order: 2; }
         .rv-head.stack #rv-note { order: 3; flex: 1 0 100%; padding-left: 2px; }
+        .rv-foot { flex: none; padding: 10px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid #f3f4f6; }
+        #rv-draw { width: 100%; border: 0; font: inherit; font-size: 1rem; font-weight: 700; letter-spacing: .08em; color: #fff; background: #007AFF; padding: 13px 0; border-radius: 12px; cursor: pointer; transition: transform .1s; -webkit-tap-highlight-color: transparent; }
+        #rv-draw:active { transform: scale(.98); }
         #rv-close { flex: none; border: 0; background: #f3f4f6; color: #6b7280; width: 32px; height: 32px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
         #rv-body { flex: 1; overflow-y: auto; padding: 18px 20px 40px; position: relative; scroll-behavior: smooth; }
         .rv-seg { font-size: .75rem; font-weight: 700; color: #9ca3af; margin: 22px 0 6px 10px; }
@@ -368,7 +444,6 @@
         html.dark .caret { color: #6b7280; }
         html.dark #draw-btn { box-shadow: 0 4px 14px rgba(0,122,255,.25); }
         html.dark .act { background: #1c1e23; border-color: #2c2f36; color: #d1d5db; box-shadow: none; }
-        html.dark .act.is-done { background: #23262d; color: #8b919c; }
         html.dark #ai-btn { color: #c4b5fd; border-color: #3b2f63; background: #221c33; }
         html.dark .foot { color: #4b5058; }
         html.dark button:disabled { background-color: #2c2f36 !important; color: #6b7280 !important; }
@@ -399,6 +474,7 @@
         html.dark .rv-backdrop { background: rgba(0,0,0,.45); }
         html.dark .rv-sheet { background: #1c1e23; box-shadow: 0 -10px 40px rgba(0,0,0,.6); }
         html.dark .rv-head { border-bottom-color: #2a2d33; }
+        html.dark .rv-foot { border-top-color: #2a2d33; }
         html.dark #rv-note, html.dark .rv-seg, html.dark .rv-st .no, html.dark .rv-empty, html.dark .rv-st.na, html.dark .rv-gapnote, html.dark .rv-hdname { color: #6b7280; }
         html.dark #rv-close, html.dark #sm-close, html.dark #pm-close { background: #2a2d33; color: #9ca3af; }
         html.dark .rv-curtain, html.dark .rv-hd { background: #1c1e23; }
@@ -413,6 +489,18 @@
         /* 都道府県の選択・検索 */
         html.dark .sm-backdrop { background: rgba(0,0,0,.5); }
         html.dark .sm-panel { background: #1c1e23; }
+        html.dark #multi-menu { background: #2a2d33; box-shadow: 0 8px 28px rgba(0,0,0,.5); }
+        html.dark #multi-menu::after { border-top-color: #2a2d33; }
+        html.dark #mm-close, html.dark #lm-close { background: #2a2d33; color: #9ca3af; }
+        html.dark #lm-input { background: #23262d; border-color: #33363d; color: #e5e7eb; }
+        html.dark .lm-group { background: #1c1e23; color: #6b7280; }
+        html.dark .lm-row:active { background: #23262d; }
+        html.dark .lm-row .ck { border-color: #4b5058; }
+        html.dark #lm-clear { background: #2a2d33; color: #d1d5db; }
+        html.dark .lm-row .nm { color: #f3f4f6; }
+        html.dark #mm-list li.cur { background: #1e2a3d; }
+        html.dark #mm-list .nm { color: #f3f4f6; }
+        html.dark #mm-list .pl { color: #9ca3af; }
         html.dark .sm-head, html.dark .pm-foot { border-color: #2a2d33; color: #f3f4f6; }
         html.dark .sm-list li, html.dark .pm-region { color: #d1d5db; }
         html.dark .sm-list li.cur { color: #f9fafb; background: color-mix(in srgb, var(--c) 22%, #1c1e23); }
@@ -477,18 +565,19 @@
             </div>
         </div>
 
-        <button id="draw-btn">抽選開始</button>
+        <div id="draw-wrap">
+            <button id="draw-btn">抽選開始</button>
+            <div id="multi-menu" hidden><button type="button" data-n="5">5連</button><button type="button" data-n="10">10連</button></div>
+        </div>
 
         <div id="actions" style="opacity:0; pointer-events:none;">
+            <button id="list-btn" class="act" type="button" hidden></button>
             <a id="map-link" class="act" target="_blank" rel="noopener">Googleマップで開く</a>
-            <button id="visited-btn" class="act">行った！除外する</button>
+            <button id="share-btn" class="act" type="button">シェアする</button>
             <button id="ai-btn" class="act" type="button">ChatGPTにこの駅を聞く</button>
         </div>
 
-        <div class="foot">
-            <span id="visited-info"></span>
-            <button id="reset-btn" style="display:none;">リセット</button>
-        </div>
+        <div class="foot"></div>
     </div>
 
 
@@ -498,6 +587,24 @@
             <div class="sm-head"><span>都道府県を選ぶ（複数可）</span><button id="pm-close" type="button" aria-label="閉じる">✕</button></div>
             <div class="sr-body"><div id="pm-list"></div></div>
             <div class="pm-foot"><button id="pm-clear" type="button">クリア</button><button id="pm-ok" type="button">決定</button></div>
+        </div>
+    </div>
+
+    <div id="line-modal" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true">
+            <div class="sm-head"><span style="flex:1">路線を選ぶ</span><button id="lm-close" type="button" aria-label="閉じる">✕</button></div>
+            <div class="lm-search"><input id="lm-input" type="search" placeholder="路線名で探す（例：山手、ほくりく）" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+            <div class="lm-wrap"><div id="lm-list"></div><div id="lm-index"></div></div>
+            <div class="pm-foot"><button id="lm-clear" type="button">クリア</button><button id="lm-ok" type="button">決定</button></div>
+        </div>
+    </div>
+
+    <div id="multi-modal" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true">
+            <div class="sm-head"><span id="mm-title"></span><button id="mm-close" type="button" aria-label="閉じる">✕</button></div>
+            <ol id="mm-list"></ol>
         </div>
     </div>
 
@@ -527,6 +634,7 @@
                 <button id="rv-close" type="button" aria-label="閉じる">✕</button>
             </div>
             <div id="rv-body"></div>
+            <div class="rv-foot"><button id="rv-draw" type="button">この路線で抽選</button></div>
         </div>
     </div>
 
@@ -651,6 +759,9 @@
             const o = selectEl.querySelector('option[value="m"]');
             if (o) o.textContent = multiLabel();
             multiEdit.hidden = selectEl.value !== 'm';
+            // 路線：欄に出ているときだけ「路線：○○」。選択肢の一覧の中ではいつも「路線から選ぶ…」
+            const lo = selectEl.querySelector('option[value="l"]');
+            if (lo) lo.textContent = selectEl.value === 'l' && lineScope && lineScope.length ? '路線：' + displayName(lineScope[0], false) + (lineScope.length > 1 ? ' ほか' + (lineScope.length - 1) + '路線' : '') : '路線から選ぶ…';
         }
         function buildPrefModal(tmp) {
             pmList.innerHTML = '';
@@ -698,14 +809,39 @@
         document.getElementById('pm-close').addEventListener('click', closePm);
         prefModal.querySelector('.sm-backdrop').addEventListener('click', closePm);
         multiEdit.addEventListener('click', openPrefModal);
-        selectEl.addEventListener('change', () => { if (selectEl.value === 'm') { openPrefModal(); } syncMultiOption(); resetToStart(); });
+        // 路線を選んである状態でもう一度「路線：○○」を選んだら一覧を開きたい。同じ項目を選び直しても change が来ないので、
+        // 選択肢を開くときだけ一時的に空にしておき、何も選ばずに閉じたら元に戻す
+        let lineHold = false;
+        // iPhone は指が触れた時点の選択で選択肢を作るので、focus ではなく触れた瞬間（touchstart / pointerdown）に空にする
+        const holdLine = () => { if (selectEl.value === 'l' && !selectEl.disabled) { lineHold = true; selectEl.value = ''; syncMultiOption(); } };
+        selectEl.addEventListener('touchstart', holdLine, { passive: true });
+        selectEl.addEventListener('pointerdown', holdLine);
+        selectEl.addEventListener('mousedown', holdLine);
+        // 閉じたあと change が少し遅れて来ることがあるので、少し待ってから「何も選ばなかった」と判断して戻す
+        selectEl.addEventListener('blur', () => { if (!lineHold) return; setTimeout(() => { if (lineHold) { lineHold = false; if (!selectEl.value) { selectEl.value = 'l'; syncMultiOption(); } } }, 400); });
+        selectEl.addEventListener('change', () => {
+            if (lineHold) { lineHold = false; if (selectEl.value === 'l') prevScope = 'l'; }
+            if (selectEl.value === 'l') { selectEl.value = prevScope; syncMultiOption(); openLineModal(); return; }   // 路線は一覧を開くだけ。「決定」を押すまで欄は元のまま
+            prevScope = selectEl.value;
+            if (selectEl.value === 'm') { openPrefModal(); } syncMultiOption(); resetToStart();
+        });
         // 範囲の選択肢を、いまの地域に合わせて作り直す（地域を選んでいないときは主な都市の「市内」など）
+        // 線路詳情の「この路線で抽選」で選んだ路線。範囲の欄に「路線：○○」として残り、選んでいる間はずっとその路線から抽選する
+        let lineScope = null;
         function rebuildScope() {
             selectEl.innerHTML = '<option value="" selected>範囲を選んでください</option>' + (catOptions[regionEl.value] || []).map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
+            // 「複数の都道府県」と「路線」は、案内の次（いちばん上）に置く。路線は一つの選択肢で、選んであれば「路線：○○」、なければ「路線から選ぶ…」
+            const lo = document.createElement('option'); lo.value = 'l';
+            const first = selectEl.options[0];
+            const mo = selectEl.querySelector('option[value="m"]');
+            if (mo) { first.after(mo); mo.after(lo); } else first.after(lo);   // 複数の都道府県 → 路線 の順
             syncMultiOption();
+            prevScope = selectEl.value;
         }
+        var prevScope = '';
         regionEl.addEventListener('change', () => {
-            // 地域を変えたら、範囲は「選んでください」の空欄に戻す
+            // 地域を変えたら、範囲は「選んでください」の空欄に戻す（路線の選択もやめる）
+            lineScope = null;
             rebuildScope();
             resetToStart();
         });
@@ -713,6 +849,7 @@
         // 抽选池：既存の地域・カテゴリはこれまで通り（ビット）。都道府県・複数選択は住所の都道府県で絞り込む
         function getPool() {
             const v = selectEl.value;
+            if (v === 'l' && lineScope) { const ids = new Set(lineScope.map(l => l.idx)); return stationList.filter(s => s.lines.some(l => ids.has(l.idx))); }
             if (!regionEl.value && !v) return stationList;   // 地域も範囲も選ばないときは全国からランダム
             if (!v) {   // 範囲を選ばないときは、その地域の全域
                 const all = { kanto: PREF_GROUPS[2][1], kansai: PREF_GROUPS[4][1], hokkaido: ['北海道'] }[regionEl.value] || REGION_PREFS[regionEl.value] || [];
@@ -839,26 +976,181 @@
             return (thru && cands.find(s => s.lines.some(l => thru.includes(l.name)))) || null;
         }
         // 点击一览里的车站：关闭一览、回到主卡片，并直接切换为该车站
+        // 面板を下へ滑らせ、滑り終わってから卡片の中身を替え、卡片を元の姿へ戻す（線路一覧・連抽の一覧で共通）
+        // 滑らかにするため：動くものは前もって GPU に載せ、中身を替えたあとは配置が落ち着くまで 2 フレーム待ってから戻し始める
+        async function sheetDownThenSwap(panel, swap) {
+            slotCard.style.willChange = 'transform, opacity';
+            panel.style.willChange = 'transform';
+            const anim = panel.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(105%)' }], { duration: reduceMotion() ? 1 : 360, easing: 'cubic-bezier(.4,0,.7,.2)', fill: 'forwards' });
+            await anim.finished.catch(() => {});
+            swap(anim);
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+            slotCard.classList.remove('away');
+            panel.style.willChange = '';
+            setTimeout(() => { slotCard.style.willChange = ''; }, 600);
+        }
         async function goToStation(st) {
             if (rvBusy || !rvOpen) return;
             rvBusy = true;
             const orig = rvOrig;
-            // 1) 面板向下滑走、背景淡出（卡片此时仍处于「移开」的淡化状态，避免露出旧内容）
             rv.classList.remove('on');
-            const anim = rvSheet.animate([{ transform: 'none' }, { transform: 'translateY(104%)' }], { duration: reduceMotion() ? 1 : 340, easing: 'cubic-bezier(.5,0,.8,.4)', fill: 'forwards' });
-            await anim.finished.catch(() => {});
-            anim.cancel();
-            rv.hidden = true;
-            if (orig) orig.style.visibility = '';
-            rvOpen = false; rvBusy = false;
-            // 2) 卡片还处于淡化状态时换成新车站的内容。线路一览里换了车站，就不再属于原来选的地区/范围，两栏都清成空栏
-            regionEl.value = '';
-            rebuildScope();
-            showStationDirect(st);
-            // 3) 再让卡片从淡化状态平滑回到正常：淡入 + 由上往下滑入 + 去模糊
-            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-            slotCard.classList.remove('away');
+            await sheetDownThenSwap(rvSheet, anim => {
+                anim.cancel();
+                rv.hidden = true;
+                if (orig) orig.style.visibility = '';
+                rvOpen = false; rvBusy = false;
+                // 線路一覧で換えた駅は元の地区／範囲に属さないので両方の欄を空にする
+                regionEl.value = '';
+                rebuildScope();
+                showStationDirect(st);
+            });
         }
+
+        // ---- 路線から選ぶ：全路線を地方ごとに並べ、名前・よみで絞り込める ----
+        const lineModal = document.getElementById('line-modal');
+        const lmList = document.getElementById('lm-list'), lmInput = document.getElementById('lm-input');
+        let lmTimer = 0, lmIndex = null;
+        function buildLineIndex() {
+            if (lmIndex) return lmIndex;
+            const cnt = new Map(), prefs = new Map();
+            stationList.forEach(s => s.lines.forEach(l => {
+                cnt.set(l.idx, (cnt.get(l.idx) || 0) + 1);
+                if (!prefs.has(l.idx)) prefs.set(l.idx, new Map());
+                const m = prefs.get(l.idx); m.set(s.pref, (m.get(s.pref) || 0) + 1);
+            }));
+            const groupOf = pref => (PREF_GROUPS.find(g => g[1].includes(pref)) || ['その他'])[0];
+            const groups = new Map([['新幹線', []]].concat(PREF_GROUPS.map(g => [g[0], []])));
+            LINES.forEach((row, idx) => {
+                if (!cnt.get(idx)) return;
+                const line = lineObjByIdx(idx);
+                // 通る地方すべてに載せる（新幹線は「新幹線」にも）
+                const gs = new Set([...prefs.get(idx).keys()].map(groupOf));
+                if (/新幹線$/.test(line.name)) gs.add('新幹線');
+                const seg = (STOPS[idx] || [])[0], sp = (SPUR[line.name] || {}).st || [], st = (seg && seg[1] || []).filter(n => !sp.includes(n));   // 端の枝（ガーラ湯沢など）は区間の端に数えない
+                const range = st.length > 1 ? st[0] + '〜' + st[st.length - 1] : '';
+                const name = displayName(line, false);
+                const item = { line, name, sub: (range ? range + '・' : '') + cnt.get(idx) + '駅', key: (name + ' ' + line.name + ' ' + (LINE_YOMI[line.name] || '')).toLowerCase() };
+                gs.forEach(g => { if (!groups.has(g)) groups.set(g, []); groups.get(g).push(item); });
+            });
+            groups.forEach(arr => { const order = sortByCompany(arr.map(x => x.line)); arr.sort((a, b) => order.indexOf(a.line) - order.indexOf(b.line)); });
+            return (lmIndex = groups);
+        }
+        const kana = t => t.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60));   // カタカナで打ってもひらがなのよみに当たるように
+        const IDX_LABEL = { '新幹線': '新幹線' };
+        let lmSel = new Set();
+        function updateLmFoot() {
+            const ok = document.getElementById('lm-ok');
+            ok.disabled = !lmSel.size;
+            ok.textContent = lmSel.size ? '決定（' + lmSel.size + '路線）' : '決定';
+        }
+        function renderLineList() {
+            const q = kana(lmInput.value.trim().toLowerCase());
+            lmList.innerHTML = '';
+            const idx = document.getElementById('lm-index'); idx.innerHTML = '';
+            let n = 0;
+            const allRows = [], groupSyncs = [];
+            const syncAll = () => { allRows.forEach(([r, x]) => r.classList.toggle('sel', lmSel.has(x.line.idx))); groupSyncs.forEach(f => f()); updateLmFoot(); };   // 同じ路線がいくつかの地方に載っているので、全部そろえる
+            buildLineIndex().forEach((arr, g) => {
+                const hit = q ? arr.filter(x => kana(x.key).includes(q)) : arr;
+                if (!hit.length) return;
+                const h = document.createElement('div'); h.className = 'lm-group';
+                h.innerHTML = '<span></span><button type="button"></button>';
+                h.querySelector('span').textContent = g;
+                const gb = h.querySelector('button');
+                const rows = [];
+                const syncG = () => { gb.textContent = hit.every(x => lmSel.has(x.line.idx)) ? '全て外す' : '全て選ぶ'; };
+                gb.addEventListener('click', () => {
+                    const all = hit.every(x => lmSel.has(x.line.idx));
+                    hit.forEach(x => { if (all) lmSel.delete(x.line.idx); else lmSel.add(x.line.idx); });
+                    syncAll();
+                });
+                const mark = document.createElement('div'); lmList.appendChild(mark);   // 見出しは貼り付くので位置が変わる。飛び先は動かない目印で測る
+                lmList.appendChild(h);
+                const ix = document.createElement('span'); ix.innerHTML = [...(IDX_LABEL[g] || g)].join('<br>'); ix._to = mark; idx.appendChild(ix);
+                hit.forEach(x => {
+                    const r = document.createElement('div'); r.className = 'lm-row';
+                    if (lmSel.has(x.line.idx)) r.classList.add('sel');
+                    r.innerHTML = '<span class="bar"></span><div class="tx"><div class="nm"></div><div class="sb"></div></div><span class="ck"></span>';
+                    r.querySelector('.bar').style.background = x.line.bg;
+                    r.querySelector('.nm').textContent = x.name;
+                    r.querySelector('.sb').textContent = x.sub;
+                    r.addEventListener('click', () => {
+                        if (lmSel.has(x.line.idx)) lmSel.delete(x.line.idx); else lmSel.add(x.line.idx);
+                        syncAll();
+                    });
+                    rows.push([r, x]); allRows.push([r, x]);
+                    lmList.appendChild(r); n++;
+                });
+                syncG(); groupSyncs.push(syncG);
+            });
+            if (!n) { const e = document.createElement('div'); e.className = 'lm-empty'; e.textContent = '見つかりませんでした'; lmList.appendChild(e); }
+            updateLmFoot();
+        }
+        // 索引：押した・なぞった所の地方へすぐ飛ぶ
+        (function () {
+            const idx = document.getElementById('lm-index');
+            let lastEl = null;
+            const go = (x, y) => {
+                const el = document.elementFromPoint(x, y);
+                const sp = el && el.closest && el.closest('#lm-index span');
+                if (!sp || sp === lastEl) return;
+                if (lastEl) lastEl.classList.remove('on');
+                lastEl = sp; sp.classList.add('on');
+                lmList.scrollTop = sp._to.offsetTop;
+                haptic(5);
+            };
+            const end = () => { if (lastEl) { const e = lastEl; setTimeout(() => e.classList.remove('on'), 250); } lastEl = null; };
+            idx.addEventListener('pointerdown', e => { idx.setPointerCapture && idx.setPointerCapture(e.pointerId); go(e.clientX, e.clientY); });
+            idx.addEventListener('pointermove', e => { if (lastEl) go(idx.getBoundingClientRect().left + 15, e.clientY); });
+            ['pointerup', 'pointercancel'].forEach(t => idx.addEventListener(t, end));
+        })();
+        function openLineModal() {
+            clearTimeout(lmTimer);
+            lmInput.value = '';
+            lmSel = new Set(selectEl.value === 'l' && lineScope ? lineScope.map(l => l.idx) : []);
+            renderLineList();
+            lineModal.hidden = false;
+            void lineModal.offsetWidth; lineModal.classList.add('on');
+            lmList.scrollTop = 0;
+            const cur = lmList.querySelector('.lm-row.sel'); if (cur) cur.scrollIntoView({ block: 'center' });
+        }
+        function closeLineModal() {
+            lmInput.blur();
+            lineModal.classList.remove('on');
+            lmTimer = setTimeout(() => { lineModal.hidden = true; }, 420);
+        }
+        document.getElementById('lm-clear').addEventListener('click', () => {
+            lmSel.clear();
+            lmList.querySelectorAll('.lm-row.sel').forEach(r => r.classList.remove('sel'));
+            lmList.querySelectorAll('.lm-group button').forEach(b => { b.textContent = '全て選ぶ'; });
+            updateLmFoot();
+        });
+        document.getElementById('lm-ok').addEventListener('click', () => {
+            if (!lmSel.size) return;
+            closeLineModal();
+            lineScope = sortByCompany([...lmSel].map(lineObjByIdx));
+            rebuildScope();
+            selectEl.value = 'l'; prevScope = 'l'; syncMultiOption();
+            resetToStart();
+        });
+        lmInput.addEventListener('input', () => { renderLineList(); lmList.scrollTop = 0; });
+        document.getElementById('lm-close').addEventListener('click', closeLineModal);
+        lineModal.querySelector('.sm-backdrop').addEventListener('click', closeLineModal);
+
+        // 線路詳情の「この路線で抽選」：いま見ている路線の駅だけから抽選する（地区・範囲の選択は空に戻す）
+        document.getElementById('rv-draw').addEventListener('click', async () => {
+            if (rvBusy || !rvOpen || isDrawing) return;
+            const v = rvVariants[rvVar], L = (v && v.lineObj) || rvLine;
+            if (!L) return;
+            if (!stationList.some(s => s.lines.some(l => l.idx === L.idx))) return;
+            haptic(12); audioUnlock();   // 押した瞬間に（あとで鳴らす音のため）
+            await closeRouteView();
+            // 範囲の欄を「路線：○○」にする。欄を変えるまで、次からの抽選（連抽も）はずっとこの路線から
+            lineScope = [L];
+            regionEl.value = ''; rebuildScope();
+            selectEl.value = 'l'; prevScope = 'l'; syncMultiOption();
+            startDraw(1);
+        });
 
         // ---- 线路一览：分歧直接画在左侧的线上；点分歧的小胶囊，当前路线滑到右边消失，只显示支线 ----
         let rvVariants = [], rvVar = 0, rvDetached = [], rvLineObj = null, rvCur = new Set();
@@ -3601,6 +3893,7 @@
         function renderName(station) {
             hideDual();
             shownStation = station;
+            setMapLink(station);
             const nm = splitBracket(station.kanji);
             const ym = splitBracket(station.yomi);
             kanjiEl.textContent = nm.main;
@@ -3710,6 +4003,7 @@
                 });
             });
             shownStation = a; shownPartner = b;
+            setMapLink(a);
             wardEl.textContent = a.ward.startsWith(a.pref) ? a.ward : a.pref + ' ' + a.ward;
             if (animate) {
                 // 二つの名前が真ん中に重なった所から左右へ分かれて現れる
@@ -3805,7 +4099,7 @@
             // 線路を選んでいる間は背景の線も遮罩の一部：押せば選択が解けるだけ（線路詳情を開くのは徽章だけ）
             if (rvOpen || rvBusy || isDrawing || selectedKey) return;
             const t = e.target;
-            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #theme-btn')) return;
+            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #theme-btn')) return;
             let best = null, bd = 14;
             bgLinesContainer.querySelectorAll('.bg-line').forEach(el => {
                 const r = el.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2));
@@ -3834,9 +4128,17 @@
             // 新幹線は数に入れず、カードの下半分（駅名と場所の下）に別に並べる
             const isSK = l => /新幹線$/.test(l.name);
             const skOnly = station.lines.every(isSK);   // 新幹線だけの駅（新富士など）は上半分にふつうに並べる
-            const skAll = skOnly ? [] : sortByCompany(station.lines).filter(isSK);
-            const solid = sortByCompany(station.lines).filter(l => skOnly || !isSK(l));
-            const hollow = sortByCompany(station.xfer || []);
+            let skAll = skOnly ? [] : sortByCompany(station.lines).filter(isSK);
+            let solid = sortByCompany(station.lines).filter(l => skOnly || !isSK(l));
+            let hollow = sortByCompany(station.xfer || []);
+            // 路線を決めて抽選している間は、その路線の徽章だけを上の真ん中に置いたままにする（新幹線も上）。止まった駅はふつうの並びに戻る
+            const pinMode = isDrawing && spinLine;
+            let pinLine = null;
+            if (pinMode) {
+                pinLine = station.lines.find(l => l.idx === spinLine.idx) || spinLine;
+                skAll = skAll.filter(l => l !== pinLine);
+                solid = sortByCompany(station.lines).filter(l => l !== pinLine && (skOnly || !isSK(l)));
+            }
             const total = solid.length + hollow.length;
             const MAXB = 18;
             let solidShow = solid, hollowShow = hollow, extra = 0;
@@ -3856,7 +4158,8 @@
                 trimText(badge, displayName(line, city));
                 badge.dataset.key = (isHollow ? 'h:' : 's:') + line.name + '#' + line.idx;
                 badge.style.setProperty('--c', line.bg);
-                badge.addEventListener('click', () => onBadgeClick(line, isHollow));
+                badge.addEventListener('click', () => { badge._unpress && badge._unpress(); onBadgeClick(line, isHollow); });
+                pressFx(badge);
                 if (/新幹線$/.test(line.name) && !isHollow) {   // 新幹線：名前の前に車両（横から見た先頭車）の小さな絵
                     badge.classList.add('sk');
                     badge.insertAdjacentHTML('beforeend', SK_ICON);
@@ -3865,6 +4168,35 @@
                 else { badge.style.backgroundColor = line.bg; badge.style.color = line.text; }
                 return badge;
             };
+            if (pinMode) {
+                // 決めた路線の徽章は、一つだけのときと同じ場所（上の空きの真ん中）に固定。ほかの線路はそのまわりに：
+                // 左右に一つずつ対にして並べ（真ん中がずれないように）、余ったものや入りきらないものは上に積む
+                linesLayer.classList.remove('compact');
+                const row = document.createElement('div'); row.className = 'pin-row';
+                const L = document.createElement('div'); L.className = 'pin-side l';
+                const R = document.createElement('div'); R.className = 'pin-side r';
+                const P = mk(pinLine, false);
+                const up = document.createElement('div'); up.className = 'pin-up compact';
+                row.append(L, P, R, up);
+                linesLayer.appendChild(row);
+                if (skAll.length) { const sk = document.createElement('div'); sk.className = 'sk-row'; skAll.forEach(l => sk.appendChild(mk(l, false))); linesLayer.appendChild(sk); }
+                const others = solid.map(l => [l, false]).concat(hollow.map(l => [l, true]));
+                const half = (linesLayer.clientWidth - 28) / 2 - P.offsetWidth / 2 - 6;
+                const wOf = el => [...el.children].reduce((a, c) => a + c.offsetWidth, 0) + Math.max(0, el.children.length - 1) * 6;
+                let k = 0;
+                for (; k + 1 < others.length; k += 2) {
+                    const a = mk(...others[k]), b = mk(...others[k + 1]);
+                    L.prepend(a); R.append(b);
+                    if (wOf(L) > half || wOf(R) > half) { a.remove(); b.remove(); break; }
+                }
+                others.slice(k).forEach(o => up.appendChild(mk(...o)));
+                // 上に積んだ分がカードの上端からはみ出すときは、上の分だけ縮める（決めた徽章の大きさと位置はそのまま）
+                const availUp = row.offsetTop - 10;
+                if (up.children.length) for (let z = 1; z >= 0.5; z -= 0.05) {
+                    up.style.zoom = z;
+                    if (up.getBoundingClientRect().height <= availUp) break;
+                }
+            } else {
             solidShow.forEach(l => inner.appendChild(mk(l, false)));
             // 空心换乘标签强制另起一行
             if (solidShow.length && hollowShow.length) { const br = document.createElement('div'); br.className = 'row-break'; inner.appendChild(br); }
@@ -3874,11 +4206,12 @@
             }
             if (extra) { const more = document.createElement('div'); more.className = 'line-badge'; more.textContent = 'ほか' + extra + '路線'; more.style.backgroundColor = '#9ca3af'; more.style.color = '#fff'; more.style.cursor = 'default'; inner.appendChild(more); }
             linesLayer.appendChild(inner);
+            }
             // 徽章多到放不下时整体缩小，保证落在上半部分的可用空间内
             const avail = linesLayer.clientHeight - 12;
             // 縮小は zoom で行う（レイアウトごと縮むので、各行の中央そろえが端末によってずれない）。zoom 非対応の環境だけ従来の transform
             const useZoom = window.CSS && CSS.supports && CSS.supports('zoom', '0.5');
-            for (let s = 1; s >= 0.55; s -= 0.05) {
+            if (!pinMode) for (let s = 1; s >= 0.55; s -= 0.05) {
                 if (useZoom) {
                     inner.style.zoom = s;
                     if (inner.getBoundingClientRect().height <= avail) break;
@@ -3917,14 +4250,8 @@
 
         const actionsEl = document.getElementById('actions');
         const mapLink = document.getElementById('map-link');
-        const visitedBtn = document.getElementById('visited-btn');
-        const visitedInfo = document.getElementById('visited-info');
-        const resetBtn = document.getElementById('reset-btn');
-
-        const STORAGE_KEY = 'tsugi-doko-he-visited';
-        let visited = new Set();
-        try { visited = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')); } catch (e) {}
-        const saveVisited = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...visited])); } catch (e) {} };
+        const shareBtn = document.getElementById('share-btn');
+        try { localStorage.removeItem('tsugi-doko-he-visited'); } catch (e) {}   // 以前の「除外」の記録は使わなくなったので消しておく
 
         let currentStation = null;
         let lastId = null;
@@ -3954,35 +4281,28 @@
             actionsEl.style.pointerEvents = show ? 'auto' : 'none';
         }
 
-        function refreshVisitedUI() {
-            visitedInfo.textContent = visited.size ? `除外中 ${visited.size}駅` : '';
-            resetBtn.style.display = visited.size ? 'inline' : 'none';
-            if (currentStation) {
-                const done = visited.has(vk(currentStation));
-                visitedBtn.disabled = false;
-                visitedBtn.classList.toggle('is-done', done);
-                visitedBtn.textContent = done ? '除外済み ✓（再タップで取消）' : '行った！除外する';
-            }
-        }
-
         function setMapLink(station) {
             const tramOnly = station.lines.every(l => /都電|トラム|市電|路面|電軌/.test(l.name));
             const query = `${station.kanji}${tramOnly ? '停留場' : '駅'}${station.kansai ? ' 関西' : ' ' + (station.pref || '東京')}`;
             mapLink.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
         }
 
-        visitedBtn.addEventListener('click', () => {
-            if (!currentStation || isDrawing) return;
-            const k = vk(currentStation);
-            if (visited.has(k)) visited.delete(k); else visited.add(k);
-            saveVisited();
-            refreshVisitedUI();
-        });
-
-        resetBtn.addEventListener('click', () => {
-            visited.clear();
-            saveVisited();
-            refreshVisitedUI();
+        // ---- シェア：画像ではなく、駅名の一言とその駅を開くリンクを共有シートに渡す（端末に何も保存しない） ----
+        function stationUrl(st) { return location.origin + location.pathname + '?eki=' + encodeURIComponent(st.id); }
+        function toast(msg) {
+            const m = document.createElement('div'); m.textContent = msg;
+            m.style.cssText = 'position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99999;background:rgba(0,0,0,.8);color:#fff;font-size:14px;font-weight:700;padding:10px 18px;border-radius:999px;pointer-events:none;transition:opacity .3s;';
+            document.body.appendChild(m); setTimeout(() => { m.style.opacity = '0'; setTimeout(() => m.remove(), 300); }, 1600);
+        }
+        shareBtn.addEventListener('click', async () => {
+            const st = currentStation; if (!st || isDrawing) return;
+            const text = '次に降りる駅は「' + st.kanji + '」' + (st.pref ? '（' + st.pref + '）' : '') + ' #次はどこへ';
+            const url = /^https?:/.test(location.protocol) ? stationUrl(st) : 'https://la-rikopatto.github.io/kien-sekve/?eki=' + encodeURIComponent(st.id);
+            try {
+                if (navigator.share) { await navigator.share({ text, url }); return; }
+            } catch (e) { if (e && e.name === 'AbortError') return; }
+            // 共有シートがない端末：文とリンクをコピーする
+            try { await navigator.clipboard.writeText(text + '\n' + url); toast('コピーしました'); } catch (e) { toast('共有できませんでした'); }
         });
 
         // 抽選で止まる直前に流れていった駅（右へ払うと、ひとつずつさかのぼって見られる）
@@ -3996,20 +4316,194 @@
             btn.disabled = false;
             btn.textContent = '抽選開始';
             setMapLink(currentStation);
-            refreshVisitedUI();
             setActionsVisible(true);
         }
 
-        btn.addEventListener('click', () => {
+        // 振動：Android は vibrate、iPhone（iOS 18 以降の Safari）は隠したスイッチを切り替えたときの「コツッ」を使う
+        const hapticEl = (() => {
+            if (navigator.vibrate) return null;
+            const lb = document.createElement('label'); lb.setAttribute('aria-hidden', 'true');
+            lb.style.cssText = 'position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;';
+            const ip = document.createElement('input'); ip.type = 'checkbox'; ip.setAttribute('switch', ''); ip.tabIndex = -1;
+            ['click', 'change'].forEach(t => { lb.addEventListener(t, e => e.stopPropagation()); ip.addEventListener(t, e => e.stopPropagation()); });   // 画面のほかの「押した」処理には届かせない
+            lb.appendChild(ip); document.body.appendChild(lb); return lb;
+        })();
+        // 抽選の音：Web Audio でその場で鳴らす（音声ファイルは使わない）。最初の一押しで音を出せる状態にする
+        let actx = null, aOut = null, aRev = null, aNoise = null, lastTick = 0;
+        function audioUnlock() {
+            try {
+                if (!actx) {
+                    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+                    actx = new AC();
+                    const lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 6000; lp.connect(actx.destination);
+                    aOut = actx.createGain(); aOut.gain.value = 0.57; aOut.connect(lp);   // 全体の音量（試聴の 75%）
+                    // 小さな部屋の響き（作った残響）を少しだけ
+                    const sr = actx.sampleRate, len = sr * 1.2, ir = actx.createBuffer(2, len, sr);
+                    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let k = 0; k < len; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / len, 4); }
+                    aRev = actx.createConvolver(); aRev.buffer = ir;
+                    const rg = actx.createGain(); rg.gain.value = 0.22; aRev.connect(rg); rg.connect(lp);
+                    aNoise = actx.createBuffer(1, Math.round(sr * 0.05), sr);
+                    const x = aNoise.getChannelData(0); for (let k = 0; k < x.length; k++) x[k] = Math.random() * 2 - 1;
+                }
+                if (actx.state === 'suspended') actx.resume();
+            } catch (e) {}
+        }
+        function aBus() { const g = actx.createGain(); g.connect(aOut); g.connect(aRev); return g; }
+        function aEnv(g, t, a, v, d) { g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + d); }
+        // 「カチッ」：ノイズを帯域で絞った短い音
+        function aClick(t, d, v, f) {
+            const s = actx.createBufferSource(), fl = actx.createBiquadFilter(), g = actx.createGain();
+            s.buffer = aNoise; fl.type = 'bandpass'; fl.frequency.value = f; fl.Q.value = 3; aEnv(g, t, 0.002, v, d);
+            s.connect(fl); fl.connect(g); g.connect(aBus()); s.start(t); s.stop(t + d + 0.02);
+        }
+        // 低い「ポッ」：下がっていく短い正弦波（ボタンを押し込んだ重み）
+        function aThump(t, f1, f2, d, v) {
+            const o = actx.createOscillator(), g = actx.createGain();
+            o.frequency.setValueAtTime(f1, t); o.frequency.exponentialRampToValueAtTime(f2, t + d);
+            aEnv(g, t, 0.002, v, d); o.connect(g); g.connect(aBus()); o.start(t); o.stop(t + d + 0.05);
+        }
+        const audioOk = () => actx && actx.state === 'running';
+        // 駅が切り替わるたびの小さな「カチ」。速いところでは間引いて、うるさくならないようにする
+        function sfxTick() {
+            if (!audioOk()) return;
+            const now = performance.now();
+            if (now - lastTick < 45) return; lastTick = now;
+            aClick(actx.currentTime, 0.012, 0.12, 2800);   // 速いときも遅いときも同じ大きさ
+        }
+        // 決まったときの「カチッ」：実物のボタンを押し込んだような音
+        function sfxWin() {
+            if (!audioOk()) return;
+            const t = actx.currentTime + 0.01;
+            aClick(t, 0.03, 0.22, 2200);
+            aThump(t, 180, 90, 0.06, 0.17);
+        }
+        // 押した感触：指が触れたらすぐ縮め、離したら戻す（短いタップでも縮んだのが見えるよう最低 90ms は保つ）
+        function pressFx(el) {
+            let t0 = 0, tm = 0;
+            const on = () => { clearTimeout(tm); t0 = performance.now(); el.classList.add('pressing'); };
+            const off = () => { clearTimeout(tm); tm = setTimeout(() => el.classList.remove('pressing'), Math.max(0, 90 - (performance.now() - t0))); };
+            el.addEventListener('pointerdown', on);
+            el._unpress = () => { clearTimeout(tm); el.classList.remove('pressing'); };   // 押したあと何か動き出すときは、すぐ普段の大きさへ戻し始める（二段に跳ねないように）
+            ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => el.addEventListener(t, off));
+        }
+        function haptic(ms) {
+            try { if (navigator.vibrate) navigator.vibrate(ms || 10); else if (hapticEl) hapticEl.click(); } catch (e) {}
+        }
+        // ---- 連抽：抽選ボタンを長押しすると 5連・10連 を選べる ----
+        const multiMenu = document.getElementById('multi-menu');
+        const multiModal = document.getElementById('multi-modal');
+        const mmList = document.getElementById('mm-list');
+        const listBtn = document.getElementById('list-btn');
+        let multiResults = null, lpTimer = 0, lpFired = false, mmTimer = 0, mmPicking = false;
+        function showMultiMenu(show) { multiMenu.hidden = !show; }
+        btn.addEventListener('pointerdown', () => {
             if (isDrawing) return;
+            lpFired = false; clearTimeout(lpTimer);
+            lpTimer = setTimeout(() => { lpFired = true; showMultiMenu(true); haptic(10); }, 450);
+        });
+        ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => btn.addEventListener(t, () => clearTimeout(lpTimer)));
+        btn.addEventListener('contextmenu', e => e.preventDefault());
+        multiMenu.addEventListener('click', e => {
+            const b = e.target.closest('button[data-n]'); if (!b) return;
+            e.stopPropagation(); showMultiMenu(false); startDraw(+b.dataset.n);
+        });
+        // メニューの外を押したら閉じる
+        document.addEventListener('pointerdown', e => { if (!multiMenu.hidden && !e.target.closest('#multi-menu, #draw-btn')) showMultiMenu(false); }, true);
+        function station2place(st) { return st.ward.startsWith(st.pref) ? st.ward : st.pref + ' ' + st.ward; }
+        function renderMultiList() {
+            if (!multiResults) return;
+            document.getElementById('mm-title').textContent = multiResults.length + '連の結果';
+            mmList.innerHTML = '';
+            multiResults.forEach((st, i) => {
+                const li = document.createElement('li');
+                li.style.setProperty('--i', i);
+                if (st === currentStation) li.classList.add('cur');
+                const nm = splitBracket(st.kanji), ym = splitBracket(st.yomi);
+                li.innerHTML = '<span class="no"></span><div class="tx"><div class="nm"></div><div class="pl"></div></div><span class="cl"></span>';
+                li.querySelector('.no').textContent = i + 1;
+                const n = li.querySelector('.nm'); n.textContent = nm.main + (nm.sub ? nm.sub : '');
+                if (ym.main) { const sm = document.createElement('small'); sm.textContent = ym.main; n.appendChild(sm); }
+                li.querySelector('.pl').textContent = station2place(st);
+                const cl = li.querySelector('.cl');
+                st.lines.slice(0, 6).forEach(l => { const d = document.createElement('i'); d.style.background = l.bg; cl.appendChild(d); });
+                li.addEventListener('click', () => pickFromList(i));
+                mmList.appendChild(li);
+            });
+        }
+        function showMultiModal(show) {
+            clearTimeout(mmTimer);
+            if (show) {
+                renderMultiList();
+                slotCard.classList.add('away');   // 線路一覧と同じく、後ろのカードは小さく引っ込む
+                multiModal.hidden = false;
+                void multiModal.offsetWidth; multiModal.classList.add('on');   // 待たずにすぐ上がり始める
+                const cur = mmList.querySelector('li.cur'); if (cur) setTimeout(() => cur.scrollIntoView({ block: 'nearest' }), 0);
+            } else {
+                multiModal.classList.remove('on');
+                if (!mmPicking) slotCard.classList.remove('away');
+                mmTimer = setTimeout(() => { multiModal.hidden = true; }, 420);
+            }
+        }
+        multiModal.querySelector('.sm-backdrop').addEventListener('click', () => showMultiModal(false));
+        document.getElementById('mm-close').addEventListener('click', () => showMultiModal(false));
+        listBtn.addEventListener('click', () => { if (!isDrawing && multiResults) showMultiModal(true); });
+        // 連抽の結果は左右に払っても順に見られるよう、前後の履歴にそのまま並べる
+        function setMultiHistory(i) {
+            drawHistory.length = 0; drawHistory.push(...multiResults.slice(0, i));
+            drawForward.length = 0; drawForward.push(...multiResults.slice(i + 1).reverse());
+        }
+        // 線路一覧で駅を押したときと同じ動き（goToStation と同じ手順）：一覧を下へ滑らせ、終わったら中身を替えて、カードを戻す
+        async function pickFromList(i) {
+            const st = multiResults[i];
+            if (mmPicking) return;
+            if (st === currentStation) { showMultiModal(false); return; }
+            mmPicking = true;
+            clearTimeout(mmTimer);
+            multiModal.classList.remove('on');
+            await sheetDownThenSwap(multiModal.querySelector('.sm-panel'), anim => {
+                multiModal.hidden = true;
+                anim.cancel();
+                spinTrail = null;
+                currentStation = st; lastId = st.id;
+                updateUI(st); finishDraw();
+                setMultiHistory(i);
+            });
+            mmPicking = false;
+        }
+        function setListBtn() {
+            listBtn.hidden = !multiResults;
+            if (multiResults) listBtn.textContent = multiResults.length + '連の結果を見る';
+        }
 
-            const pool = getPool().filter(s => s && !visited.has(vk(s)));
+        btn.addEventListener('click', () => {
+            if (lpFired) { lpFired = false; return; }   // 長押しのあとに来る「押した」は無視（メニューを出しただけ）
+            startDraw(1);
+        });
+        let spinLine = null;
+        function startDraw(count, poolOverride, line) {
+            if (isDrawing) return;
+            spinLine = line || (selectEl.value === 'l' && lineScope && lineScope.length === 1 ? lineScope[0] : null);   // 一路線だけのときは、その徽章を真ん中に固定
+            haptic(12);
+            audioUnlock();
+            showMultiMenu(false);
+
+            const pool = (poolOverride || getPool()).filter(Boolean);
             if (pool.length === 0) {
-                wardEl.textContent = '候補がありません。除外をリセットしてください';
+                wardEl.textContent = '候補がありません';
                 return;
             }
 
-            spinTrail = [];
+            // 連抽：先に重ならないように結果を決めておく（候補が足りなければある分だけ）
+            let results = null;
+            if (count > 1) {
+                const a = pool.slice();
+                for (let k = a.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [a[k], a[j]] = [a[j], a[k]]; }
+                results = a.slice(0, Math.min(count, a.length));
+                if (results.length < 2) results = null;
+            }
+            multiResults = results; setListBtn();
+
+            spinTrail = results ? null : [];
             isDrawing = true;
             lockScope(true);
             bgLinesContainer.classList.add('spinning');
@@ -4023,7 +4517,9 @@
 
             const spin = () => {
                 let pick;
-                do {
+                if (step === totalSteps - 1) spinLine = null;   // 最後の駅はふつうの表示
+                if (results && step === totalSteps - 1) pick = results[0];   // 最後に止まるのは連抽の 1 番目
+                else do {
                     pick = pool[Math.floor(Math.random() * pool.length)];
                 } while (pool.length > 1 && pick.id === lastId);
                 lastId = pick.id;
@@ -4033,13 +4529,17 @@
                 step++;
 
                 if (step >= totalSteps) {
+                    sfxWin();
                     finishDraw();
+                    if (results) { setMultiHistory(0); showMultiModal(true); }   // 止まった音と同時に一覧を出す
                     return;
                 }
-                spinTimer = setTimeout(spin, 14 + Math.pow(step / totalSteps, 10) * 540);
+                const gap = 14 + Math.pow(step / totalSteps, 10) * 540;
+                sfxTick();
+                spinTimer = setTimeout(spin, gap);
             };
             spin();
-        });
+        }
 
 
         // ---- 测试功能：连续点击站名 5 次 → 输入站名（须一字不差）→ 直接显示该站 ----
@@ -4323,6 +4823,12 @@
     </script>
     <script>
         // ホーム画面に追加して使うとき（PWA）：オフラインでも開けるように保存の仕組みを登録する（file:// で開いたときなどは何もしない）
+        // 共有リンク（?eki=駅のID）で開いたときは、その駅を出しておく
+        try {
+            const eki = new URLSearchParams(location.search).get('eki');
+            const st = eki && stationById.get(eki);
+            if (st) { showStationDirect(st); history.replaceState(null, '', location.pathname); }
+        } catch (e) {}
         if ('serviceWorker' in navigator && location.protocol === 'https:') window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
     </script>
 </body>
