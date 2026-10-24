@@ -817,8 +817,9 @@
         selectEl.addEventListener('touchstart', holdLine, { passive: true });
         selectEl.addEventListener('pointerdown', holdLine);
         selectEl.addEventListener('mousedown', holdLine);
-        // 閉じたあと change が少し遅れて来ることがあるので、少し待ってから「何も選ばなかった」と判断して戻す
-        selectEl.addEventListener('blur', () => { if (!lineHold) return; setTimeout(() => { if (lineHold) { lineHold = false; if (!selectEl.value) { selectEl.value = 'l'; syncMultiOption(); } } }, 400); });
+        // 「範囲を選んでください」を選んだのか、何も選ばずに閉じたのかは iPhone では見分けられない。
+        // 欄の表示と実際の抽選がずれないよう、どちらも「路線をやめた」として扱う（選んでいた路線は覚えておき、次に開くと選んだ状態で出る）
+        selectEl.addEventListener('blur', () => { if (lineHold) { lineHold = false; prevScope = selectEl.value; syncMultiOption(); } });
         selectEl.addEventListener('change', () => {
             if (lineHold) { lineHold = false; if (selectEl.value === 'l') prevScope = 'l'; }
             if (selectEl.value === 'l') { selectEl.value = prevScope; syncMultiOption(); openLineModal(); return; }   // 路線は一覧を開くだけ。「決定」を押すまで欄は元のまま
@@ -1107,7 +1108,7 @@
         function openLineModal() {
             clearTimeout(lmTimer);
             lmInput.value = '';
-            lmSel = new Set(selectEl.value === 'l' && lineScope ? lineScope.map(l => l.idx) : []);
+            lmSel = new Set(lineScope ? lineScope.map(l => l.idx) : []);   // 前に選んだ路線は、やめたあとでも選んだ状態で出す
             renderLineList();
             lineModal.hidden = false;
             void lineModal.offsetWidth; lineModal.classList.add('on');
