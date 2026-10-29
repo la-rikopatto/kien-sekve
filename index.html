@@ -116,11 +116,18 @@
         html.dark #ten-btn { background: #1e2a3d; color: #5ea8ff; }
         #draw-btn { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
         /* 長押しで出る 5連・10連 の選択：ボタンのすぐ上に浮かぶ */
-        #multi-menu { position: absolute; right: 0; bottom: calc(100% + 10px); display: flex; gap: 6px; padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.05); z-index: 30; animation: mm-in .22s cubic-bezier(.2,.9,.3,1.2); }
+        #multi-menu { position: absolute; right: 0; bottom: calc(100% + 10px); transform-origin: calc(100% - 46px) 100%; display: flex; gap: 6px; padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.05); z-index: 30; animation: mm-in .22s cubic-bezier(.2,.8,.2,1); }
         #multi-menu[hidden] { display: none; }
         #multi-menu::after { content: ''; position: absolute; right: 39px; top: 100%; border: 7px solid transparent; border-top-color: #fff; }
-        #multi-menu button { border: 0; font: inherit; font-size: 1rem; font-weight: 800; letter-spacing: .05em; color: #fff; background: #007AFF; padding: 10px 22px; border-radius: 10px; cursor: pointer; transition: transform .1s; }
+        #multi-menu button { border: 0; font: inherit; font-size: 1rem; font-weight: 800; letter-spacing: .05em; color: #007AFF; background: #eef4ff; padding: 10px 16px; border-radius: 10px; cursor: pointer; transition: transform .1s; }
         #multi-menu button:active { transform: scale(.96); }
+        #multi-menu button.cur { color: #fff; background: #007AFF; }   /* いま選んでいる回数 */
+        html.dark #multi-menu button { background: #1e2a3d; color: #5ea8ff; }
+        html.dark #multi-menu button.cur { background: #007AFF; color: #fff; }
+        #draw-btn .rl, #ten-btn .rl { display: inline-block; }
+        #ten-btn .cv { display: inline-block; margin-left: 3px; font-size: .7em; vertical-align: 1px; opacity: .8; }
+        #multi-menu.out { animation: mm-out .14s cubic-bezier(.4,0,.6,1) forwards; pointer-events: none; }
+        @keyframes mm-out { to { opacity: 0; transform: translateY(6px) scale(.92); } }
         @keyframes mm-in { from { opacity: 0; transform: translateY(6px) scale(.92); } to { opacity: 1; transform: none; } }
         /* 連抽の結果を開くボタン：カードの右上に小さく。出たり消えたりしても下のボタンの位置は動かない */
         #list-btn { position: absolute; bottom: 12px; right: 12px; z-index: 6; border: 0; font: inherit; font-size: .75rem; font-weight: 700; color: #007AFF; background: #eef4ff; padding: 6px 12px 6px 10px; border-radius: 999px; cursor: pointer; display: flex; align-items: center; gap: 5px; opacity: 0; transform: scale(.9); pointer-events: none; transition: opacity .25s ease, transform .25s cubic-bezier(.2,.8,.2,1); -webkit-tap-highlight-color: transparent; }
@@ -528,8 +535,180 @@
         /* 表示の切り替えボタン */
         #theme-btn { position: absolute; top: -2px; right: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         html.dark #theme-btn { color: #6b7280; }
-        #hist-btn { position: absolute; top: -2px; left: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        html.dark #hist-btn { color: #6b7280; }
+        #menu-btn { position: absolute; top: -2px; left: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        html.dark #menu-btn { color: #6b7280; }
+        /* ---- 左のメニュー ---- */
+        #side { position: fixed; inset: 0; z-index: 70; }
+        #side[hidden] { display: none; }
+        .sd-back { position: absolute; inset: 0; background: rgba(17,24,39,.35); opacity: 0; transition: opacity .3s ease; }
+        .sd-panel { position: absolute; left: 0; top: 0; bottom: 0; width: min(78vw, 300px); background: #fff; box-shadow: 8px 0 30px rgba(0,0,0,.12); transform: translateX(-102%); transition: transform .34s cubic-bezier(.2,.85,.25,1); display: flex; flex-direction: column; padding: calc(22px + env(safe-area-inset-top)) 14px calc(18px + env(safe-area-inset-bottom)); }
+        #side.on .sd-back { opacity: 1; }
+        #side.on .sd-panel { transform: none; }
+        .sd-head { display: flex; align-items: center; gap: 12px; padding: 6px 8px 18px; border-bottom: 1px solid #f1f2f4; margin-bottom: 10px; }
+        .sd-head img, .ab-hero img { width: 46px; height: 46px; border-radius: 11px; }
+        .sd-head b, .ab-hero b { display: block; font-size: 1.05rem; font-weight: 900; color: #26396b; }
+        .sd-head span, .ab-hero span { font-size: .75rem; color: #9ca3af; font-weight: 700; letter-spacing: .08em; }
+        .sd-item { display: flex; align-items: center; gap: 14px; width: 100%; border: 0; background: transparent; font: inherit; font-size: 1rem; font-weight: 700; color: #1f2937; text-align: left; padding: 14px 10px; border-radius: 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .12s; }
+        .sd-item:active { background: #f3f4f6; }
+        .sd-item svg { width: 22px; height: 22px; color: #6b7280; flex: none; }
+        .sd-foot { margin-top: auto; padding: 10px; font-size: .75rem; color: #c0c4cc; letter-spacing: .06em; }
+        html.dark .sd-panel { background: #1c1e23; }
+        html.dark .sd-head { border-color: #2a2d33; }
+        html.dark .sd-head b, html.dark .ab-hero b { color: #e5e7eb; }
+        html.dark .sd-item { color: #e5e7eb; }
+        html.dark .sd-item:active { background: #23262d; }
+        html.dark .sd-item svg { color: #9ca3af; }
+        html.dark .sd-foot { color: #4b5058; }
+        /* ---- 使い方（スライド） ---- */
+        #tut { position: fixed; inset: 0; z-index: 80; background: rgba(17,24,39,.45); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity .28s ease; }
+        #tut[hidden] { display: none; }
+        #tut.on { opacity: 1; }
+        .tt-panel { position: relative; width: 100%; max-width: 380px; background: #fff; border-radius: 24px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.25); transform: translateY(16px) scale(.97); transition: transform .32s cubic-bezier(.2,.85,.25,1); }
+        #tut.on .tt-panel { transform: none; }
+        #tt-skip { position: absolute; top: 12px; right: 14px; z-index: 2; border: 0; background: transparent; font: inherit; font-size: .8rem; font-weight: 700; color: #9ca3af; padding: 6px; cursor: pointer; }
+        .tt-track { display: flex; transition: transform .38s cubic-bezier(.2,.85,.25,1); touch-action: pan-y; }
+        .tt-slide { flex: 0 0 100%; min-width: 0; overflow: hidden; padding: 30px 26px 8px; text-align: center; }
+        .tt-fig { height: 190px; margin: 6px auto 18px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .tt-slide h3 { font-size: 1.2rem; font-weight: 900; color: #111827; margin: 0 0 10px; }
+        .tt-slide p { font-size: .88rem; line-height: 1.75; color: #4b5563; margin: 0; text-align: left; text-wrap: pretty; line-break: strict; }
+        .tt-dots { display: flex; justify-content: center; gap: 6px; padding: 16px 0 6px; }
+        .tt-dots i { width: 6px; height: 6px; border-radius: 3px; background: #d1d5db; transition: width .25s, background .25s; }
+        .tt-dots i.on { width: 18px; background: #007AFF; }
+        .tt-nav { display: flex; gap: 8px; padding: 10px 18px 20px; }
+        .tt-nav button { flex: 1; border: 0; border-radius: 12px; padding: 12px; font: inherit; font-weight: 700; cursor: pointer; }
+        #tt-prev { background: #f3f4f6; color: #4b5563; }
+        #tt-next { background: #007AFF; color: #fff; flex: 2; }
+        #tt-prev:disabled { opacity: .35; }
+        html.dark .tt-panel { background: #1c1e23; }
+        html.dark .tt-slide h3 { color: #f3f4f6; }
+        html.dark .tt-slide p { color: #c4c8cf; }
+        html.dark #tt-prev { background: #2a2d33; color: #d1d5db; }
+        html.dark .tt-dots i { background: #3a3d44; }
+        /* スライドの中の小さな見本 */
+        .tf-card { width: 170px; height: 150px; border-radius: 16px; background: #fff; border: 1px solid #eceef1; box-shadow: 0 8px 24px rgba(0,0,0,.08); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative; }
+        html.dark .tf-card { background: #23262d; border-color: #2f3239; }
+        .tf-nm { font-size: 1.6rem; font-weight: 900; color: #111827; }
+        html.dark .tf-nm { color: #f3f4f6; }
+        .tf-ym { font-size: .6rem; color: #9ca3af; font-weight: 700; letter-spacing: .1em; }
+        .tf-ym + .tf-nm { margin-top: -6px; line-height: 1.2; }
+        .tf-blur { animation: tf-blur 3.2s ease infinite; }
+        @keyframes tf-blur { 0%,31% { filter: none; opacity: 1; } 35%,88% { filter: blur(3px); opacity: .6; } 92%,100% { filter: none; opacity: 1; } }
+        .tf-b { display: inline-block; font-size: .62rem; font-weight: 700; color: #fff; padding: 3px 8px; border-radius: 5px; }
+        .tf-b.h { background: transparent !important; border: 2px solid; color: #4b5563; padding: 1px 6px; }
+        html.dark .tf-b.h { color: #d1d5db; }
+        .tf-row { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
+        .tf-btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; border-radius: 10px; font-size: .85rem; font-weight: 800; }
+        .tf-tap { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,122,255,.25); border: 2px solid #007AFF; animation: tf-tap 1.6s ease-in-out infinite; }
+        @keyframes tf-tap { 0%,100% { transform: scale(.8); opacity: .3; } 50% { transform: scale(1.05); opacity: 1; } }
+        .tf-card.clip { overflow: hidden; }
+        .tf-l { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+        .tf-xa { animation: tf-xa 3.2s cubic-bezier(.4,0,.2,1) infinite; }
+        .tf-xb { animation: tf-xb 3.2s cubic-bezier(.4,0,.2,1) infinite; }
+        @keyframes tf-xa { 0%,22% { transform: translateX(0); opacity: 1; } 42%,82% { transform: translateX(110%); opacity: 0; } 83% { transform: translateX(0); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+        @keyframes tf-xb { 0%,22% { transform: translateX(-110%); opacity: 0; } 42%,82% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(0); opacity: 0; } }
+        .tf-fa { animation: tf-fa 3.2s ease-in-out infinite; }
+        .tf-fb { animation: tf-fb 3.2s ease-in-out infinite; }
+        @keyframes tf-fa { 0%,30% { opacity: 1; } 34%,88% { opacity: 0; } 92%,100% { opacity: 1; } }
+        @keyframes tf-fb { 0%,34% { opacity: 0; } 38%,84% { opacity: 1; } 88%,100% { opacity: 0; } }
+        .tf-drag { position: absolute; left: 30px; bottom: 16px; width: 22px; height: 22px; border-radius: 50%; background: rgba(0,122,255,.25); border: 2px solid #007AFF; animation: tf-drag 3.2s cubic-bezier(.4,0,.2,1) infinite; }
+        @keyframes tf-drag { 0%,10% { transform: translateX(0); opacity: 0; } 18% { opacity: 1; } 42% { transform: translateX(90px); opacity: 1; } 50%,100% { transform: translateX(90px); opacity: 0; } }
+        .tf-sel { width: 220px; display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 9px 14px; font-size: .85rem; text-align: left; }
+        .tf-sel small { color: #9ca3af; font-weight: 700; font-size: .7rem; width: 30px; }
+        .tf-sel b { flex: 1; color: #111827; }
+        .tf-sel i { font-style: normal; color: #9ca3af; font-size: .7rem; }
+        html.dark .tf-sel { background: #23262d; border-color: #2f3239; }
+        html.dark .tf-sel b { color: #f3f4f6; }
+        .tf-menu { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.1); padding: 4px; display: flex; flex-direction: column; font-size: .78rem; font-weight: 700; color: #374151; }
+        .tf-menu span { padding: 3px 14px; border-radius: 8px; }
+        .tf-menu span.on { background: #e6f0ff; color: #007AFF; }
+        html.dark .tf-menu { background: #23262d; border-color: #2f3239; color: #d1d5db; }
+        html.dark .tf-menu span.on { background: #1e2a3d; color: #5ea8ff; }
+        .tf-pill { position: absolute; right: 8px; bottom: 8px; font-size: .58rem; font-weight: 800; color: #007AFF; background: #e6f0ff; border-radius: 999px; padding: 3px 8px; }
+        html.dark .tf-pill { background: #1e2a3d; color: #5ea8ff; }
+        .tf-map { position: relative; width: 120px; height: 150px; border-radius: 14px; background: #fff; border: 1px solid #eceef1; box-shadow: 0 8px 24px rgba(0,0,0,.08); text-align: left; }
+        html.dark .tf-map { background: #23262d; border-color: #2f3239; }
+        .tf-map .ln { position: absolute; left: 22px; top: 18px; bottom: 18px; width: 6px; border-radius: 3px; }
+        .tf-map .st { position: absolute; left: 17px; display: flex; align-items: center; gap: 8px; font-size: .68rem; font-weight: 800; color: #374151; white-space: nowrap; }
+        html.dark .tf-map .st { color: #d1d5db; }
+        .tf-map .st .tx { color: #374151; } html.dark .tf-map .st .tx { color: #d1d5db; }
+        .tf-map .st::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 3px solid currentColor; box-sizing: border-box; color: inherit; }
+        .tf-map .st em { font-style: normal; font-size: .5rem; color: #fff; background: #ef4444; border-radius: 4px; padding: 1px 4px; }
+        .tf-chk { width: 230px; background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; text-align: left; font-size: .8rem; font-weight: 700; color: #374151; }
+        .tf-chk div { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-top: 1px solid #f1f2f4; }
+        .tf-chk div:first-child { border-top: 0; color: #9ca3af; font-size: .68rem; padding: 6px 12px; background: #f9fafb; }
+        .tf-chk u { text-decoration: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #d1d5db; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: .55rem; color: #fff; }
+        .tf-chk u.on { background: #007AFF; border-color: #007AFF; }
+        .tf-chk span.c { width: 5px; height: 16px; border-radius: 3px; }
+        html.dark .tf-chk { background: #23262d; border-color: #2f3239; color: #d1d5db; }
+        html.dark .tf-chk div { border-color: #2f3239; }
+        html.dark .tf-chk div:first-child { background: #1c1e23; }
+        .tf-acts { display: flex; flex-direction: column; gap: 7px; width: 220px; }
+        .tf-acts span { display: block; border-radius: 10px; padding: 8px; font-size: .75rem; font-weight: 800; text-align: center; background: #f3f4f6; color: #374151; }
+        html.dark .tf-acts span { background: #2a2d33; color: #d1d5db; }
+        .tf-t { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: rgba(0,122,255,.25); border: 2px solid #007AFF; opacity: 0; animation: tf-t 3.2s ease-out infinite; z-index: 3; }
+        @keyframes tf-t { 0% { transform: scale(.6); opacity: 0; } 3% { transform: scale(.9); opacity: 1; } 11% { transform: scale(1.25); opacity: 0; } 100% { opacity: 0; } }
+        .tf-glow { position: relative; z-index: 2; animation: tf-glow 3.2s ease infinite; }
+        @keyframes tf-glow { 0%,6% { transform: none; box-shadow: none; } 9%,90% { transform: scale(1.04); box-shadow: 0 0 0 2px var(--c), 0 0 16px 3px color-mix(in srgb, var(--c) 50%, transparent); } 96%,100% { transform: none; box-shadow: none; } }
+        .tf-glowh { position: relative; z-index: 2; animation: tf-glowh 3.2s ease infinite; }
+        @keyframes tf-glowh { 0%,33% { box-shadow: none; } 36%,84% { box-shadow: 0 0 12px 2px color-mix(in srgb, var(--c) 55%, transparent), inset 0 0 8px 0 color-mix(in srgb, var(--c) 45%, transparent); } 90%,100% { box-shadow: none; } }
+        .tf-rvin { animation: tf-rvin 3.2s cubic-bezier(.2,.85,.25,1) infinite; }
+        @keyframes tf-rvin { 0%,27% { opacity: 0; transform: translateY(14px); } 36%,92% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
+        .tf-rv { width: 184px; height: 176px; border-radius: 14px; background: #fff; border: 1px solid #eceef1; box-shadow: 0 8px 24px rgba(0,0,0,.08); overflow: hidden; text-align: left; }
+        .tf-rv .hd { padding: 8px 9px 6px; border-bottom: 1px solid #f3f4f6; }
+        .tf-rv .pl { display: inline-flex; flex-direction: column; background: #b6007a; color: #fff; font-weight: 800; font-size: .7rem; line-height: 1.15; padding: 2px 7px 3px; border-radius: 5px; }
+        .tf-rv .pl small { font-size: .42rem; opacity: .85; }
+        .tf-rv .nt { display: block; font-size: .46rem; color: #9ca3af; margin-top: 3px; }
+        .tf-rv .ls { position: relative; padding: 4px 0 0; }
+        .tf-rv .ln { position: absolute; left: 16px; top: 0; bottom: -10px; width: 6px; background: #b6007a; }
+        .tf-rv .r { position: relative; display: flex; align-items: center; height: 27px; padding-left: 36px; gap: 5px; }
+        .tf-rv .dt { position: absolute; left: 10.5px; width: 10px; height: 10px; border-radius: 50%; background: #fff; border: 3.5px solid #b6007a; box-sizing: content-box; }
+        .tf-rv .cur .dt { background: #b6007a; box-shadow: inset 0 0 0 2px #fff, 0 0 0 3px color-mix(in srgb, #b6007a 25%, transparent); }
+        .tf-rv .no { font-size: .42rem; color: #9ca3af; width: 20px; }
+        .tf-rv .nm { font-size: .66rem; color: #374151; }
+        .tf-rv .cur .nm { font-weight: 900; color: #111827; }
+        .tf-rv em { font-style: normal; font-size: .42rem; font-weight: 800; color: #fff; background: #b6007a; border-radius: 999px; padding: 1px 5px; }
+        .tf-rv .ds { margin-left: auto; margin-right: 8px; display: flex; gap: 2px; }
+        .tf-rv .ds u, .tf-rv .ds b { width: 6px; height: 6px; border-radius: 50%; box-sizing: border-box; }
+        .tf-rv .ds u { border: 1.5px solid; }
+        html.dark .tf-rv { background: #23262d; border-color: #2f3239; }
+        html.dark .tf-rv .hd { border-color: #2f3239; }
+        html.dark .tf-rv .dt { background: #23262d; }
+        html.dark .tf-rv .cur .dt { background: #b6007a; box-shadow: inset 0 0 0 2px #23262d, 0 0 0 3px color-mix(in srgb, #b6007a 25%, transparent); }
+        html.dark .tf-rv .nm { color: #d1d5db; } html.dark .tf-rv .cur .nm { color: #f3f4f6; }
+        .gd-fig { height: 200px; margin: 10px 0 6px; border-radius: 14px; background: #f6f7f9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        html.dark .gd-fig { background: #16181c; }
+        .tf-arrow { position: absolute; font-size: 1.4rem; color: #007AFF; font-weight: 900; }
+        /* このサイトについて */
+        #guide-modal { position: fixed; inset: 0; z-index: 75; display: flex; align-items: flex-end; justify-content: center; }
+        #guide-modal[hidden] { display: none; }
+        #guide-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #guide-modal .sm-panel { height: 84dvh; max-height: 84dvh; transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #guide-modal.on .sm-backdrop { opacity: 1; }
+        #guide-modal.on .sm-panel { transform: none; }
+        #gd-close { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
+        html.dark #gd-close { background: #2a2d33; color: #9ca3af; }
+        .gd-body ul { margin: 0 0 4px; padding-left: 1.2em; }
+        .gd-body li { margin: 4px 0; }
+        .gd-body h4:first-child { margin-top: 6px; }
+        .gd-tour { display: block; width: 100%; margin: 22px 0 4px; border: 0; border-radius: 12px; padding: 12px; font: inherit; font-weight: 700; color: #007AFF; background: #eef4ff; cursor: pointer; }
+        html.dark .gd-tour { background: #1e2a3d; color: #5ea8ff; }
+        #about-modal { position: fixed; inset: 0; z-index: 75; display: flex; align-items: flex-end; justify-content: center; }
+        #about-modal[hidden] { display: none; }
+        #about-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #about-modal .sm-panel { transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #about-modal.on .sm-backdrop { opacity: 1; }
+        #about-modal.on .sm-panel { transform: none; }
+        #ab-close { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
+        html.dark #ab-close { background: #2a2d33; color: #9ca3af; }
+        .ab-body { overflow-y: auto; padding: 6px 22px calc(24px + max(env(safe-area-inset-bottom), 18px)); font-size: .9rem; line-height: 1.75; color: #374151; }
+        .ab-hero { display: flex; align-items: center; gap: 12px; margin: 8px 0 14px; }
+        .ab-body h4 { font-size: .9rem; font-weight: 800; color: #111827; margin: 18px 0 4px; }
+        .ab-body p { margin: 0 0 6px; }
+        .ab-note { font-size: .78rem; color: #9ca3af; margin-top: 16px !important; }
+        html.dark .ab-body { color: #c4c8cf; }
+        html.dark .ab-body h4 { color: #f3f4f6; }
+        @media (prefers-reduced-motion: reduce) { .sd-back, .sd-panel, #tut, .tt-panel, .tt-track, #about-modal .sm-panel { transition: none !important; } .tf-tap, .tf-t, .tf-blur, .tf-glow, .tf-glowh, .tf-rvin, .tf-xa, .tf-xb, .tf-fa, .tf-fb, .tf-drag { animation: none; } .tf-xb, .tf-fb { opacity: 0; } }
+
         #hist-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: flex-end; justify-content: center; }
         #hist-modal[hidden] { display: none; }
         #hist-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
@@ -583,7 +762,7 @@
     <div class="wrap">
         <h1>次はどこへ</h1>
         <button id="theme-btn" type="button" aria-label="表示モード"></button>
-        <button id="hist-btn" type="button" aria-label="抽選の履歴"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg></button>
+        <button id="menu-btn" type="button" aria-label="メニュー"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
 
         <div class="sel-box">
             <select id="region-select">
@@ -605,7 +784,7 @@
             <select id="category-select">
                 <option value="" selected>範囲を選んでください</option>
             </select>
-            <button id="scope-clear" type="button" aria-label="路線をやめる" hidden>✕</button>
+            <button id="scope-clear" type="button" aria-label="路線の指定を解除" hidden>✕</button>
             <div class="caret"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg></div>
         </div>
         <button id="multi-edit" type="button" hidden>選ぶ都道府県を編集</button>
@@ -624,7 +803,7 @@
                 <div class="dsep"></div>
                 <div class="dcol"><div class="dy"></div><div class="dn"><span></span></div></div>
             </div>
-            <button id="list-btn" type="button" aria-label="連抽の結果"></button>
+            <button id="list-btn" type="button" aria-label="連続抽選の結果"></button>
             <div id="location-layer">
                 <div id="ward"></div>
             </div>
@@ -632,8 +811,8 @@
 
         <div id="draw-wrap">
             <button id="draw-btn">抽選開始</button>
-            <button id="ten-btn" type="button">10連</button>
-            <div id="multi-menu" hidden><button type="button" data-n="5">5連</button><button type="button" data-n="10">10連</button></div>
+            <button id="ten-btn" type="button" aria-label="何回抽選するか"></button>
+            <div id="multi-menu" hidden><button type="button" data-n="1">単発</button><button type="button" data-n="5">5連</button><button type="button" data-n="7">7連</button><button type="button" data-n="10">10連</button></div>
         </div>
 
         <div id="actions" style="opacity:0; pointer-events:none;">
@@ -665,6 +844,109 @@
         </div>
     </div>
 
+
+    <div id="side" hidden>
+        <div class="sd-back"></div>
+        <nav class="sd-panel" aria-label="メニュー">
+            <div class="sd-head"><img class="app-ic" alt=""><div><b>次はどこへ</b><span>駅ガチャ</span></div></div>
+            <button type="button" class="sd-item" data-go="hist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg>抽選の履歴</button>
+            <button type="button" class="sd-item" data-go="tut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.4"/><path d="M12 16.8v.2"/></svg>使い方</button>
+            <button type="button" class="sd-item" data-go="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.2"/></svg>このサイトについて</button>
+            <div class="sd-foot">知らない駅で降りてみよう</div>
+        </nav>
+    </div>
+
+    <div id="tut" hidden>
+        <div class="tt-panel" role="dialog" aria-modal="true" aria-label="使い方">
+            <button type="button" id="tt-skip">スキップ</button>
+            <div class="tt-track"></div>
+            <div class="tt-dots"></div>
+            <div class="tt-nav"><button type="button" id="tt-prev">戻る</button><button type="button" id="tt-next">次へ</button></div>
+        </div>
+    </div>
+
+    <div id="guide-modal" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true">
+            <div class="sm-head"><span style="flex:1">使い方</span><button id="gd-close" type="button" aria-label="閉じる">✕</button></div>
+            <div class="ab-body gd-body">
+                <h4>抽選する</h4>
+                <div class="gd-fig" data-fig="scope"></div>
+                <ul>
+                    <li>何も選ばずに「抽選開始」を押すと、全国の駅から一つ選びます。</li>
+                    <li>「地域」と「範囲」で、地方・都道府県・主な都市にしぼれます。「複数の都道府県を選ぶ…」では、いくつかの県をまとめて選べます。</li>
+                    <li>右のボタンで回数を選べます（単発・5連・7連・10連）。5連以上では、最後に流れた駅がそのまま結果になり、一覧が開きます。カードの右下の「◯連の結果」から、あとで一覧を開き直せます。</li>
+                </ul>
+                <div class="gd-fig" data-fig="count"></div>
+                <h4>路線で抽選する</h4>
+                <div class="gd-fig" data-fig="lines"></div>
+                <ul>
+                    <li>範囲の「路線から選ぶ…」で、路線だけにしぼって抽選できます。名前やよみで検索でき、右の索引で地方へ飛べます。「全て選ぶ」で地方ごとまとめて選ぶことも、何本でも選ぶこともできます。</li>
+                    <li>路線図の下の「この路線で抽選」からも始められます。</li>
+                    <li>一路線だけのときは、抽選中もその路線のバッジが真ん中に止まったままになります。</li>
+                    <li>解除するときは、範囲の欄の右の ✕ を押します。</li>
+                </ul>
+                <h4>カードをスワイプ</h4>
+                <div class="gd-fig" data-fig="swipe"></div>
+                <ul>
+                    <li>右にスワイプすると、抽選中に流れていった駅をひとつずつさかのぼれます。カードはそのままで、駅名とバッジが入れ替わります。左にスワイプすると戻ります。</li>
+                </ul>
+                <h4>路線のバッジ</h4>
+                <div class="gd-fig" data-fig="hollow"></div>
+                <ul>
+                    <li>一度タップするとその路線が選ばれ、もう一度タップすると路線図が開きます。背景の縦の線をタップしても同じです。</li>
+                    <li>白抜きのバッジは、近くの別の駅で乗り換えられる路線です。タップすると、その駅の名前に切り替わります。</li>
+                    <li>新幹線のバッジは、カードの下の方に分けて並びます。</li>
+                </ul>
+                <h4>路線図</h4>
+                <div class="gd-fig" data-fig="map"></div>
+                <ul>
+                    <li>駅をタップすると、その駅に切り替わります。今の駅には「現在地」が付きます。</li>
+                    <li>分岐や直通の先は、線の上の小さなバッジから切り替えられます。</li>
+                    <li>駅の横の丸は乗り換えできる路線です（白抜きは近くの駅での乗り換え）。</li>
+                </ul>
+                <h4>駅が決まったら</h4>
+                <div class="gd-fig" data-fig="acts"></div>
+                <ul>
+                    <li>「Googleマップで開く」で場所を確認、「ChatGPTにこの駅を聞く」で駅のまわりのことを質問できます。</li>
+                    <li>「シェアする」で、その駅を開くリンクを送れます。</li>
+                </ul>
+                <h4>表示を変える</h4>
+                <div class="gd-fig" data-fig="yomi"></div>
+                <ul>
+                    <li>駅名の上の読みがなをタップすると隠せます。もう一度タップすると表示されます。読み方を当てて遊ぶときにどうぞ。</li>
+                </ul>
+                <div class="gd-fig" data-fig="theme"></div>
+                <ul>
+                    <li>右上のボタンで、明るい表示・暗い表示・端末の設定に合わせる表示を順に切り替えられます。選んだ表示は次に開いたときも残ります。</li>
+                </ul>
+                <h4>そのほか</h4>
+                <div class="gd-fig" data-fig="menu"></div>
+                <ul>
+                    <li>メニューの「抽選の履歴」に、最近の100件が残ります（この端末だけに保存）。</li>
+                    <li>Safari の共有ボタンから「ホーム画面に追加」すると、アプリのように使えます。2回目からは電波がなくても開けます。</li>
+                </ul>
+                <button type="button" id="gd-tour" class="gd-tour">はじめの説明をもう一度見る</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="about-modal" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true">
+            <div class="sm-head"><span style="flex:1">このサイトについて</span><button id="ab-close" type="button" aria-label="閉じる">✕</button></div>
+            <div class="ab-body">
+                <div class="ab-hero"><img class="app-ic" alt=""><div><b>次はどこへ</b><span>駅ガチャ</span></div></div>
+                <p>知らない駅をランダムに選ぶ、駅ガチャのサイトです。全国およそ9000駅・580路線から、次に降りる駅を決めてくれます。</p>
+                <h4>ホーム画面に追加する</h4>
+                <p>iPhone の Safari で開き、共有ボタン →「ホーム画面に追加」。アプリのように全画面で開けて、2回目からはすぐに起動します。</p>
+                <h4>データについて</h4>
+                <p>駅・路線・ラインカラーは、各社の公表している情報と Wikipedia などをもとにまとめています。廃止や改称が反映されていない場合があります。</p>
+                <p class="ab-note">履歴などの記録は、この端末の中だけに保存されます。</p>
+            </div>
+        </div>
+    </div>
+
     <div id="hist-modal" hidden>
         <div class="sm-backdrop"></div>
         <div class="sm-panel" role="dialog" aria-modal="true">
@@ -687,7 +969,7 @@
         <div class="sm-panel" role="dialog" aria-modal="true">
             <div class="sm-head"><span id="sr-title">駅名で呼び出し（テスト）</span><button id="sr-close" type="button" aria-label="閉じる">✕</button></div>
             <div class="sr-body">
-                <p class="sr-hint">表示したい駅の名前を、一字違わず入力してください。</p>
+                <p class="sr-hint">表示したい駅の名前を正確に入力してください。</p>
                 <div class="sr-row">
                     <input id="sr-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="例：新宿">
                     <button id="sr-go" type="button">表示</button>
@@ -1047,7 +1329,13 @@
                 stationList.forEach(s => s.lines.forEach(l => { if (!linePrefs.has(l.name)) linePrefs.set(l.name, new Set()); linePrefs.get(l.name).add(s.pref); }));
             }
             const prefs = linePrefs.get(line.name);
-            const viaPref = prefs && cands.find(s => prefs.has(s.pref));
+            // 同じ県に同名の駅が複数あるとき（中央本線の高尾と樽見鉄道の高尾など）は、同じ会社の路線が通る駅を先に
+            const co = n => (n.match(/^(JR|東京メトロ|都営|東急|京王|小田急|西武|東武|京急|京成|相鉄|名鉄|近鉄|阪急|阪神|南海|京阪|西鉄)/) || [])[1] || '';
+            const myCo = co(line.name);
+            const sameCo = s => myCo && s.lines.some(l => co(l.name) === myCo);
+            const inPref = prefs ? cands.filter(s => prefs.has(s.pref)) : [];
+            const coAll = cands.filter(sameCo);
+            const viaPref = inPref.find(sameCo) || (coAll.length === 1 ? coAll[0] : null) || inPref[0];
             if (viaPref) return viaPref;
             // 直通運転の路線（上野東京ライン）：直通先の各線に属する同名駅
             const thru = THROUGH_LINES[line.name];
@@ -4177,7 +4465,7 @@
             // 線路を選んでいる間は背景の線も遮罩の一部：押せば選択が解けるだけ（線路詳情を開くのは徽章だけ）
             if (rvOpen || rvBusy || isDrawing || selectedKey) return;
             const t = e.target;
-            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #hist-modal, #hist-btn, #theme-btn')) return;
+            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #hist-modal, #menu-btn, #side, #tut, #about-modal, #guide-modal, #theme-btn')) return;
             let best = null, bd = 14;
             bgLinesContainer.querySelectorAll('.bg-line').forEach(el => {
                 const r = el.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2));
@@ -4392,7 +4680,7 @@
             bgLinesContainer.classList.remove('spinning');
             lockScope(false);
             btn.disabled = false; tenBtn.disabled = false;
-            btn.textContent = '抽選開始';
+            btn.innerHTML = '<span class="rl">' + (drawCount > 1 ? drawCount + '連で抽選' : '抽選開始') + '</span>';
             setMapLink(currentStation);
             setActionsVisible(true);
             if (typeof setListBtn === 'function') setListBtn();
@@ -4476,23 +4764,42 @@
         const multiModal = document.getElementById('multi-modal');
         const mmList = document.getElementById('mm-list');
         const listBtn = document.getElementById('list-btn');
-        let multiResults = null, lpTimer = 0, lpFired = false, mmTimer = 0, mmPicking = false;
-        function showMultiMenu(show) { multiMenu.hidden = !show; }
+        let multiResults = null, mmTimer = 0, mmPicking = false;
+        // 回数の選択：出るときは下からふわっと、消えるときは縮みながら下へ消える
+        let mmOutTimer = 0;
+        function showMultiMenu(show) {
+            clearTimeout(mmOutTimer);
+            if (show) { multiMenu.classList.remove('out'); multiMenu.hidden = false; return; }
+            if (multiMenu.hidden) return;
+            if (reduceMotion()) { multiMenu.hidden = true; return; }
+            multiMenu.classList.add('out');
+            mmOutTimer = setTimeout(() => { multiMenu.hidden = true; multiMenu.classList.remove('out'); }, 140);
+        }
         const tenBtn = document.getElementById('ten-btn');
-        tenBtn.addEventListener('pointerdown', () => {
-            if (isDrawing) return;
-            lpFired = false; clearTimeout(lpTimer);
-            lpTimer = setTimeout(() => { lpFired = true; showMultiMenu(true); haptic(10); }, 450);   // 長押しで 5連・10連 を選ぶ
-        });
-        ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => tenBtn.addEventListener(t, () => clearTimeout(lpTimer)));
-        tenBtn.addEventListener('contextmenu', e => e.preventDefault());
-        tenBtn.addEventListener('click', () => {
-            if (lpFired) { lpFired = false; return; }   // 長押しのあとに来る「押した」は無視（メニューを出しただけ）
-            startDraw(10);
-        });
+        // 何回抽選するか：右のボタンで選ぶ（単発・5連・7連・10連）。左の大きいボタンはその回数で抽選する
+        let drawCount = 1;
+        // 回数を変えたとき：ボタンの文字が下から入れ替わる（古い文字は上へ抜ける）
+        function rollText(el, html) {
+            const old = el.querySelector('.rl');
+            if (!old || reduceMotion() || !el.animate) { el.innerHTML = '<span class="rl">' + html + '</span>'; return; }
+            if (old.innerHTML === html) return;
+            el.style.position = 'relative'; el.style.overflow = 'hidden'; el.style.clipPath = 'inset(0 round 12px)';   // ボタンの外へ文字がはみ出して見えないように
+            const ghost = old.cloneNode(true); ghost.style.cssText = 'position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);pointer-events:none;';
+            el.appendChild(ghost);
+            old.innerHTML = html;
+            const o = { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' };
+            ghost.animate([{ transform: 'translateY(-50%)', opacity: 1 }, { transform: 'translateY(-140%)', opacity: 0 }], { ...o, fill: 'forwards' }).finished.then(() => ghost.remove()).catch(() => ghost.remove());
+            old.animate([{ transform: 'translateY(60%)', opacity: 0 }, { transform: 'none', opacity: 1 }], o);
+        }
+        function syncCount() {
+            rollText(tenBtn, (drawCount > 1 ? drawCount + '連' : '単発') + '<span class="cv">▾</span>');
+            multiMenu.querySelectorAll('button').forEach(b => b.classList.toggle('cur', +b.dataset.n === drawCount));
+            if (!isDrawing) rollText(btn, drawCount > 1 ? drawCount + '連で抽選' : '抽選開始');
+        }
+        tenBtn.addEventListener('click', () => { if (!isDrawing) showMultiMenu(multiMenu.hidden); });
         multiMenu.addEventListener('click', e => {
             const b = e.target.closest('button[data-n]'); if (!b) return;
-            e.stopPropagation(); showMultiMenu(false); startDraw(+b.dataset.n);
+            e.stopPropagation(); drawCount = +b.dataset.n; syncCount(); showMultiMenu(false);
         });
         // メニューの外を押したら閉じる
         document.addEventListener('pointerdown', e => { if (!multiMenu.hidden && !e.target.closest('#multi-menu, #ten-btn')) showMultiMenu(false); }, true);
@@ -4632,7 +4939,7 @@
             });
             histPicking = false;
         }
-        document.getElementById('hist-btn').addEventListener('click', () => { if (!isDrawing && !rvOpen) showHist(true); });
+        
         document.getElementById('hm-close').addEventListener('click', () => showHist(false));
         histModal.querySelector('.sm-backdrop').addEventListener('click', () => showHist(false));
         // 履歴を消す：一度目は「もう一度押すと消えます」に変わって赤くなる（少し揺れる）。二度目で、行が上から順に左へ消え、ボタンは下へ沈んで消える
@@ -4663,7 +4970,8 @@
             clearing = false;
         });
 
-        btn.addEventListener('click', () => startDraw(1));
+        btn.addEventListener('click', () => startDraw(drawCount));
+        syncCount();
         let spinLine = null;
         function startDraw(count, poolOverride, line) {
             if (isDrawing) return;
@@ -4695,6 +5003,21 @@
             const totalSteps = 44;
             let step = 0;
 
+            // 切り替える時刻を先に決めておき、画面の描き替え（requestAnimationFrame）に合わせて進める。
+            // 一コマの間に二回以上の切り替えが来たら最新の一回だけ描く（スマホで前半の速いところがカクつかないように）
+            const due = [0];
+            for (let k = 1; k < totalSteps; k++) due[k] = due[k - 1] + 14 + Math.pow(k / totalSteps, 10) * 540;
+            let t0 = 0;
+            const frame = now => {
+                if (!isDrawing) return;
+                if (!t0) t0 = now;
+                const el = now - t0;
+                if (el + 4 >= due[step]) {
+                    while (step + 1 < totalSteps - 1 && due[step + 1] <= el + 4) step++;   // 間に合わなかった分は飛ばす（最後の一駅は飛ばさない）
+                    if (spin()) return;
+                }
+                spinTimer = requestAnimationFrame(frame);
+            };
             const spin = () => {
                 let pick;
                 if (step === totalSteps - 1) spinLine = null;   // 最後の駅はふつうの表示
@@ -4718,13 +5041,12 @@
                     addHist(results || [pick], results ? results.length : 1);
                     finishDraw();   // 右へ払うと、ふつうの抽選と同じく回っていた時の駅をさかのぼれる
                     if (results) { multiResults = results; multiTrail = trail; setListBtn(); showMultiModal(true); }   // 止まった音と同時に一覧を出す
-                    return;
+                    return true;
                 }
-                const gap = 14 + Math.pow(step / totalSteps, 10) * 540;
                 sfxTick();
-                spinTimer = setTimeout(spin, gap);
+                return false;
             };
-            spin();
+            spinTimer = requestAnimationFrame(frame);
         }
 
 
@@ -4740,7 +5062,7 @@
         }
         function closeSearch() { searchModal.hidden = true; }
         function showStationDirect(st) {
-            clearTimeout(spinTimer);
+            cancelAnimationFrame(spinTimer); clearTimeout(spinTimer);
             isDrawing = false;
             lockScope(false);
             spinTrail = null; drawHistory.length = 0; drawForward.length = 0;   // 検索で開いた駅には「直前の駅」はない
@@ -4760,7 +5082,7 @@
             const sameName = s => s.kanji === q || s.kanji.replace(/（臨）$/, '') === q;   // 臨時駅は「（臨）」を付けなくても見つかる
             if ([...q].length >= 5 && !stationList.some(sameName)) { const fz = fuzzySearch(q); if (fz.length) { srMsg.textContent = ''; showCands(fz); return; } }
             const hits = stationList.filter(sameName);   // 原名与输入完全一致
-            if (hits.length === 0) { srMsg.textContent = '「' + q + '」に一致する駅がありません。一字違わず入力してください。'; return; }
+            if (hits.length === 0) { srMsg.textContent = '「' + q + '」に一致する駅がありません。正確に入力してください。'; return; }
             srMsg.textContent = '';
             if (hits.length === 1) { showStationDirect(hits[0]); return; }
             srMsg.style.color = '#4b5563'; srMsg.textContent = '同じ名前の駅が ' + hits.length + ' 件あります。選んでください。';
@@ -5009,6 +5331,117 @@
     </script>
     <script>
         // ホーム画面に追加して使うとき（PWA）：オフラインでも開けるように保存の仕組みを登録する（file:// で開いたときなどは何もしない）
+
+        // ---- 左のメニュー・使い方・このサイトについて ----
+        // アイコンはページの中に持っておく（ファイル一つで開いても表示されるように）
+        const APP_ICON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><rect width="2048" height="2048" fill="#f7f6f2"/><path d="M-1418 1635L2886 720" stroke="#8f76d6" stroke-width="210"/><path d="M-1366 1880L2938 965" stroke="#ff9500" stroke-width="210"/><path d="M303 -852L1217 3452" stroke="#b6007a" stroke-width="210"/><circle cx="760" cy="1300" r="530" fill="#f7f6f2"/><circle cx="760" cy="1300" r="490" fill="#263a6e"/><circle cx="760" cy="1300" r="350" fill="#f7f6f2"/><circle cx="760" cy="1300" r="160" fill="#263a6e"/><path d="M879 590L909 412" stroke="#263a6e" stroke-width="90" stroke-linecap="round"/><path d="M1095 663L1179 504" stroke="#263a6e" stroke-width="90" stroke-linecap="round"/><path d="M1278 800L1407 675" stroke="#263a6e" stroke-width="90" stroke-linecap="round"/></svg>');
+        const setIcons = root => root.querySelectorAll('img.app-ic').forEach(im => { im.src = APP_ICON; });
+        setIcons(document);
+        const side = document.getElementById('side'), tut = document.getElementById('tut'), about = document.getElementById('about-modal');
+        let sideTimer = 0, tutTimer = 0, abTimer = 0;
+        function showSide(on) {
+            clearTimeout(sideTimer);
+            if (on) { side.hidden = false; void side.offsetWidth; side.classList.add('on'); }
+            else { side.classList.remove('on'); sideTimer = setTimeout(() => { side.hidden = true; }, 340); }
+        }
+        document.getElementById('menu-btn').addEventListener('click', () => { if (!isDrawing && !rvOpen) showSide(true); });
+        side.querySelector('.sd-back').addEventListener('click', () => showSide(false));
+        side.querySelectorAll('.sd-item').forEach(b => b.addEventListener('click', () => {
+            const go = b.dataset.go;
+            showSide(false);
+            setTimeout(() => { if (go === 'hist') showHist(true); else if (go === 'tut') showGuide(true); else showAbout(true); }, 180);
+        }));
+        function showAbout(on) {
+            clearTimeout(abTimer);
+            if (on) { about.hidden = false; void about.offsetWidth; about.classList.add('on'); }
+            else { about.classList.remove('on'); abTimer = setTimeout(() => { about.hidden = true; }, 420); }
+        }
+        document.getElementById('ab-close').addEventListener('click', () => showAbout(false));
+        const guide = document.getElementById('guide-modal'); let gdTimer = 0;
+        // 図が画面の幅に収まらないときは、まるごと縮める（細い画面で次のページがずれないように）
+        function fitFigs(root) {
+            root.querySelectorAll('.tt-fig, .gd-fig').forEach(f => {
+                const c = f.firstElementChild; if (!c) return;
+                c.style.transform = ''; const av = f.clientWidth - 8, w = c.offsetWidth;
+                if (av > 0 && w > av) c.style.transform = `scale(${av / w})`;
+            });
+        }
+        addEventListener('resize', () => { if (!tut.hidden) fitFigs(tut); if (!guide.hidden) fitFigs(guide); });
+        function showGuide(on) {
+            clearTimeout(gdTimer);
+            if (on) { guide.hidden = false; fitFigs(guide); guide.querySelector('.gd-body').scrollTop = 0; void guide.offsetWidth; guide.classList.add('on'); }
+            else { guide.classList.remove('on'); gdTimer = setTimeout(() => { guide.hidden = true; }, 420); }
+        }
+        document.getElementById('gd-close').addEventListener('click', () => showGuide(false));
+        guide.querySelector('.sm-backdrop').addEventListener('click', () => showGuide(false));
+        document.getElementById('gd-tour').addEventListener('click', () => { showGuide(false); setTimeout(() => showTut(true), 300); });
+        about.querySelector('.sm-backdrop').addEventListener('click', () => showAbout(false));
+        // 使い方のスライド
+        const B = (c, t, h) => `<span class="tf-b${h ? ' h' : ''}" style="${h ? 'border-color:' + c : 'background:' + c}">${t}</span>`;
+        const tap = (x, y, d) => `<span class="tf-tap" style="left:${x}px;top:${y}px${d ? ';animation-delay:' + d + 's' : ''}"></span>`;
+        const tt = (x, y, d) => `<span class="tf-t" style="left:${x}px;top:${y}px;animation-delay:${d}s"></span>`;
+        const FIG = {
+            icon: '<img class="app-ic" alt="" style="width:120px;height:120px;border-radius:28px;box-shadow:0 12px 30px rgba(38,57,107,.2)">',
+            scope: '<div style="display:flex;flex-direction:column;gap:8px;position:relative"><div class="tf-sel"><small>地域</small><b>関東</b><i>▾</i></div><div class="tf-sel"><small>範囲</small><b>東京都</b><i>▾</i></div><div class="tf-sel" style="opacity:.6"><small>範囲</small><b style="font-size:.75rem">複数の都道府県を選ぶ…</b><i>▾</i></div>' + tap(180, 52) + '</div>',
+            count: '<div style="display:flex;gap:14px;align-items:center"><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;position:relative"><div style="display:flex;gap:5px"><span class="tf-btn" style="width:96px;background:#007AFF;color:#fff;font-size:.75rem">10連で抽選</span><span class="tf-btn" style="width:50px;background:#e6f0ff;color:#007AFF;font-size:.72rem">10連▾</span></div><div class="tf-menu"><span>単発</span><span>5連</span><span>7連</span><span class="on">10連</span></div>' + tap(118, 4) + '</div><div class="tf-card" style="width:116px;height:130px"><span class="tf-ym" style="font-size:.5rem">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1.05rem">青山一丁目</span><span class="tf-pill">≡ 10連の結果</span>' + tap(72, 96, .8) + '</div></div>',
+            swipe: '<div class="tf-card clip" style="width:262px;height:160px"><div class="tf-l tf-xa"><span class="tf-ym">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1.3rem">青山一丁目</span>' + '<div class="tf-row">' + B('#f39700', '東京メトロ銀座線') + B('#8f76d6', '東京メトロ半蔵門線') + '</div><div class="tf-row">' + B('#b6007a', '都営大江戸線') + '</div>' + '</div><div class="tf-l tf-xb"><span class="tf-ym">こうらくえん</span><span class="tf-nm" style="font-size:1.3rem">後楽園</span>' + '<div class="tf-row">' + B('#e60012', '東京メトロ丸ノ内線') + B('#00ada9', '東京メトロ南北線') + '</div><div class="tf-row">' + B('#b6007a', '都営大江戸線', 1) + B('#0079c2', '都営三田線', 1) + '</div>' + '</div><span class="tf-drag"></span></div>',
+            map: '<div style="display:flex;align-items:center;gap:6px"><div class="tf-card" style="width:116px;height:124px;position:relative"><span class="tf-ym" style="font-size:.5rem">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1rem">青山一丁目</span><div class="tf-row"><span class="tf-b tf-glow" style="background:#b6007a;--c:#b6007a">都営大江戸線</span></div>' + tt(43, 76, 0) + tt(43, 76, .75) + '</div><span style="color:#9ca3af;font-weight:900">›</span><div class="tf-rv tf-rvin"><div class="hd"><span class="pl"><small>とえいおおえどせん</small>都営大江戸線</span><span class="nt">現在地：青山一丁目 ／ 全38駅</span></div><div class="ls"><i class="ln"></i>' + [['E-22', '麻布十番', '<b style="background:#00ada9"></b>'], ['E-23', '六本木', '<b style="background:#b5b5ac"></b>'], ['E-24', '青山一丁目', '<b style="background:#8f76d6"></b><b style="background:#f39700"></b>', 1], ['E-25', '国立競技場', '']].map(([n, k, d, c]) => `<div class="r${c ? ' cur' : ''}"><i class="dt"></i><span class="no">${n}</span><span class="nm">${k}</span>${c ? '<em>現在地</em>' : ''}<span class="ds">${d}</span></div>`).join('') + tt(62, 84, 1.9) + '</div></div></div>',
+            hollow: '<div class="tf-card clip" style="width:262px;height:156px"><div class="tf-l" style="justify-content:flex-start;padding-top:18px"><div style="position:relative;height:44px;width:100%"><div class="tf-l tf-fa"><span class="tf-ym">こうらくえん</span><span class="tf-nm" style="font-size:1.3rem">後楽園</span></div><div class="tf-l tf-fb"><span class="tf-ym">かすが</span><span class="tf-nm" style="font-size:1.3rem">春日</span></div></div><div class="tf-row" style="margin-top:12px">' + B('#e60012', '東京メトロ丸ノ内線') + B('#00ada9', '東京メトロ南北線') + '</div><div class="tf-row" style="margin-top:5px;position:relative">' + B('#b6007a', '都営大江戸線', 1) + '<span class="tf-b h tf-glowh" style="border-color:#0079c2;--c:#0079c2">都営三田線</span>' + tt(92, -6, .98) + '</div></div></div>',
+            lines: '<div style="display:flex;flex-direction:column;gap:8px;align-items:center;position:relative"><div class="tf-sel" style="width:230px"><small>範囲</small><b style="font-size:.78rem">路線から選ぶ…</b><i>✕</i></div><div class="tf-chk"><div>関東</div><div><u class="on">✓</u><span class="c" style="background:#9acd32"></span>JR山手線</div><div><u class="on">✓</u><span class="c" style="background:#f15a22"></span>JR中央線</div><div><u></u><span class="c" style="background:#dd0077"></span>京王線</div></div>' + tap(18, 112) + '</div>',
+            yomi: '<div class="tf-card" style="width:262px;height:156px;position:relative"><span class="tf-ym tf-blur">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1.4rem">青山一丁目</span>' + '<div class="tf-row">' + B('#f39700', '東京メトロ銀座線') + B('#8f76d6', '東京メトロ半蔵門線') + '</div><div class="tf-row">' + B('#b6007a', '都営大江戸線') + '</div>' + tt(116, 22, .98) + tt(116, 22, 2.85) + '</div>',
+            theme: '<div style="display:flex;align-items:center;gap:12px"><div class="tf-card" style="width:104px;height:120px;background:#fff;border-color:#eceef1"><span class="tf-ym" style="font-size:.5rem">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:.95rem;color:#111827">青山一丁目</span></div><div style="position:relative;width:40px;height:40px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="#6b7280" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="#6b7280"/></svg>' + tap(5, 5) + '</div><div class="tf-card" style="width:104px;height:120px;background:#23262d;border-color:#2f3239"><span class="tf-ym" style="font-size:.5rem;color:#6b7280">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:.95rem;color:#f3f4f6">青山一丁目</span></div></div>',
+            acts: '<div class="tf-acts"><span>Googleマップで開く</span><span>ChatGPTにこの駅を聞く</span><span>シェアする</span></div>',
+            menu: '<div style="display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:54px;height:54px;border-radius:14px;background:#f3f4f6;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#6b7280" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div><span style="font-weight:800;color:#6b7280;font-size:.85rem">左上のメニュー</span></div>'
+        };
+        const TUT = [
+            { fig: FIG.icon, h: 'ようこそ「次はどこへ」へ', p: '知らない駅をランダムに選ぶ、駅ガチャです。全国およそ9000駅から、次に降りる駅を決めます。' },
+            { fig: FIG.scope, h: 'どこから抽選するか', p: '何も選ばなければ全国から。「地域」と「範囲」で地方・都道府県・都市にしぼれます。複数の県をまとめて選ぶこともできます。' },
+            { fig: FIG.count, h: '回数を選ぶ', p: '右のボタンで単発・5連・7連・10連を選べます。5連以上の結果は一覧で開き、カード右下のボタンからあとで見直せます。' },
+            { fig: FIG.swipe, h: '右にスワイプしてさかのぼる', p: 'カードを右にスワイプすると、抽選中に流れていった駅に一つずつ戻れます。左にスワイプすると元に戻ります。' },
+            { fig: FIG.map, h: 'バッジから路線図へ', p: '路線のバッジを一度タップすると選ばれ、もう一度タップすると路線図が開きます。路線図の駅をタップすると、その駅に切り替わります。' },
+            { fig: FIG.hollow, h: '白抜きのバッジ', p: '近くの別の駅で乗り換えられる路線です。たとえば後楽園の三田線は、となりの春日駅から。タップすると、その駅の名前に切り替わります。' },
+            { fig: FIG.lines, h: '路線で抽選', p: '範囲の「路線から選ぶ…」で、好きな路線だけにしぼれます。何本でも選べて、路線図の「この路線で抽選」からも始められます。解除は ✕ から。' },
+            { fig: FIG.menu, h: 'くわしくはメニューから', p: '左上のメニューの「使い方」に、すべての機能の説明があります。抽選の履歴もそこから見られます。' }
+        ];
+        document.querySelectorAll('.gd-fig[data-fig]').forEach(el => { el.innerHTML = FIG[el.dataset.fig]; });
+        const ttTrack = tut.querySelector('.tt-track'), ttDots = tut.querySelector('.tt-dots'), ttPrev = document.getElementById('tt-prev'), ttNext = document.getElementById('tt-next');
+        ttTrack.innerHTML = TUT.map(t => `<div class="tt-slide"><div class="tt-fig">${t.fig}</div><h3>${t.h}</h3><p>${t.p}</p></div>`).join('');
+        ttDots.innerHTML = TUT.map(() => '<i></i>').join('');
+        setIcons(ttTrack);
+        let ttIdx = 0, ttPlayT = 0;
+        function ttGo(i) {
+            ttIdx = Math.max(0, Math.min(TUT.length - 1, i));
+            ttTrack.style.transform = `translateX(${-ttIdx * 100}%)`;
+            ttDots.querySelectorAll('i').forEach((d, k) => d.classList.toggle('on', k === ttIdx));
+            ttPrev.disabled = ttIdx === 0;
+            ttNext.textContent = ttIdx === TUT.length - 1 ? 'はじめる' : '次へ';
+            // 図の動きは、スライドが止まってから最初から始める（流れている途中から見せない）
+            clearTimeout(ttPlayT);
+            ttTrack.querySelectorAll('.tt-fig').forEach(f => f.getAnimations({ subtree: true }).forEach(an => { if (an instanceof CSSAnimation) { an.pause(); an.currentTime = 0; } }));
+            ttPlayT = setTimeout(() => { const f = ttTrack.children[ttIdx] && ttTrack.children[ttIdx].querySelector('.tt-fig'); if (f) f.getAnimations({ subtree: true }).forEach(an => { if (an instanceof CSSAnimation) { an.currentTime = 0; an.play(); } }); }, 700);
+        }
+        function showTut(on) {
+            clearTimeout(tutTimer);
+            if (on) { ttGo(0); tut.hidden = false; fitFigs(tut); void tut.offsetWidth; tut.classList.add('on'); }
+            else {
+                tut.classList.remove('on'); tutTimer = setTimeout(() => { tut.hidden = true; }, 300);
+                try { localStorage.setItem('tsugi-tut-seen', '1'); } catch (e) {}
+            }
+        }
+        ttNext.addEventListener('click', () => { if (ttIdx === TUT.length - 1) showTut(false); else ttGo(ttIdx + 1); });
+        ttPrev.addEventListener('click', () => ttGo(ttIdx - 1));
+        document.getElementById('tt-skip').addEventListener('click', () => showTut(false));
+        // スライドは指で左右に払っても送れる
+        (function () {
+            let x0 = null, y0 = 0;
+            ttTrack.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+            ttTrack.addEventListener('touchend', e => {
+                if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+                if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) ttGo(ttIdx + (dx < 0 ? 1 : -1));
+            });
+        })();
+        // はじめて開いたときだけ、使い方を自動で出す（共有リンクで開いたときも）
+        try { if (!localStorage.getItem('tsugi-tut-seen')) setTimeout(() => showTut(true), 600); } catch (e) {}
         // 共有リンク（?eki=駅のID）で開いたときは、その駅を出しておく
         try {
             const eki = new URLSearchParams(location.search).get('eki');
