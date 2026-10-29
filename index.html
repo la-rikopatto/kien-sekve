@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>次はどこへ — 駅ガチャ</title>
+    <title>次はどこへ — 駅ガチャ｜全国の駅をランダムに選ぶ</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +17,9 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="次はどこへ — 駅ガチャ">
     <meta property="og:description" content="知らない駅で降りてみよう">
-    <meta name="description" content="知らない駅で降りてみよう">
+    <meta name="description" content="全国およそ9000駅からランダムに一駅を選ぶ駅ガチャ。地域・都道府県・路線でしぼったり、10連で回したりして、次の休みに降りる知らない駅を決めよう。路線図・乗り換え・Googleマップつき、無料・登録不要。">
+    <link rel="canonical" href="https://la-rikopatto.github.io/kien-sekve/">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"次はどこへ — 駅ガチャ","alternateName":["駅ガチャ","次はどこへ"],"url":"https://la-rikopatto.github.io/kien-sekve/","description":"全国およそ9000駅からランダムに一駅を選ぶ駅ガチャ。地域・都道府県・路線でしぼって抽選できます。","applicationCategory":"TravelApplication","operatingSystem":"Any","inLanguage":"ja","offers":{"@type":"Offer","price":"0","priceCurrency":"JPY"}}</script>
     <meta property="og:url" content="https://la-rikopatto.github.io/kien-sekve/">
     <meta property="og:image" content="https://la-rikopatto.github.io/kien-sekve/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
@@ -535,6 +537,30 @@
         /* 表示の切り替えボタン */
         #theme-btn { position: absolute; top: -2px; right: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         html.dark #theme-btn { color: #6b7280; }
+        #theme-btn { view-transition-name: theme-btn; }
+        #theme-btn .tm * { transform-box: view-box; transform-origin: 12px 12px; transition: transform .5s cubic-bezier(.3,1.3,.5,1), opacity .3s ease; }
+        #theme-btn .tm { transition: transform .5s cubic-bezier(.3,1.2,.5,1); }
+        #theme-btn[data-mode=light] .tm-body { transform: scale(.5); }
+        #theme-btn[data-mode=light] .tm-cut { transform: translate(15px, -15px); }
+        #theme-btn[data-mode=light] .tm-half { transform: translateX(-13px); }
+        #theme-btn[data-mode=light] .tm-ring { opacity: 0; transform: scale(.5); }
+        #theme-btn[data-mode=light] .tm-rays { opacity: 1; transform: none; }
+        #theme-btn[data-mode=dark] .tm-body { transform: scale(.95); }
+        #theme-btn[data-mode=dark] .tm-cut { transform: translate(5.5px, -5px); }
+        #theme-btn[data-mode=dark] .tm-half { transform: translateX(-13px); }
+        #theme-btn[data-mode=dark] .tm-ring { opacity: 0; transform: scale(.7); }
+        #theme-btn[data-mode=dark] .tm-rays { opacity: 0; transform: rotate(-90deg) scale(.4); }
+        #theme-btn[data-mode=dark] .tm { transform: rotate(-20deg); }
+        #theme-btn[data-mode=auto] .tm-body { transform: scale(.89); }
+        #theme-btn[data-mode=auto] .tm-cut { transform: translate(15px, 15px); }
+        #theme-btn[data-mode=auto] .tm-half { transform: none; }
+        #theme-btn[data-mode=auto] .tm-ring { opacity: 1; transform: none; }
+        #theme-btn[data-mode=auto] .tm-rays { opacity: 0; transform: rotate(90deg) scale(.4); }
+        #theme-btn[data-mode=auto] .tm { transform: rotate(180deg); }
+        html.theme-swap, html.theme-swap *:not(#theme-btn):not(#theme-btn *), html.theme-swap *::before, html.theme-swap *::after { transition: none !important; }
+        ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .32s; animation-timing-function: ease; }
+        ::view-transition-group(theme-btn), ::view-transition-old(theme-btn), ::view-transition-new(theme-btn) { animation: none; }
+        ::view-transition-old(theme-btn) { display: none; }
         #menu-btn { position: absolute; top: -2px; left: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: transparent; color: #9ca3af; display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
         html.dark #menu-btn { color: #6b7280; }
         /* ---- 左のメニュー ---- */
@@ -550,6 +576,11 @@
         .sd-head span, .ab-hero span { font-size: .75rem; color: #9ca3af; font-weight: 700; letter-spacing: .08em; }
         .sd-item { display: flex; align-items: center; gap: 14px; width: 100%; border: 0; background: transparent; font: inherit; font-size: 1rem; font-weight: 700; color: #1f2937; text-align: left; padding: 14px 10px; border-radius: 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .12s; }
         .sd-item:active { background: #f3f4f6; }
+        .sd-group { font-size: .72rem; font-weight: 800; color: #a3a8b0; letter-spacing: .08em; padding: 14px 10px 4px; }
+        .sd-group:first-of-type { padding-top: 4px; }
+        html.dark .sd-group { color: #5d6169; }
+        .sd-panel .sd-item { padding: 11px 10px; }
+        .sd-panel { overflow-y: auto; }
         .sd-item svg { width: 22px; height: 22px; color: #6b7280; flex: none; }
         .sd-foot { margin-top: auto; padding: 10px; font-size: .75rem; color: #c0c4cc; letter-spacing: .06em; }
         html.dark .sd-panel { background: #1c1e23; }
@@ -692,6 +723,111 @@
         .gd-body h4:first-child { margin-top: 6px; }
         .gd-tour { display: block; width: 100%; margin: 22px 0 4px; border: 0; border-radius: 12px; padding: 12px; font: inherit; font-weight: 700; color: #007AFF; background: #eef4ff; cursor: pointer; }
         html.dark .gd-tour { background: #1e2a3d; color: #5ea8ff; }
+        .gsheet { position: fixed; inset: 0; z-index: 76; display: flex; align-items: flex-end; justify-content: center; }
+        .gsheet[hidden] { display: none; }
+        .gsheet .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        .gsheet .sm-panel { transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        .gsheet.on .sm-backdrop { opacity: 1; }
+        .gsheet.on .sm-panel { transform: none; }
+        .gx { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; flex: none; }
+        html.dark .gx { background: #2a2d33; color: #9ca3af; }
+        #fav-modal .sm-panel, #stats-modal .sm-panel { height: 78dvh; }
+        #fav-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 6px 10px 12px; }
+        .fv-del { border: 0; background: transparent; color: #f5a623; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none; }
+        .fv-del svg { width: 20px; height: 20px; }
+        .fv-del:active { background: #f3f4f6; }
+        html.dark .fv-del:active { background: #23262d; }
+        .hm-row.out { transition: opacity .25s, transform .25s; opacity: 0; transform: translateX(30px); }
+        /* 行きたい駅の星：カードの右上 */
+        #fav-btn { position: absolute; top: 12px; right: 12px; z-index: 6; width: 38px; height: 38px; border: 0; border-radius: 50%; background: transparent; color: #c4c8cf; display: flex; align-items: center; justify-content: center; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity .3s, color .2s; }
+        #fav-btn svg { width: 22px; height: 22px; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+        #fav-btn.on { color: #f5a623; }
+        #fav-btn.on svg { fill: currentColor; }
+        #fav-btn.pop svg { animation: fv-pop .45s cubic-bezier(.3,1.6,.5,1); }
+        @keyframes fv-pop { 0% { transform: scale(.6); } 60% { transform: scale(1.25); } 100% { transform: none; } }
+        #fav-btn[hidden] { display: flex; opacity: 0; pointer-events: none; }
+        html.dark #fav-btn { color: #4b5058; }
+        html.dark #fav-btn.on { color: #f5a623; }
+        /* 設定 */
+        .set-body { padding: 6px 16px calc(18px + env(safe-area-inset-bottom)); }
+        .set-row { display: flex; align-items: center; gap: 14px; padding: 14px 4px; border-bottom: 1px solid #f1f2f4; cursor: pointer; }
+        .set-row:last-child { border-bottom: 0; }
+        html.dark .set-row { border-color: #2a2d33; }
+        .set-row div { flex: 1; min-width: 0; }
+        .set-row b { display: block; font-size: .98rem; color: #111827; }
+        .set-row span { display: block; font-size: .75rem; color: #9ca3af; margin-top: 2px; }
+        html.dark .set-row b { color: #f3f4f6; }
+        .tg { appearance: none; -webkit-appearance: none; flex: none; width: 50px; height: 30px; border-radius: 15px; background: #e5e7eb; position: relative; cursor: pointer; transition: background .25s; margin: 0; }
+        .tg::before { content: ''; position: absolute; left: 2px; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); transition: transform .28s cubic-bezier(.3,1.3,.5,1); }
+        .tg:checked { background: #34c759; }
+        .tg:checked::before { transform: translateX(20px); }
+        html.dark .tg { background: #3a3d44; }
+        /* きろく */
+        .st-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px 16px calc(18px + env(safe-area-inset-bottom)); }
+        .st-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
+        .st-nums div { background: #f6f7f9; border-radius: 14px; padding: 12px 8px; text-align: center; }
+        html.dark .st-nums div { background: #23262d; }
+        .st-nums b { display: block; font-size: 1.5rem; font-weight: 900; color: #111827; font-variant-numeric: tabular-nums; line-height: 1.2; }
+        .st-nums b small { font-size: .7rem; font-weight: 700; color: #9ca3af; margin-left: 2px; }
+        .st-nums span { font-size: .7rem; font-weight: 700; color: #9ca3af; }
+        html.dark .st-nums b { color: #f3f4f6; }
+        .st-h { font-size: .78rem; font-weight: 800; color: #9ca3af; letter-spacing: .06em; margin: 4px 2px 10px; }
+        .st-mapw { position: relative; margin-bottom: 8px; }
+        .st-map { display: block; width: 100%; height: auto; cursor: pointer; -webkit-tap-highlight-color: transparent; overflow: visible; }
+        .st-map path { fill: #cdd3dc; stroke: #fff; stroke-width: 1.2; stroke-linejoin: round; transition: fill .2s; }   /* 境目は細く（小さな県が線に食われないように） */
+        html.dark .st-map path { fill: #3b414c; stroke: #1c1e23; }
+        .st-map path.v { fill: color-mix(in srgb, #007AFF calc(var(--a) * 100%), #a9cbff); }
+        html.dark .st-map path.v { fill: color-mix(in srgb, #3b8cff calc(var(--a) * 100%), #2a4a7a); }
+        .st-map path.hl { fill: #ff9f0a !important; }
+        .st-map .ok-frame { fill: none; stroke: #d5d8de; stroke-width: 2; stroke-dasharray: 6 6; pointer-events: none; }
+        html.dark .st-map .ok-frame { stroke: #3a3d44; }
+        .st-map .ok-lb { font-size: 26px; fill: #b0b4bb; font-weight: 700; pointer-events: none; }
+        .st-tip { position: absolute; left: 0; top: 0; width: 60%; z-index: 2; padding: 4px 2px; pointer-events: none; }
+        .st-tip span { font-size: .74rem; color: #a3a8b0; line-height: 1.6; }
+        .st-tip b { display: block; font-size: 1.25rem; font-weight: 900; color: #111827; }
+        .st-tip em { display: block; font-style: normal; font-size: 2rem; font-weight: 900; color: #ff9f0a; font-variant-numeric: tabular-nums; line-height: 1.2; }
+        .st-tip em small { font-size: .8rem; font-weight: 700; color: #9ca3af; margin-left: 3px; }
+        html.dark .st-tip b { color: #f3f4f6; }
+        .st-tip.pop { animation: st-pop .3s cubic-bezier(.3,1.4,.5,1); }
+        @keyframes st-pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+        .st-leg { display: flex; justify-content: space-between; font-size: .7rem; color: #9ca3af; margin-bottom: 18px; }
+        .st-top { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .st-top div { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: #374151; }
+        html.dark .st-top div { color: #d1d5db; }
+        .st-top div b { width: 5.5em; font-weight: 800; }
+        .st-top div i { height: 8px; border-radius: 4px; background: #007AFF; min-width: 4px; }
+        .st-top div span { font-size: .75rem; color: #9ca3af; font-variant-numeric: tabular-nums; }
+        .st-note { font-size: .72rem; color: #b0b4bb; text-align: center; margin-top: 8px; }
+        /* 路線から探す：選ぶ印や決定ボタンは出さない */
+        #line-modal.browse .pm-foot, #line-modal.browse .lm-group button, #line-modal.browse .lm-row .ck { display: none; }
+        /* 駅を探す */
+        #search-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #search-modal .sm-panel { height: 78dvh; transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #search-modal.on .sm-backdrop { opacity: 1; }
+        #search-modal.on .sm-panel { transform: none; }
+        #share-modal { position: fixed; inset: 0; z-index: 76; display: flex; align-items: flex-end; justify-content: center; }
+        #share-modal[hidden] { display: none; }
+        #share-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
+        #share-modal .sm-panel { max-height: 92dvh; transform: translateY(105%); transition: transform .42s cubic-bezier(.2,.85,.25,1); }
+        #share-modal.on .sm-backdrop { opacity: 1; }
+        #share-modal.on .sm-panel { transform: none; }
+        #sh-close { border: 0; background: #f3f4f6; color: #6b7280; width: 30px; height: 30px; border-radius: 50%; font-size: .9rem; cursor: pointer; }
+        html.dark #sh-close { background: #2a2d33; color: #9ca3af; }
+        .sh-body { padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); overflow-y: auto; }
+        .sh-prev { position: relative; width: min(100%, calc(44dvh * .8)); aspect-ratio: 4 / 5; margin: 0 auto 16px; border-radius: 12px; overflow: hidden; background: #efe9de; box-shadow: 0 10px 30px rgba(60,45,20,.16); }
+        .sh-prev img { width: 100%; height: 100%; display: block; transition: opacity .2s ease; }
+        .sh-prev.busy img { opacity: .55; }
+        .sh-prev[data-err]::after { content: attr(data-err); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; font-size: .8rem; color: #8b847a; }
+        .sh-prev.busy::before { content: ''; position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px; border-radius: 50%; border: 3px solid rgba(139,132,122,.3); border-top-color: #8b847a; animation: sh-spin .8s linear infinite; }
+        @keyframes sh-spin { to { transform: rotate(360deg); } }
+        .sh-copies { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+        .sh-copies button { border: 1px solid #e5e7eb; background: #fff; color: #374151; font: inherit; font-size: .8rem; font-weight: 700; padding: 7px 12px; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background .2s, color .2s, border-color .2s; }
+        .sh-copies button.on { background: #007AFF; border-color: #007AFF; color: #fff; }
+        html.dark .sh-copies button { background: #23262d; border-color: #2f3239; color: #d1d5db; }
+        html.dark .sh-copies button.on { background: #007AFF; border-color: #007AFF; color: #fff; }
+        #sh-go { width: 100%; border: 0; border-radius: 12px; padding: 13px 0; font: inherit; font-size: 1rem; font-weight: 700; letter-spacing: .06em; color: #fff; background: #007AFF; cursor: pointer; transition: opacity .2s, transform .15s; }
+        #sh-go:disabled { opacity: .5; }
+        #sh-go:active { transform: scale(.98); }
         #about-modal { position: fixed; inset: 0; z-index: 75; display: flex; align-items: flex-end; justify-content: center; }
         #about-modal[hidden] { display: none; }
         #about-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
@@ -804,6 +940,7 @@
                 <div class="dcol"><div class="dy"></div><div class="dn"><span></span></div></div>
             </div>
             <button id="list-btn" type="button" aria-label="連続抽選の結果"></button>
+            <button id="fav-btn" type="button" aria-label="行きたい駅に入れる" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.5l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></svg></button>
             <div id="location-layer">
                 <div id="ward"></div>
             </div>
@@ -837,7 +974,7 @@
     <div id="line-modal" hidden>
         <div class="sm-backdrop"></div>
         <div class="sm-panel" role="dialog" aria-modal="true">
-            <div class="sm-head"><span style="flex:1">路線を選ぶ</span><button id="lm-close" type="button" aria-label="閉じる">✕</button></div>
+            <div class="sm-head"><span id="lm-title" style="flex:1">路線を選ぶ</span><button id="lm-close" type="button" aria-label="閉じる">✕</button></div>
             <div class="lm-search"><input id="lm-input" type="search" placeholder="路線名で探す（例：山手、ほくりく）" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
             <div class="lm-wrap"><div id="lm-list"></div><div id="lm-index"></div></div>
             <div class="pm-foot"><button id="lm-clear" type="button">クリア</button><button id="lm-ok" type="button">決定</button></div>
@@ -849,7 +986,15 @@
         <div class="sd-back"></div>
         <nav class="sd-panel" aria-label="メニュー">
             <div class="sd-head"><img class="app-ic" alt=""><div><b>次はどこへ</b><span>駅ガチャ</span></div></div>
+            <div class="sd-group">探す</div>
+            <button type="button" class="sd-item" data-go="find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>駅を探す</button>
+            <button type="button" class="sd-item" data-go="lines"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v18M18 3v18"/><circle cx="6" cy="8" r="2" fill="currentColor"/><circle cx="18" cy="15" r="2" fill="currentColor"/><path d="M6 12h12"/></svg>路線から探す</button>
+            <div class="sd-group">わたしの駅</div>
             <button type="button" class="sd-item" data-go="hist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3 4.5v4h4"/><path d="M12 7.5V12l3 2"/></svg>抽選の履歴</button>
+            <button type="button" class="sd-item" data-go="fav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.5l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></svg>行きたい駅</button>
+            <button type="button" class="sd-item" data-go="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>きろく</button>
+            <div class="sd-group">その他</div>
+            <button type="button" class="sd-item" data-go="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>設定</button>
             <button type="button" class="sd-item" data-go="tut"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 1 1 3.4 2.3c-.6.3-1 .8-1 1.5v.4"/><path d="M12 16.8v.2"/></svg>使い方</button>
             <button type="button" class="sd-item" data-go="about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6v.2"/></svg>このサイトについて</button>
             <div class="sd-foot">知らない駅で降りてみよう</div>
@@ -909,7 +1054,7 @@
                 <div class="gd-fig" data-fig="acts"></div>
                 <ul>
                     <li>「Googleマップで開く」で場所を確認、「ChatGPTにこの駅を聞く」で駅のまわりのことを質問できます。</li>
-                    <li>「シェアする」で、その駅を開くリンクを送れます。</li>
+                    <li>「シェアする」で、その駅のカードを画像にして送ったり、写真に保存したりできます。</li>
                 </ul>
                 <h4>表示を変える</h4>
                 <div class="gd-fig" data-fig="yomi"></div>
@@ -924,6 +1069,9 @@
                 <div class="gd-fig" data-fig="menu"></div>
                 <ul>
                     <li>メニューの「抽選の履歴」に、最近の100件が残ります（この端末だけに保存）。</li>
+                    <li>メニューの「駅を探す」で駅名・よみ・ローマ字から、「路線から探す」で路線を選んで路線図から、抽選せずに駅を見られます。</li>
+                    <li>カード右上の☆を押すと「行きたい駅」に残ります。「きろく」では、抽選した回数と出会った駅・都道府県が見られます。</li>
+                    <li>「設定」で、効果音・振動・読みがなを最初から隠すかどうかを変えられます。</li>
                     <li>Safari の共有ボタンから「ホーム画面に追加」すると、アプリのように使えます。2回目からは電波がなくても開けます。</li>
                 </ul>
                 <button type="button" id="gd-tour" class="gd-tour">はじめの説明をもう一度見る</button>
@@ -931,6 +1079,42 @@
         </div>
     </div>
 
+    <div id="fav-modal" class="gsheet" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true" aria-label="行きたい駅">
+            <div class="sm-head"><span style="flex:1">行きたい駅</span><button class="gx" data-close type="button" aria-label="閉じる">✕</button></div>
+            <div id="fav-list"></div>
+        </div>
+    </div>
+    <div id="stats-modal" class="gsheet" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true" aria-label="きろく">
+            <div class="sm-head"><span style="flex:1">きろく</span><button class="gx" data-close type="button" aria-label="閉じる">✕</button></div>
+            <div class="st-body" id="st-body"></div>
+        </div>
+    </div>
+    <div id="set-modal" class="gsheet" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true" aria-label="設定">
+            <div class="sm-head"><span style="flex:1">設定</span><button class="gx" data-close type="button" aria-label="閉じる">✕</button></div>
+            <div class="set-body">
+                <label class="set-row"><div><b>効果音</b><span>抽選中の「カチカチ」と、止まったときの音</span></div><input class="tg" type="checkbox" data-set="sound"></label>
+                <label class="set-row"><div><b>振動</b><span>ボタンを押したときの小さな振動</span></div><input class="tg" type="checkbox" data-set="haptic"></label>
+                <label class="set-row"><div><b>読みがなを隠しておく</b><span>駅名の読み方を当てて遊ぶときに。タップで表示</span></div><input class="tg" type="checkbox" data-set="yomi"></label>
+            </div>
+        </div>
+    </div>
+    <div id="share-modal" hidden>
+        <div class="sm-backdrop"></div>
+        <div class="sm-panel" role="dialog" aria-modal="true" aria-label="画像でシェア">
+            <div class="sm-head"><span style="flex:1">画像でシェア</span><button id="sh-close" type="button" aria-label="閉じる">✕</button></div>
+            <div class="sh-body">
+                <div class="sh-prev"><img id="sh-img" alt=""></div>
+                <div class="sh-copies" id="sh-copies"></div>
+                <button id="sh-go" type="button">シェアする</button>
+            </div>
+        </div>
+    </div>
     <div id="about-modal" hidden>
         <div class="sm-backdrop"></div>
         <div class="sm-panel" role="dialog" aria-modal="true">
@@ -967,12 +1151,10 @@
     <div id="search-modal" hidden>
         <div class="sm-backdrop"></div>
         <div class="sm-panel" role="dialog" aria-modal="true">
-            <div class="sm-head"><span id="sr-title">駅名で呼び出し（テスト）</span><button id="sr-close" type="button" aria-label="閉じる">✕</button></div>
+            <div class="sm-head"><span id="sr-title" style="flex:1">駅を探す</span><button id="sr-close" class="gx" type="button" aria-label="閉じる">✕</button></div>
             <div class="sr-body">
-                <p class="sr-hint">表示したい駅の名前を正確に入力してください。</p>
                 <div class="sr-row">
-                    <input id="sr-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="例：新宿">
-                    <button id="sr-go" type="button">表示</button>
+                    <input id="sr-input" type="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="駅名・よみ・ローマ字（例：しんじゅく）">
                 </div>
                 <div id="sr-msg"></div>
                 <div id="sr-cands"></div>
@@ -1020,6 +1202,10 @@
                 document.body.appendChild(m); st(() => m.remove(), 1600);
             }, true);
         })();
+        // ---- 設定（効果音・振動・読みがな）：この端末に保存 ----
+        const SET = { sound: true, haptic: true, yomi: false };
+        try { Object.assign(SET, JSON.parse(localStorage.getItem('tsugi-settings') || '{}')); } catch (e) {}
+        const saveSet = () => { try { localStorage.setItem('tsugi-settings', JSON.stringify(SET)); } catch (e) {} };
         // ---- 黒夜モード：端末の設定に合わせる（自動）／いつも明るい／いつも暗い を切り替えられる ----
         const THEME_KEY = 'tsugi-theme';
         let themeMode = 'auto';
@@ -1030,12 +1216,10 @@
             document.documentElement.classList.toggle('dark', dark);
             const b = document.getElementById('theme-btn');
             if (b) {
-                const ic = {
-                    auto: '<svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>',
-                    dark: '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></svg>',
-                    light: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
-                };
-                b.innerHTML = ic[themeMode]; b.title = themeMode === 'auto' ? '表示：端末に合わせる' : themeMode === 'dark' ? '表示：ダーク' : '表示：ライト'; }
+                // 一つの絵の形を変えて、太陽・月・半分の丸を行き来する（重ねて入れ替えない）
+                if (!b.querySelector('svg.tm')) b.innerHTML = '<svg class="tm" viewBox="0 0 24 24" width="20" height="20"><defs><mask id="tm-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><circle class="tm-cut" cx="12" cy="12" r="8.5" fill="#000"/><rect class="tm-half" x="0" y="0" width="12" height="24" fill="#000"/></mask></defs><circle class="tm-ring" cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle class="tm-body" cx="12" cy="12" r="9" fill="currentColor" mask="url(#tm-mask)"/><g class="tm-rays" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1.5v2.2M12 20.3v2.2M1.5 12h2.2M20.3 12h2.2M4.6 4.6l1.5 1.5M17.9 17.9l1.5 1.5M4.6 19.4l1.5-1.5M17.9 6.1l1.5-1.5"/></g></svg>';
+                b.dataset.mode = themeMode;
+                b.title = themeMode === 'auto' ? '表示：端末に合わせる' : themeMode === 'dark' ? '表示：ダーク' : '表示：ライト'; }
             try { if (rvOpen) rvBody.querySelectorAll('.rv-route').forEach(drawLine); } catch (e) {}   // 線路図の白い丸を描き直す（起動直後はまだ無い）
         }
         if (darkMQ) (darkMQ.addEventListener ? darkMQ.addEventListener('change', applyTheme) : darkMQ.addListener(applyTheme));
@@ -1047,7 +1231,14 @@
             const first = sysDark ? 'light' : 'dark', second = sysDark ? 'dark' : 'light';
             themeMode = themeMode === 'auto' ? first : themeMode === first ? second : 'auto';
             try { localStorage.setItem(THEME_KEY, themeMode); } catch (e) {}
-            applyTheme();
+            // 画面じゅうが同時に切り替わるように：切り替える間だけ各部品の色の transition を止め、全体をまとめてふわっと入れ替える
+            const root = document.documentElement;
+            const swap = () => { root.classList.add('theme-swap'); applyTheme(); void root.offsetWidth; };
+            const done = () => requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-swap')));
+            if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const vt = document.startViewTransition(swap);
+                vt.finished.then(done, done);
+            } else { swap(); done(); }
         });
         // 線路図の「白」（黒夜では面の色）
         const surface = () => getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#fff';
@@ -1441,6 +1632,7 @@
                     r.querySelector('.nm').textContent = x.name;
                     r.querySelector('.sb').textContent = x.sub;
                     r.addEventListener('click', () => {
+                        if (lmBrowse) { closeLineModal(); browseLine(x.line); return; }
                         if (lmSel.has(x.line.idx)) lmSel.delete(x.line.idx); else lmSel.add(x.line.idx);
                         syncAll();
                     });
@@ -1470,10 +1662,14 @@
             idx.addEventListener('pointermove', e => { if (lastEl) go(idx.getBoundingClientRect().left + 15, e.clientY); });
             ['pointerup', 'pointercancel'].forEach(t => idx.addEventListener(t, end));
         })();
-        function openLineModal() {
+        let lmBrowse = false;   // 「路線から探す」：選んだ路線の路線図をそのまま開く
+        function openLineModal(browse) {
             clearTimeout(lmTimer);
+            lmBrowse = browse === true;
+            lineModal.classList.toggle('browse', lmBrowse);
+            document.getElementById('lm-title').textContent = lmBrowse ? '路線から探す' : '路線を選ぶ';
             lmInput.value = '';
-            lmSel = new Set(selectEl.value === 'l' && lineScope ? lineScope.map(l => l.idx) : []);   // いま路線で抽選しているときだけ、その路線に印を付けて出す
+            lmSel = new Set(!lmBrowse && selectEl.value === 'l' && lineScope ? lineScope.map(l => l.idx) : []);   // いま路線で抽選しているときだけ、その路線に印を付けて出す
             renderLineList();
             lineModal.hidden = false;
             void lineModal.offsetWidth; lineModal.classList.add('on');
@@ -1519,7 +1715,7 @@
         });
 
         // ---- 线路一览：分歧直接画在左侧的线上；点分歧的小胶囊，当前路线滑到右边消失，只显示支线 ----
-        let rvVariants = [], rvVar = 0, rvDetached = [], rvLineObj = null, rvCur = new Set();
+        let rvVariants = [], rvVar = 0, rvDetached = [], rvLineObj = null, rvCur = new Set(), rvNoCur = false;
         let rvFlip = false;   // 今の画面の路線を、データと上下逆に表示しているか
         // 本線から分かれて、先でまた本線に戻る支線（予讃線の海線：向井原→伊予大洲、函館本線の砂原線：大沼→森）。支線の画面の下の端に、本線へ戻る胶囊を出す
         const REJOIN = { 'JR予讃・内子線': { '向井原': '伊予大洲' }, 'JR函館本線': { '大沼': '森' } };
@@ -2101,7 +2297,7 @@
             const st = shownStation || baseStation, v = rvVariants[rvVar];
             const n = v.loop || (v.items.filter(x => !x.link).length + (v.ext ? 0 : rvDetached.reduce((s, g) => s + g[1].length, 0)));
             const tag = v.loop ? '（環状線）' : rvVariants.length > 1 ? '（' + (v.ext ? v.label : v.label + (rvVar ? '方面の支線' : '方面')) + '）' : '';
-            document.getElementById('rv-note').textContent = '現在地：' + splitBracket(st.kanji).main + '　／　全 ' + n + ' 駅' + tag;
+            document.getElementById('rv-note').textContent = (rvNoCur ? '' : '現在地：' + splitBracket(st.kanji).main + '　／　') + '全 ' + n + ' 駅' + tag;
             // 見出しのバッジも、いま表示している路線に合わせる
             const bd = rvSlot.querySelector('.rv-badge'), ln = v.lineObj || rvLineObj;
             const mv = rvBadgeMove; rvBadgeMove = null;
@@ -2193,7 +2389,7 @@
             rvBody.innerHTML = '';
             rvBody.scrollTop = 0;
             rvLineObj = line;
-            rvCur = new Set([baseStation, shownStation, shownPartner].filter(Boolean).map(s => normStop(splitBracket(s.kanji).main)));
+            rvCur = rvNoCur ? new Set() : new Set([baseStation, shownStation, shownPartner].filter(Boolean).map(s => normStop(splitBracket(s.kanji).main)));   // 路線から探したときは、今の駅がその路線になければ「現在地」を付けない
             const segs = STOPS[line.idx] || [];
             if (!segs.length) { rvBody.innerHTML = '<div class="rv-empty">この路線の駅データがありません。</div>'; rvVariants = []; return; }
             const m = makeVariants(segs, line);
@@ -4059,6 +4255,7 @@
             const line = selectedLineObj;
             const orig = document.querySelector('#lines-layer .line-badge.sel');
             if (!orig) return;
+            rvNoCur = false;
             rvBusy = true; rvLine = line; rvOrig = orig;
             rvFlip = false;
             buildRoute(line);
@@ -4172,6 +4369,44 @@
             rvOpen = true; rvBusy = false;
             if (rvBody.querySelector('.rv-route[data-loop]')) scheduleLoopExtend();
         }
+        // 路線から探す：カードの駅はそのままで、路線図だけを下から出す（今の駅がその路線にあれば現在地を付ける）
+        async function openRouteDirect(line) {
+            if (rvOpen || rvBusy || isDrawing) return;
+            rvBusy = true; rvLine = line; rvOrig = null; rvFlip = false;
+            const st = shownStation || baseStation;
+            rvNoCur = !(st && st.lines.some(l => l.idx === line.idx));
+            buildRoute(line);
+            updateNote();
+            rvSlot.innerHTML = ''; rvSlot.style.minHeight = '';
+            const target = document.createElement('div');
+            target.className = 'rv-badge'; setBadgeText(target, line);
+            { const v0 = rvVariants[rvVar], l0 = (v0 && v0.lineObj) || line; target.dataset.k = String(l0.idx) + l0.bg; }
+            target.style.background = line.bg; target.style.color = line.text;
+            rvSlot.appendChild(target);
+            rvSheet.style.transform = 'translateY(104%)';
+            rv.hidden = false;
+            fitHead();
+            rvBody.querySelectorAll('.rv-route').forEach(drawLine);
+            { const sb0 = rvBody.style.scrollBehavior; rvBody.style.scrollBehavior = 'auto'; rvBody.scrollTop = 0;
+              const curRow = !rvNoCur && loopMiddle(rvBody.querySelectorAll('.rv-st.cur'));
+              if (curRow && curRow.offsetTop > rvBody.clientHeight / 2) rvBody.scrollTop = Math.max(0, curRow.offsetTop - rvBody.clientHeight / 2);
+              else if (!curRow && rvBody.querySelector('.rv-route[data-loop]')) {   // 環状線で現在地がないとき：一周目の最初の駅が上に来るように
+                  const rows = [...rvBody.querySelectorAll('.rv-st')], f = rows[0] && rows[0].querySelector('.nm');
+                  const same = f ? rows.filter(r => { const x = r.querySelector('.nm'); return x && x.textContent === f.textContent; }) : [];
+                  const m = same.length ? loopMiddle(same) : null;
+                  if (m) rvBody.scrollTop = Math.max(0, m.offsetTop - 30);
+              }
+              rvBody.style.scrollBehavior = sb0; }
+            playRouteAnim(rvBody.scrollTop);
+            await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+            slotCard.classList.add('away');
+            rv.classList.add('on');
+            const sheetIn = rvSheet.animate([{ transform: 'translateY(104%)' }, { transform: 'none' }], { duration: reduceMotion() ? 1 : 540, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'forwards' });
+            await sheetIn.finished.catch(() => {});
+            rvSheet.style.transform = 'none'; sheetIn.cancel();
+            rvOpen = true; rvBusy = false;
+            if (rvBody.querySelector('.rv-route[data-loop]')) scheduleLoopExtend();
+        }
         // 線路一覧の「上から順に描く」演出を即座に完了させる（線の描き出し・行の出現・胶囊）。落石や裂ける山の演出は残す
         function finishIntro() {
             rvBody.querySelectorAll('.rv-route').forEach(ul => {
@@ -4187,7 +4422,14 @@
             rvBusy = true;
             const orig = rvOrig, line = rvLine;
             const target = rvSlot.querySelector('.rv-badge');
+            if (!orig && target && !immediate && !reduceMotion()) {   // 路線から探して開いたとき：カードの徽章はないので、面板だけ下へ
+                rv.classList.remove('on'); slotCard.classList.remove('away');
+                const sa = rvSheet.animate([{ transform: 'none' }, { transform: 'translateY(104%)' }], { duration: 420, easing: 'cubic-bezier(.5,0,.8,.4)', fill: 'forwards' });
+                await sa.finished.catch(() => {});
+                rv.hidden = true; sa.cancel(); rvOpen = false; rvBusy = false; rvNoCur = false; return;
+            }
             if (immediate || reduceMotion() || !orig || !target) {
+                rvNoCur = false;
                 rv.hidden = true; rv.classList.remove('on'); slotCard.classList.remove('away');
                 if (orig) orig.style.visibility = ''; rvOpen = false; rvBusy = false; return;
             }
@@ -4465,7 +4707,7 @@
             // 線路を選んでいる間は背景の線も遮罩の一部：押せば選択が解けるだけ（線路詳情を開くのは徽章だけ）
             if (rvOpen || rvBusy || isDrawing || selectedKey) return;
             const t = e.target;
-            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #hist-modal, #menu-btn, #side, #tut, #about-modal, #guide-modal, #theme-btn')) return;
+            if (!t.closest || t.closest('button, select, a, input, .line-badge, #slot-card, #route-view, #pref-modal, #search-modal, #multi-modal, #multi-menu, #line-modal, #hist-modal, #share-modal, #fav-modal, #stats-modal, #set-modal, #fav-btn, #menu-btn, #side, #tut, #about-modal, #guide-modal, #theme-btn')) return;
             let best = null, bd = 14;
             bgLinesContainer.querySelectorAll('.bg-line').forEach(el => {
                 const r = el.getBoundingClientRect(), d = Math.abs(e.clientX - (r.left + r.width / 2));
@@ -4483,7 +4725,8 @@
         });
 
         function updateUI(station) {
-            setYomiOff(false);   // 読みを隠すのは今の駅だけ
+            setYomiOff(SET.yomi);   // 読みを隠すのは今の駅だけ（設定で「隠しておく」なら、どの駅も最初は隠す）
+            syncFav(station);
             baseStation = station;
             selectedKey = null; document.body.classList.remove('focus');
             selectedLineObj = null;
@@ -4645,9 +4888,11 @@
         function setActionsVisible(show) {
             actionsEl.style.opacity = show ? '1' : '0';
             actionsEl.style.pointerEvents = show ? 'auto' : 'none';
+            const fb = document.getElementById('fav-btn'); if (fb) fb.hidden = !show;
         }
 
         function setMapLink(station) {
+            setTimeout(() => { if (!isDrawing && currentStation === station) prepareShare(station); }, 500);   // 共有の画像は先に作っておく（押したらすぐ共有シートが出るように）
             const tramOnly = station.lines.every(l => /都電|トラム|市電|路面|電軌/.test(l.name));
             const query = `${station.kanji}${tramOnly ? '停留場' : '駅'}${station.kansai ? ' 関西' : ' ' + (station.pref || '東京')}`;
             mapLink.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
@@ -4660,15 +4905,229 @@
             m.style.cssText = 'position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99999;background:rgba(0,0,0,.8);color:#fff;font-size:14px;font-weight:700;padding:10px 18px;border-radius:999px;pointer-events:none;transition:opacity .3s;';
             document.body.appendChild(m); setTimeout(() => { m.style.opacity = '0'; setTimeout(() => m.remove(), 300); }, 1600);
         }
-        shareBtn.addEventListener('click', async () => {
-            const st = currentStation; if (!st || isDrawing) return;
-            const text = '次に降りる駅は「' + st.kanji + '」' + (st.pref ? '（' + st.pref + '）' : '') + ' #次はどこへ';
-            const url = /^https?:/.test(location.protocol) ? stationUrl(st) : 'https://la-rikopatto.github.io/kien-sekve/?eki=' + encodeURIComponent(st.id);
+        // ---- 画像でシェア：今の駅をカードの絵にして、共有シートに渡す（網址は入れない） ----
+        let shareCache = { key: null, blob: null, p: null };
+        function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+        function loadImg(src) { return new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = src; }); }
+        // 背景の縦線をもとにした一枚：上から路線の色の線が降りてきて、乗換駅の印（白い横長の丸）で一つの駅に集まる。下に駅名だけ
+        function hashStr(t) { let h = 2166136261; for (const c of t) { h ^= c.codePointAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+        // 静かで、紙のぬくもりのある一枚：生成りの紙に、路線の色がにじんだ光の柱としてやわらかく立ち、下に駅名を中くらいで
+        // 駅名の左右に添えることば（自然な日本語で、左右の長さはなるべく近く）
+        const SHARE_COPIES = [
+            { l: '次は', r: 'へ。' },
+            { l: '今度、', r: '行かない？' },
+            { l: '一緒に', r: 'へ行こう。' },
+            { l: 'ちょっと', r: 'まで。' },
+            { l: '次の休みは', r: 'へ。' },
+            { l: 'ねえ、', r: 'で降りてみない？' }
+        ];
+        let shareCopyIdx = 0;
+        try { shareCopyIdx = Math.min(SHARE_COPIES.length - 1, Math.max(0, +localStorage.getItem('tsugi-share-copy') || 0)); } catch (e) {}
+        const SHARE_COPY = SHARE_COPIES[0];
+        async function makeShareImage(st, copy = SHARE_COPY, noIcon) {
+            const FF = '"Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif';
+            try { await Promise.race([Promise.all(['900 100px', '700 40px', '500 40px'].map(w => document.fonts.load(w + ' "Noto Sans JP"', st.kanji + st.yomi + 'あ次はどこへ駅ガチャ'))), new Promise(r => setTimeout(r, 1500))]); } catch (e) {}
+            const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+            const ctx = cv.getContext('2d');
+            let seed = hashStr(st.id); const rnd = () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822519) ^ Math.imul(seed ^ (seed >>> 13), 3266489917)) >>> 0) / 4294967296;
+            const night = document.documentElement.classList.contains('dark');   // 暗い表示のときは、夜空に流れる流れ星の一枚
+            const C = night ? { paper: '#0c0f17', ink: '#ecebe6', sub: '#8a90a0', faint: '#565c6b' }
+                            : { paper: '#efe9de', ink: '#2a2723', sub: '#8b847a', faint: '#b4ada2' };
+            ctx.fillStyle = C.paper; ctx.fillRect(0, 0, W, H);
+            if (night) {
+                // 夜空：上ほど深く、地平の近くがほんのり明るい
+                const sky = ctx.createLinearGradient(0, 0, 0, H);
+                sky.addColorStop(0, '#070910'); sky.addColorStop(.55, '#0d111b'); sky.addColorStop(1, '#151a26');
+                ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+                // 星：ごく小さく、まばらに
+                for (let k = 0; k < 260; k++) {
+                    const x = rnd() * W, y = rnd() * H * .85, r = rnd() < .92 ? .7 + rnd() * .8 : 1.4 + rnd() * .9, a = .15 + rnd() * .55;
+                    ctx.fillStyle = `rgba(230,234,245,${a.toFixed(2)})`; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+                }
+            } else {
+                // 紙のむら（大きくゆっくり）
+                const v = ctx.createRadialGradient(W * .5, H * .38, 80, W * .5, H * .45, H * .8);
+                v.addColorStop(0, 'rgba(255,252,245,.55)'); v.addColorStop(1, 'rgba(120,100,70,.10)');
+                ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+            }
+            // 光の柱：にじんだ色（ぼかしは影を使う。どの端末でも同じに見えるように）
+            // 新幹線は同じ色のもの（東北・上越・北陸など同じ線路を走るもの）を一本にまとめ、光の群れの真ん中に置く
+            const isSKl = l => /新幹線$/.test(l.name);
+            const skSeen = new Set(), sk = [];
+            st.lines.filter(isSKl).forEach(l => { const c = l.bg.toLowerCase(); if (!skSeen.has(c)) { skSeen.add(c); sk.push({ l, h: false }); } });
+            let lines = st.lines.filter(l => !isSKl(l)).map(l => ({ l, h: false })).concat((st.xfer || []).map(l => ({ l, h: true })));
+            for (let k = lines.length - 1; k > 0; k--) { const j = Math.floor(rnd() * (k + 1)); [lines[k], lines[j]] = [lines[j], lines[k]]; }
+
+            const n = lines.length + sk.length, area = Math.min(780, 150 + n * 70), left = (W - area) / 2, seg = area / Math.max(n, 1);
+            const soft = (x, w, y0, y1, col, a, blur) => {
+                ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = a;
+                ctx.shadowColor = col; ctx.shadowBlur = blur; ctx.shadowOffsetX = 4000;
+                ctx.fillStyle = col; ctx.beginPath(); ctx.rect(x - w / 2 - 4000, y0, w, y1 - y0); ctx.fill();
+                ctx.restore();
+            };
+            const top = 170, bottom = 820;
+            // 本物の光のように：芯から左右へなだらかに弱まる（1/(1+d²) に近い減り方）。上下の端も細く溶けるように消える
+            const beam = (x, y0, y1, col, a, halfW) => {
+                const bw = halfW * 2, bh = y1 - y0;
+                const oc = document.createElement('canvas'); oc.width = Math.ceil(bw); oc.height = Math.ceil(bh);
+                const o = oc.getContext('2d');
+                const hg = o.createLinearGradient(0, 0, bw, 0);
+                [[0, 0], [.2, .03], [.32, .08], [.4, .16], [.45, .3], [.48, .55], [.495, .85], [.5, 1], [.505, .85], [.52, .55], [.55, .3], [.6, .16], [.68, .08], [.8, .03], [1, 0]]
+                    .forEach(([t, al]) => hg.addColorStop(t, col + Math.round(al * 255).toString(16).padStart(2, '0')));
+                o.fillStyle = hg; o.fillRect(0, 0, bw, bh);
+                // 上下：端に向かってゆっくり消える
+                const vg = o.createLinearGradient(0, 0, 0, bh);
+                [[0, 0], [.08, .15], [.2, .55], [.32, .9], [.42, 1], [.62, 1], [.74, .85], [.86, .45], [.95, .12], [1, 0]].forEach(([t, al]) => vg.addColorStop(t, `rgba(0,0,0,${al})`));
+                o.globalCompositeOperation = 'destination-in'; o.fillStyle = vg; o.fillRect(0, 0, bw, bh);
+                ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = a; ctx.drawImage(oc, x - halfW, y0); ctx.restore();
+            };
+            // 位置：新幹線はほかの線と同じ間隔のまま、並びの真ん中に入れる
+            lines.splice(Math.floor((lines.length + sk.length) / 2) - Math.floor(sk.length / 2), 0, ...sk);
+            const pos = lines.map((o, k) => left + (k + rnd() * .6 + .2) * seg);
+            { const ks0 = lines.findIndex(o => isSKl(o.l) && !o.h), m = sk.length;   // 新幹線どうしは寄せて並べる（在来線との間より狭く）
+              if (ks0 >= 0) { const c = left + (ks0 + m / 2) * seg; for (let k = 0; k < m; k++) pos[ks0 + k] = c + (k - (m - 1) / 2) * Math.min(seg * .45, 26); } }
+            // 流れ星：右上から左下へ、少し斜めに。尾は細く消え、頭が白く光る
+            const meteor = (x, yHead, len, col, a, wHead, sharp) => {
+                const ang = 12 * Math.PI / 180, dx = Math.sin(ang) * len, dy = Math.cos(ang) * len;
+                const tx = x + dx, ty = yHead - dy;   // 尾の先
+                const nx = Math.cos(ang), ny = Math.sin(ang);   // 進む向きに直角
+                ctx.save(); ctx.globalCompositeOperation = 'lighter';
+                const pass = (w, al, blur) => {
+                    const g = ctx.createLinearGradient(tx, ty, x, yHead);
+                    g.addColorStop(0, col + '00'); g.addColorStop(.55, col + Math.round(al * 120).toString(16).padStart(2, '0')); g.addColorStop(.92, col + Math.round(al * 190).toString(16).padStart(2, '0')); g.addColorStop(1, '#f4f1ea' + Math.round(al * 170).toString(16).padStart(2, '0'));
+                    ctx.fillStyle = g; ctx.shadowColor = col; ctx.shadowBlur = blur;
+                    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(x + nx * w / 2, yHead + ny * w / 2); ctx.arc(x, yHead, w / 2, Math.atan2(ny, nx), Math.atan2(ny, nx) + Math.PI); ctx.closePath(); ctx.fill();
+                };
+                ctx.globalAlpha = a;
+                pass(wHead * 2.6, .22, sharp ? 8 : 16);   // 外のにじみ
+                pass(wHead, 1, sharp ? 4 : 8);            // 芯
+                // 頭のきらめき
+                const hg = ctx.createRadialGradient(x, yHead, 0, x, yHead, wHead * (sharp ? 3 : 4));
+                hg.addColorStop(0, 'rgba(250,247,240,.7)'); hg.addColorStop(.2, col + '55'); hg.addColorStop(1, col + '00');   // 頭は控えめに
+                ctx.shadowBlur = 0; ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(x, yHead, wHead * (sharp ? 3 : 4), 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            };
+            if (night) lines.forEach((o, k) => {
+                const sk1 = !o.h && isSKl(o.l);
+                const yHead = 500 + rnd() * 320, len = sk1 ? 640 + rnd() * 120 : 370 + rnd() * 240;
+                meteor(pos[k] - Math.sin(12 * Math.PI / 180) * len * .15, yHead, len, o.l.bg, o.h ? .35 : .82, sk1 ? 1.8 : 2.7, sk1);   // 頭の並びが真ん中に来るように（尾は右上へ伸びる）
+            });
+            else lines.forEach((o, k) => {
+                const x = pos[k];
+                const y0 = top - 10 + rnd() * 90, y1 = bottom + 10 - rnd() * 135;
+                const hw = Math.max(44, Math.min(90, seg * 2.4));   // 線が多い駅は光を細めにして、にごらないように
+                if (!o.h && /新幹線$/.test(o.l.name)) {
+                    // 新幹線：にじみは小さく、芯がくっきりした速い光
+                    beam(x, y0, y1, o.l.bg, .45, hw * .38);
+                    const g = ctx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, o.l.bg + '00'); g.addColorStop(.3, o.l.bg); g.addColorStop(.7, o.l.bg); g.addColorStop(1, o.l.bg + '00');
+                    ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = .75; ctx.fillStyle = g; ctx.fillRect(x - 1.3, y0, 2.6, y1 - y0); ctx.restore();
+                } else beam(x, y0, y1, o.l.bg, o.h ? .22 : .5, o.h ? hw * .66 : hw);
+            });
+            // 紙の粒（リソグラフのような細かい点）
+            if (!night) {
+            ctx.save();
+            for (let k = 0; k < 16000; k++) { const a = rnd(); ctx.globalAlpha = .05 + a * .07; ctx.fillStyle = a < .5 ? '#5a4a35' : '#fffaf0'; ctx.fillRect(rnd() * W, rnd() * H, 1.2 + rnd(), 1.2 + rnd()); }
+            ctx.restore();
+            }
+            // 文字：中央に、中くらいで
+            const track = (t, cx, y, sp) => { const ws = [...t].map(ch => ctx.measureText(ch).width); const tw = ws.reduce((a, b) => a + b, 0) + sp * (ws.length - 1); let x = cx - tw / 2; [...t].forEach((ch, k) => { ctx.fillText(ch, x, y); x += ws[k] + sp; }); };
+            const nm = splitBracket(st.kanji), ym = splitBracket(st.yomi);
+            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = C.sub; ctx.font = `500 28px ${FF}`; track(ym.main, W / 2, 945, 9);
+            let ks = 112; ctx.font = `700 ${ks}px ${FF}`;
+            const nw = [...nm.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + 14 * ([...nm.main].length - 1);
+            if (nw > W - 340) ks = Math.floor(ks * (W - 340) / nw);   // 左右の「次は」「へ。」が入る余白を残す
+            ctx.font = `700 ${ks}px ${FF}`; ctx.fillStyle = C.ink; track(nm.main, W / 2, 945 + 34 + ks * .86, ks * .12);
+            // 駅名の左右に、淡く小さく「次は」「へ。」（一続きの文として読めるように、駅名と同じ並びの高さで）
+            { const nb = 945 + 34 + ks * .86, half = Math.min(nw, W - 200) / 2 * (ks / 112 > 0 ? 1 : 1);
+              ctx.font = `700 ${ks}px ${FF}`; const realW = [...nm.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + ks * .12 * ([...nm.main].length - 1);
+              ctx.font = `500 32px ${FF}`; ctx.fillStyle = C.sub;
+              // そろえすぎない：「次は」は駅名の左上に浮かせ、「へ。」は右下へ少し落とす
+              // 駅名の高さの真ん中にそろえ、駅名から少し離す
+              const my = nb - ks * .37; ctx.textBaseline = 'middle';
+              ctx.textAlign = 'right'; ctx.fillText(copy.l, W / 2 - realW / 2 - 40, my);
+              ctx.textAlign = 'left'; ctx.fillText(copy.r, W / 2 + realW / 2 + 36, my);
+              ctx.textBaseline = 'alphabetic';
+              ctx.textAlign = 'left'; }
+            let by = 945 + 34 + ks * .86 + 70;
+            if (nm.sub) { ctx.font = `500 32px ${FF}`; ctx.fillStyle = C.sub; track(nm.sub, W / 2, by, 4); by += 50; }
+            ctx.fillStyle = C.faint; ctx.font = `500 22px ${FF}`; track(st.pref || '', W / 2, by, 10);
+            // 落款：小さなロゴだけ
+            // アイコンの地の色（角の四角と輪のまわりの縁取り）を、その場所の紙の色に置きかえて描く
+            const ls = 56, lx = W / 2 - ls / 2, ly = H - 56 - ls;
+            const px = ctx.getImageData(Math.round(W / 2), Math.round(ly + ls / 2), 1, 1).data;
+            const paperHex = '#' + [px[0], px[1], px[2]].map(v => v.toString(16).padStart(2, '0')).join('');
+            const iconSvg = decodeURIComponent(APP_ICON.split(',')[1]).replace(/<rect[^>]*\/>/, '').replace(/#f7f6f2/gi, paperHex).replace(/#263a6e/gi, night ? '#c9ced8' : '#263a6e');   // 夜は紺の輪を明るく
+            const logo = noIcon ? null : await loadImg('data:image/svg+xml,' + encodeURIComponent(iconSvg));
+            if (logo) { ctx.save(); ctx.globalAlpha = .9; ctx.drawImage(logo, lx, ly, ls, ls); ctx.restore(); }
+            try { return await new Promise((r, j) => { try { cv.toBlob(b => b ? r(b) : j(new Error('blob')), 'image/png'); } catch (e) { j(e); } }); }
+            catch (e) { if (!noIcon) return makeShareImage(st, copy, true); throw e; }   // 開き方によってはロゴ（SVG）を描くと書き出せないので、ロゴなしで作り直す
+        }
+        function prepareShare(st) {
+            if (!st) return Promise.resolve(null);
+            const key = st.id + ':' + shareCopyIdx + (document.documentElement.classList.contains('dark') ? ':n' : ':d');   // 表示の明暗が変わったら作り直す
+            if (shareCache.key === key) return shareCache.p;
+            const c = shareCache = { key, blob: null, p: null };
+            c.p = makeShareImage(st, SHARE_COPIES[shareCopyIdx]).then(b => { c.blob = b; return b; }).catch(e => { c.err = '画像を作れませんでした（' + (e && e.message || e) + '）'; return null; });
+            return c.p;
+        }
+        // 共有シートが使えないとき：画像を大きく出して、長押しで保存してもらう
+        function showShareImage(blob) {
+            const ov = document.createElement('div');
+            ov.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(15,17,21,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;';
+            ov.innerHTML = '<img style="max-width:100%;max-height:78dvh;border-radius:16px;box-shadow:0 20px 50px rgba(0,0,0,.4)"><div style="color:#e5e7eb;font-size:14px;font-weight:700">画像を長押しして保存できます</div>';
+            const fr = new FileReader(); fr.onload = () => { ov.querySelector('img').src = fr.result; }; fr.readAsDataURL(blob);   // blob: が表示されない環境でも出るように data: で
+            ov.addEventListener('click', e => { if (e.target === ov) ov.remove(); });
+            document.body.appendChild(ov);
+        }
+        // シェアの画面：プレビューを見ながらことばを選び、「シェアする」で共有シートへ
+        const shModal = document.getElementById('share-modal'), shImg = document.getElementById('sh-img'), shGo = document.getElementById('sh-go'), shCopies = document.getElementById('sh-copies');
+        let shTimer = 0, shUrl = null, shSt = null;
+        function shRender() {
+            const st = shSt; if (!st) return;
+            const prev = shImg.parentNode; prev.classList.add('busy'); shGo.disabled = true;
+            const want = shareCopyIdx;
+            prepareShare(st).then(b => {
+                if (want !== shareCopyIdx || st !== shSt) return;
+                if (!b) { prev.classList.remove('busy'); shGo.disabled = true; prev.dataset.err = (shareCache.key && shareCache.key.startsWith(st.id + ':' + want) && shareCache.err) || '画像を作れませんでした'; return; }
+                delete prev.dataset.err;
+                // プレビューは data: で（アプリ内の表示などで blob: の画像が出ない環境があるため）
+                const fr = new FileReader();
+                fr.onload = () => { if (want !== shareCopyIdx || st !== shSt) return; shImg.src = fr.result; prev.classList.remove('busy'); shGo.disabled = false; };
+                fr.onerror = () => { prev.classList.remove('busy'); prev.dataset.err = 'プレビューを表示できませんでした'; };
+                fr.readAsDataURL(b);
+            });
+        }
+        function shChips() {
+            shCopies.innerHTML = '';
+            SHARE_COPIES.forEach((c, k) => {
+                const b = document.createElement('button'); b.type = 'button'; b.textContent = c.l + '○○' + c.r;
+                b.classList.toggle('on', k === shareCopyIdx);
+                b.addEventListener('click', () => {
+                    if (k === shareCopyIdx) return;
+                    shareCopyIdx = k; try { localStorage.setItem('tsugi-share-copy', k); } catch (e) {}
+                    shCopies.querySelectorAll('button').forEach((x, j) => x.classList.toggle('on', j === k));
+                    shRender();
+                });
+                shCopies.appendChild(b);
+            });
+        }
+        function showShare(on) {
+            clearTimeout(shTimer);
+            if (on) { shSt = currentStation; shChips(); shImg.removeAttribute('src'); shModal.hidden = false; void shModal.offsetWidth; shModal.classList.add('on'); shRender(); }
+            else { shModal.classList.remove('on'); shTimer = setTimeout(() => { shModal.hidden = true; }, 420); }
+        }
+        document.getElementById('sh-close').addEventListener('click', () => showShare(false));
+        shModal.querySelector('.sm-backdrop').addEventListener('click', () => showShare(false));
+        shareBtn.addEventListener('click', () => { if (!currentStation || isDrawing) return; showShare(true); });
+        shGo.addEventListener('click', async () => {
+            const st = shSt; const blob = shareCache.key === st.id + ':' + shareCopyIdx + (document.documentElement.classList.contains('dark') ? ':n' : ':d') ? shareCache.blob : null;
+            if (!blob) return;
+            const file = new File([blob], st.kanji + '駅.png', { type: 'image/png' });
             try {
-                if (navigator.share) { await navigator.share({ text, url }); return; }
+                if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
             } catch (e) { if (e && e.name === 'AbortError') return; }
-            // 共有シートがない端末：文とリンクをコピーする
-            try { await navigator.clipboard.writeText(text + '\n' + url); toast('コピーしました'); } catch (e) { toast('共有できませんでした'); }
+            showShareImage(blob);
         });
 
         // 抽選で止まる直前に流れていった駅（右へ払うと、ひとつずつさかのぼって見られる）
@@ -4735,14 +5194,14 @@
         const audioOk = () => actx && actx.state === 'running';
         // 駅が切り替わるたびの小さな「カチ」。速いところでは間引いて、うるさくならないようにする
         function sfxTick() {
-            if (!audioOk()) return;
+            if (!SET.sound || !audioOk()) return;
             const now = performance.now();
             if (now - lastTick < 45) return; lastTick = now;
             aClick(actx.currentTime, 0.012, 0.12, 2800);   // 速いときも遅いときも同じ大きさ
         }
         // 決まったときの「カチッ」：実物のボタンを押し込んだような音
         function sfxWin() {
-            if (!audioOk()) return;
+            if (!SET.sound || !audioOk()) return;
             const t = actx.currentTime + 0.01;
             aClick(t, 0.03, 0.22, 2200);
             aThump(t, 180, 90, 0.06, 0.17);
@@ -4757,6 +5216,7 @@
             ['pointerup', 'pointercancel', 'pointerleave'].forEach(t => el.addEventListener(t, off));
         }
         function haptic(ms) {
+            if (!SET.haptic) return;
             try { if (navigator.vibrate) navigator.vibrate(ms || 10); else if (hapticEl) hapticEl.click(); } catch (e) {}
         }
         // ---- 連抽：抽選ボタンを長押しすると 5連・10連 を選べる ----
@@ -4879,6 +5339,7 @@
         function loadHist() { try { const a = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
         function saveHist(a) { try { localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(0, HIST_MAX))); } catch (e) {} }
         function addHist(stations, n) {
+            recStats(stations);
             const t = Date.now(), a = loadHist();
             const add = stations.map((st, i) => ({ id: st.id, t, n: n > 1 ? n : 0, k: i }));
             saveHist(add.concat(a));
@@ -5057,10 +5518,12 @@
         const srCands = document.getElementById('sr-cands');
         function openSearch() {
             srInput.value = ''; srMsg.textContent = ''; srCands.innerHTML = '';
-            searchModal.hidden = false;
-            setTimeout(() => srInput.focus(), 50);
+            clearTimeout(searchModal._t);
+            slotCard.classList.add('away');   // 履歴と同じく、カードを少し下げておき、駅を選んだら戻ってくる動きにする
+            searchModal.hidden = false; void searchModal.offsetWidth; searchModal.classList.add('on');
+            setTimeout(() => srInput.focus(), 60);
         }
-        function closeSearch() { searchModal.hidden = true; }
+        function closeSearch() { srInput.blur(); searchModal.classList.remove('on'); if (!sheetPicking) slotCard.classList.remove('away'); clearTimeout(searchModal._t); searchModal._t = setTimeout(() => { searchModal.hidden = true; }, 420); }
         function showStationDirect(st) {
             cancelAnimationFrame(spinTimer); clearTimeout(spinTimer);
             isDrawing = false;
@@ -5096,7 +5559,7 @@
                 b.innerHTML = '<b></b><span></span>';
                 b.querySelector('b').textContent = s.kanji;
                 b.querySelector('span').textContent = (s.ward.startsWith(s.pref) ? s.ward : s.pref + ' ' + s.ward) + '　' + s.lines.map(l => l.name).join('・');
-                b.addEventListener('click', () => showStationDirect(s));
+                b.addEventListener('click', () => pickVia(searchModal, s));
                 srCands.appendChild(b);
             });
         }
@@ -5165,8 +5628,31 @@
             scored.sort((a, b) => b[0] - a[0]);
             return scored.slice(0, 10).map(x => x[1]);
         }
-        document.getElementById('sr-go').addEventListener('click', runSearch);
-        srInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); runSearch(); } });
+        // 打つそばから候補を出す：完全一致 → 前方一致（乗り換えの多い駅から）→ 部分一致 → あいまい
+        function liveSearch() {
+            const q = srInput.value.trim();
+            srCands.innerHTML = ''; srMsg.textContent = ''; srMsg.style.color = '#9ca3af';
+            if (!q) return;
+            let res = [];
+            if (/^[\x00-\x7f\s]+$/.test(q)) res = fuzzySearch(q);
+            else {
+                const qh = kata2hira(q), ex = [], st = [], inc = [];
+                stationList.forEach(s => {
+                    const k = s.kanji.replace(/（臨）$/, ''), y = s.yomi;
+                    if (k === q || y === qh) ex.push(s);
+                    else if (k.startsWith(q) || y.startsWith(qh)) st.push(s);
+                    else if (k.includes(q) || (qh.length > 1 && y.includes(qh))) inc.push(s);
+                });
+                const big = (a, b) => b.lines.length - a.lines.length;
+                res = ex.sort(big).concat(st.sort(big), inc.sort(big)).slice(0, 40);
+                if (res.length < 4 && [...q].length >= 2) fuzzySearch(q).forEach(s => { if (!res.includes(s)) res.push(s); });
+            }
+            if (!res.length) { srMsg.textContent = '見つかりませんでした'; return; }
+            showCands(res);
+        }
+        let srT = 0;
+        srInput.addEventListener('input', () => { clearTimeout(srT); srT = setTimeout(liveSearch, 120); });
+        srInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); liveSearch(); const f = srCands.querySelector('.sr-cand'); if (f) f.click(); } });
         document.getElementById('sr-close').addEventListener('click', closeSearch);
         searchModal.querySelector('.sm-backdrop').addEventListener('click', closeSearch);
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSearch(); });
@@ -5332,6 +5818,177 @@
     <script>
         // ホーム画面に追加して使うとき（PWA）：オフラインでも開けるように保存の仕組みを登録する（file:// で開いたときなどは何もしない）
 
+        // ---- 下から出る画面（行きたい駅・きろく・設定）の共通の出し入れ ----
+        const favModal = document.getElementById('fav-modal'), statsModal = document.getElementById('stats-modal'), setModal = document.getElementById('set-modal');
+        function openSheet(m) {
+            clearTimeout(m._t);
+            if (m === favModal) renderFav(); else if (m === statsModal) renderStats(); else if (m === setModal) setModal.querySelectorAll('[data-set]').forEach(c => { c.checked = !!SET[c.dataset.set]; });
+            if (m === favModal) slotCard.classList.add('away');
+            m.hidden = false; void m.offsetWidth; m.classList.add('on');
+        }
+        function closeSheet(m) { m.classList.remove('on'); if (!sheetPicking) slotCard.classList.remove('away'); clearTimeout(m._t); m._t = setTimeout(() => { m.hidden = true; }, 420); }
+        [favModal, statsModal, setModal].forEach(m => {
+            m.querySelector('[data-close]').addEventListener('click', () => closeSheet(m));
+            m.querySelector('.sm-backdrop').addEventListener('click', () => closeSheet(m));
+        });
+        // 一覧から駅を選んだとき：画面を下へ滑らせてから、その駅を出す（履歴と同じ動き）
+        let sheetPicking = false;
+        async function pickVia(m, st) {
+            if (sheetPicking) return;
+            if (st === currentStation) { m === searchModal ? closeSearch() : closeSheet(m); return; }
+            sheetPicking = true; clearTimeout(m._t);
+            m.classList.remove('on');
+            await sheetDownThenSwap(m.querySelector('.sm-panel'), anim => {
+                m.hidden = true; anim.cancel();
+                multiResults = null; setListBtn();
+                regionEl.value = ''; rebuildScope();
+                showStationDirect(st);
+            });
+            sheetPicking = false;
+        }
+        // 履歴と同じ形の一行
+        function stRow(st) {
+            const nm = splitBracket(st.kanji), ym = splitBracket(st.yomi);
+            const r = document.createElement('div'); r.className = 'hm-row';
+            r.innerHTML = '<div class="tx"><div class="nm"></div><div class="pl"></div></div><span class="cl"></span>';
+            const n = r.querySelector('.nm'); n.textContent = nm.main + (nm.sub || '');
+            if (ym.main) { const sm = document.createElement('small'); sm.textContent = ym.main; n.appendChild(sm); }
+            r.querySelector('.pl').textContent = station2place(st);
+            const cl = r.querySelector('.cl'); st.lines.slice(0, 6).forEach(l => { const i = document.createElement('i'); i.style.background = l.bg; cl.appendChild(i); });
+            return r;
+        }
+
+        // ---- 設定 ----
+        setModal.querySelectorAll('[data-set]').forEach(c => c.addEventListener('change', () => {
+            SET[c.dataset.set] = c.checked; saveSet();
+            if (c.dataset.set === 'yomi' && !isDrawing) setYomiOff(SET.yomi);
+            if (c.dataset.set === 'haptic' && c.checked) haptic(10);
+        }));
+
+        // ---- 行きたい駅：カード右上の星で入れたり外したり ----
+        const FAV_KEY = 'tsugi-fav';
+        const loadFav = () => { try { const a = JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+        const saveFav = a => { try { localStorage.setItem(FAV_KEY, JSON.stringify(a)); } catch (e) {} };
+        const favBtn = document.getElementById('fav-btn');
+        function syncFav(st) {
+            const fb = document.getElementById('fav-btn'); if (!fb) return;
+            let on = false; try { on = !!st && JSON.parse(localStorage.getItem('tsugi-fav') || '[]').some(f => f.id === st.id); } catch (e) {}
+            fb.classList.toggle('on', on); fb.setAttribute('aria-label', on ? '行きたい駅から外す' : '行きたい駅に入れる');
+        }
+        ['pointerdown', 'touchstart', 'mousedown'].forEach(t => favBtn.addEventListener(t, e => e.stopPropagation(), { passive: true }));   // カードを払う動きにしない
+        favBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            const st = currentStation; if (!st || isDrawing) return;
+            let a = loadFav(); const has = a.some(f => f.id === st.id);
+            a = has ? a.filter(f => f.id !== st.id) : [{ id: st.id, t: Date.now() }].concat(a);
+            saveFav(a); syncFav(st); haptic(10);
+            favBtn.classList.remove('pop'); void favBtn.offsetWidth; if (!has) favBtn.classList.add('pop');
+            toast(has ? '行きたい駅から外しました' : '行きたい駅に入れました');
+        });
+        const favList = document.getElementById('fav-list');
+        function renderFav() {
+            const a = loadFav().filter(f => stationById.get(f.id));
+            favList.innerHTML = '';
+            if (!a.length) { favList.innerHTML = '<div class="hm-empty"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.5l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></svg><div>まだありません</div><div>駅が出たら、カード右上の☆を押すと<br>ここに残ります</div></div>'; return; }
+            a.forEach((f, k) => {
+                const st = stationById.get(f.id), r = stRow(st);
+                r.style.setProperty('--i', Math.min(k, 14));
+                const del = document.createElement('button'); del.type = 'button'; del.className = 'fv-del'; del.setAttribute('aria-label', '外す');
+                del.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3.6l2.5 5.2 5.7.8-4.1 4 1 5.6L12 16.5l-5.1 2.7 1-5.6-4.1-4 5.7-.8z"/></svg>';
+                del.addEventListener('click', e => {
+                    e.stopPropagation();
+                    saveFav(loadFav().filter(x => x.id !== f.id)); syncFav(currentStation); haptic(8);
+                    r.classList.add('out'); setTimeout(() => { r.remove(); if (!favList.querySelector('.hm-row')) renderFav(); }, 250);
+                });
+                r.appendChild(del);
+                r.addEventListener('click', () => pickVia(favModal, st));
+                favList.appendChild(r);
+            });
+        }
+
+        // ---- きろく：抽選の回数と、出会った駅（この端末だけ） ----
+        const STATS_KEY = 'tsugi-stats';
+        function loadStats() {
+            try { const o = JSON.parse(localStorage.getItem(STATS_KEY)); if (o && o.s) return o; } catch (e) {}
+            // はじめて：今ある履歴から作っておく
+            const o = { d: 0, s: {} }, seen = new Set();
+            loadHist().forEach(h => { o.s[h.id] = (o.s[h.id] || 0) + 1; const k = h.t + ':' + h.n; if (!seen.has(k)) { seen.add(k); o.d++; } });
+            return o;
+        }
+        function recStats(stations) { const o = loadStats(); o.d++; stations.forEach(st => { o.s[st.id] = (o.s[st.id] || 0) + 1; }); try { localStorage.setItem(STATS_KEY, JSON.stringify(o)); } catch (e) {} }
+        // 都道府県の一覧（地図のマスの順）
+        const JP_PREFS = ["北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"];
+        const JP_CH = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTU';
+        // 都道府県の地図（dataofjapan/land の境界を簡略化したもの。沖縄本島は左下に寄せてある）
+        const JP_PATHS = ["M749 33L748 29L751 26L751 24L753 21L753 20L752 17L753 14L755 16L755 17L761 17L765 15L767 10L770 9L771 12L774 14L776 17L782 22L795 36L800 41L801 41L802 43L803 44L804 46L806 48L806 51L809 54L810 57L817 64L826 72L829 77L849 90L850 92L853 94L861 98L881 105L892 107L897 109L900 108L901 113L903 114L902 115L903 117L909 120L922 122L932 121L938 116L940 113L943 111L944 109L954 102L956 98L962 92L963 92L964 98L962 102L958 107L957 112L951 118L949 123L948 127L947 129L947 133L952 141L963 145L963 147L960 147L960 147L959 147L962 146L961 145L962 144L959 145L960 144L957 144L958 143L954 142L954 144L956 145L959 157L961 161L965 166L971 167L973 164L980 159L984 159L987 158L990 159L989 160L985 163L982 163L982 164L979 164L977 167L976 166L974 170L975 171L973 172L973 173L972 173L973 174L971 175L972 174L971 173L966 173L959 174L955 177L953 176L952 176L950 177L950 180L948 181L948 183L945 184L945 186L942 187L936 187L935 185L934 185L935 183L932 182L929 184L927 188L931 190L930 191L922 190L912 190L907 188L907 187L907 186L902 186L896 187L889 190L882 195L864 211L856 221L852 227L848 235L849 235L848 235L847 238L849 243L847 252L844 256L843 260L844 262L839 258L837 254L830 251L828 248L819 246L816 244L811 243L806 239L800 237L798 235L794 234L789 230L784 225L774 222L765 215L758 213L752 212L755 210L751 211L751 212L744 214L736 218L723 227L716 235L713 234L712 233L713 232L715 234L715 232L716 232L711 230L709 224L703 221L703 219L699 215L696 215L692 216L689 215L686 215L680 221L677 227L675 234L675 239L682 241L690 248L693 249L699 247L702 248L703 250L705 251L706 254L711 257L714 262L724 266L724 268L726 269L727 270L725 271L722 271L719 276L714 277L710 274L703 272L701 273L700 274L699 275L698 273L699 271L700 273L700 272L700 270L698 269L696 269L694 271L693 274L689 277L686 277L684 278L683 285L684 288L682 290L680 290L674 293L670 299L667 296L664 297L661 294L658 288L658 284L660 278L663 272L663 270L665 270L666 269L666 266L665 266L667 264L667 258L661 248L655 247L652 242L649 241L646 238L647 237L646 234L647 231L649 229L651 224L649 213L653 209L662 208L663 205L667 203L670 198L672 200L673 202L676 202L676 198L679 196L681 192L689 187L689 184L688 183L684 176L680 173L678 171L678 168L680 164L679 163L683 163L685 162L685 160L687 160L692 164L695 165L696 166L696 167L703 170L703 172L704 172L707 172L708 171L709 172L711 171L712 170L717 169L717 170L716 172L717 173L725 176L732 172L740 163L740 157L736 150L738 145L736 141L735 135L738 129L744 127L746 126L748 126L751 122L752 119L753 120L752 119L754 113L753 94L754 93L758 85L761 71L760 63L757 51L749 33ZM718 26L717 26L717 24L715 19L716 16L714 15L715 14L714 13L716 15L718 15L718 13L720 16L719 22L719 23L718 26L718 26ZM724 30L727 27L729 29L731 29L734 32L735 35L732 38L729 39L724 34L723 33L724 30ZM628 253L626 251L626 247L625 244L627 241L633 240L634 239L634 240L632 244L631 250L628 253Z", "M703 312L705 304L706 302L707 297L711 292L710 290L711 288L716 292L720 293L722 294L727 299L731 302L733 302L737 301L742 296L738 315L739 319L738 331L740 344L744 358L746 360L749 359L755 365L749 368L749 371L746 372L743 370L741 370L739 372L738 371L737 373L736 374L734 371L728 375L724 376L722 377L722 379L716 381L715 381L713 379L713 377L713 376L714 373L714 372L716 372L715 367L710 367L708 366L709 361L706 362L705 365L704 365L701 366L701 368L699 367L696 368L693 366L691 367L691 369L690 368L689 368L689 366L686 365L684 365L684 363L682 363L681 363L679 364L678 366L665 366L663 364L660 365L660 367L659 366L655 367L656 362L656 358L654 356L652 356L651 354L654 351L655 352L656 350L657 349L659 344L662 343L666 345L673 340L676 332L677 323L677 320L673 317L676 317L677 316L678 308L686 314L687 313L690 310L693 311L695 313L696 315L695 321L697 330L698 336L701 338L704 338L708 334L709 330L707 330L708 330L709 326L713 327L715 329L714 331L720 333L722 336L725 334L728 329L730 319L732 316L729 309L727 307L725 307L724 309L725 308L724 310L719 314L715 313L713 314L708 315L705 318L703 316L703 313L703 312Z", "M749 371L749 368L755 365L762 378L763 381L762 382L761 383L762 383L761 383L764 385L766 387L764 388L763 391L768 396L769 396L770 398L771 400L769 401L769 402L771 405L772 409L772 412L773 413L772 414L773 414L771 416L772 416L771 418L772 419L771 421L772 422L771 422L771 423L770 425L770 426L774 421L774 426L776 427L777 429L776 430L776 430L775 430L773 434L771 433L770 434L772 436L773 436L775 433L776 434L775 436L775 437L774 438L773 437L773 438L772 438L771 437L769 440L770 441L771 441L770 442L768 442L767 443L768 444L773 442L771 445L766 446L768 447L769 448L766 448L767 449L767 450L768 450L771 450L770 450L770 452L769 451L766 452L767 453L765 452L765 454L768 454L763 457L765 458L766 459L767 459L768 460L766 461L765 460L762 459L763 462L766 462L762 463L764 465L761 465L761 464L759 466L758 466L758 463L757 462L756 465L758 466L758 467L758 468L756 467L757 468L756 469L757 470L756 471L754 469L755 467L754 467L751 467L752 469L748 467L744 467L744 473L742 476L742 477L741 479L742 480L740 480L741 482L739 483L739 482L738 481L734 479L733 482L731 481L730 484L728 485L726 482L724 482L724 480L722 479L722 478L724 477L724 476L721 475L715 476L714 473L709 472L706 470L703 470L703 467L705 463L705 462L702 461L702 459L703 458L702 457L703 455L705 454L703 453L702 452L704 450L700 448L700 446L699 446L699 444L698 441L698 440L696 440L697 438L698 438L698 435L700 433L700 432L701 429L701 427L704 425L706 421L706 419L703 415L705 415L707 411L704 409L704 406L706 405L708 406L709 406L707 400L708 394L707 392L709 389L708 388L709 386L708 385L710 383L710 382L713 381L713 379L715 381L717 381L722 379L722 377L728 375L734 371L736 374L737 373L738 371L739 372L741 370L743 370L746 372L749 371Z", "M743 469L744 467L745 467L752 469L753 471L752 472L754 476L754 477L753 477L752 474L750 475L749 473L749 474L750 475L749 477L750 479L746 482L745 483L747 486L748 485L748 489L747 488L746 487L745 489L744 489L744 490L741 490L741 492L746 493L746 494L742 497L744 500L746 499L747 502L746 503L745 501L743 501L742 501L743 501L744 502L744 504L743 505L745 506L744 507L741 506L743 508L743 510L744 508L745 510L747 509L746 510L745 510L743 511L745 511L746 513L746 514L747 516L746 518L745 516L744 517L744 516L743 515L743 516L741 515L743 514L742 513L742 513L741 512L741 513L740 513L742 511L741 511L740 509L740 510L739 509L737 510L736 508L731 508L731 509L725 512L725 513L725 513L726 515L724 514L724 515L723 513L724 513L724 512L725 512L724 512L723 511L722 510L722 511L722 511L721 510L719 511L720 513L718 513L718 513L719 514L717 515L718 515L718 516L720 515L721 516L718 518L718 517L716 518L719 519L717 519L715 522L712 531L711 538L712 545L710 544L708 545L708 551L706 552L703 551L703 552L705 553L704 553L700 553L699 551L698 549L698 548L698 545L697 544L695 544L694 543L693 544L691 543L691 543L687 544L686 543L686 541L682 539L681 540L681 541L679 541L675 539L676 537L675 533L680 533L683 531L683 529L686 525L686 518L687 517L688 515L689 515L689 512L692 510L692 507L694 505L691 501L692 500L691 499L692 497L690 493L690 492L693 492L695 489L694 487L696 483L693 482L693 479L690 477L690 475L691 476L694 474L695 475L702 470L706 470L709 472L714 473L715 476L721 475L724 476L724 477L722 478L722 479L724 480L724 482L726 482L728 485L729 485L731 481L733 482L734 479L738 481L739 482L739 483L741 482L740 480L742 480L741 479L742 477L742 476L744 473L743 469Z", "M709 361L708 366L710 367L715 367L716 372L714 372L714 373L713 376L713 377L713 379L713 381L711 381L710 383L708 385L709 386L708 388L709 389L707 392L708 395L707 399L709 406L708 406L706 405L704 406L704 409L707 411L705 415L703 415L706 419L706 421L704 425L701 427L701 429L700 432L700 433L698 435L698 437L697 438L696 440L697 440L698 443L699 443L698 446L700 446L700 448L704 450L702 452L703 453L705 454L703 455L702 457L703 458L702 459L702 461L705 462L705 463L703 467L703 470L701 470L696 475L694 474L691 476L690 474L688 474L685 473L685 469L684 468L680 467L680 465L678 465L677 466L674 465L671 465L670 463L668 464L666 462L663 460L663 458L660 458L659 460L652 459L653 455L653 452L654 448L658 445L661 438L663 424L662 413L661 413L661 411L659 407L655 404L651 404L650 405L651 406L651 406L645 407L644 404L642 402L642 401L643 400L642 400L642 397L642 396L643 398L648 400L653 397L656 391L659 384L658 383L660 381L659 381L661 373L660 370L655 367L659 366L660 367L660 365L663 364L665 366L678 366L679 364L681 363L682 363L684 363L684 365L686 365L689 366L689 368L690 368L691 369L691 367L693 366L696 368L699 367L701 368L701 366L704 365L705 365L706 362L709 361Z", "M652 459L659 460L660 458L663 458L663 460L666 462L668 464L670 463L671 465L674 465L677 466L678 465L680 465L680 467L684 468L685 473L688 474L690 474L690 475L690 477L693 479L693 482L696 483L694 487L695 489L693 492L690 492L690 493L692 497L691 499L692 500L691 501L694 505L692 507L692 510L689 512L689 515L688 515L687 517L686 518L686 525L683 529L683 532L680 533L675 533L676 537L675 539L675 541L674 543L674 549L676 551L673 555L669 554L666 556L662 553L659 554L656 549L655 550L653 551L651 549L648 551L647 549L644 550L643 548L641 548L638 545L640 535L642 533L642 532L640 532L642 529L641 525L642 523L647 524L651 521L653 518L653 517L651 513L645 512L643 510L642 510L643 502L636 501L633 498L637 490L642 486L646 481L648 471L650 470L649 470L652 462L652 459Z", "M675 539L679 541L681 541L681 540L682 539L686 541L686 543L687 544L691 543L691 543L693 544L694 543L695 544L698 545L698 550L700 553L705 553L703 552L703 551L708 552L708 545L710 544L712 545L714 549L715 550L717 560L717 561L717 561L718 574L717 585L718 585L717 585L717 590L717 591L718 591L716 593L716 600L714 605L715 608L714 610L711 612L710 611L709 613L706 614L704 618L694 614L693 612L692 612L691 614L693 616L690 617L688 620L687 620L685 622L684 620L681 619L680 616L678 615L676 612L673 611L673 606L671 606L670 603L667 600L660 597L654 597L649 598L649 599L649 601L646 601L645 603L641 603L640 605L638 605L637 607L635 606L633 609L628 610L627 613L625 614L617 612L615 612L617 608L616 606L617 604L616 599L617 596L615 593L613 594L612 591L614 587L615 584L616 583L615 580L613 579L615 576L623 574L625 575L626 572L627 571L634 572L636 571L636 570L634 569L634 566L633 565L633 562L638 559L638 558L640 554L644 550L643 547L641 548L642 547L644 550L647 549L648 551L651 549L653 551L655 550L656 549L659 554L662 553L666 556L669 554L673 555L676 551L674 549L675 539Z", "M691 612L692 611L694 614L703 617L705 619L703 620L702 623L700 631L696 637L695 643L694 644L695 644L694 644L694 647L695 647L695 647L694 647L694 649L695 651L692 656L691 656L691 660L694 672L699 682L698 683L697 683L697 685L698 686L698 684L699 683L707 696L706 696L702 693L699 689L695 688L693 685L688 681L687 683L688 684L685 683L680 685L677 687L675 687L673 688L671 687L667 689L666 687L663 686L656 682L655 680L653 679L647 670L646 672L644 672L642 666L642 663L644 664L649 661L650 656L652 655L652 656L654 657L654 654L657 653L658 651L658 652L662 651L663 650L663 649L665 650L667 649L668 650L670 649L672 642L674 641L673 638L673 635L672 634L673 632L672 630L672 629L676 628L674 625L674 620L673 618L673 613L676 612L678 615L680 616L681 619L684 620L685 622L687 620L688 620L690 617L693 616L691 614L691 612Z", "M657 597L667 600L670 603L671 606L673 606L673 607L673 610L673 611L674 612L673 613L673 618L674 620L674 624L676 628L672 629L672 630L673 632L672 634L673 635L673 638L674 641L672 642L670 650L667 649L665 650L663 649L663 650L662 651L658 652L658 651L657 653L654 654L654 657L652 656L652 655L650 656L649 661L644 664L643 663L641 664L640 663L640 662L638 660L639 659L638 659L634 659L632 658L629 659L626 656L627 655L626 654L623 651L626 646L627 645L626 642L627 640L627 639L628 639L630 637L629 635L625 635L621 633L621 629L623 625L622 625L622 623L625 619L622 618L623 616L626 613L627 613L628 610L633 609L635 606L637 607L638 605L640 605L641 603L645 603L646 601L649 601L649 599L652 597L657 597Z", "M582 649L579 648L576 649L573 649L573 650L568 647L568 643L570 639L570 636L572 633L575 632L576 631L575 629L586 626L587 624L590 625L592 624L592 620L594 621L598 619L598 618L598 616L599 615L601 615L600 609L605 608L607 606L608 603L612 607L613 610L615 610L616 612L617 612L625 614L623 616L622 618L625 619L622 623L622 625L623 625L621 629L621 633L625 635L629 635L630 637L628 639L627 639L627 640L626 642L627 645L626 646L623 651L626 654L627 655L626 656L629 659L632 658L634 659L638 659L639 659L638 660L640 663L638 665L636 663L632 664L628 664L623 660L621 662L620 660L616 661L610 658L606 664L606 667L605 667L605 669L603 668L601 670L600 669L599 671L595 672L593 675L588 675L586 679L581 676L582 674L581 671L582 671L582 669L582 668L579 668L578 666L579 665L580 666L582 665L581 664L582 663L580 660L580 658L583 656L583 652L582 649Z", "M610 658L616 661L620 660L621 662L623 660L628 664L632 664L636 663L638 665L640 663L641 663L644 672L646 672L646 671L649 675L649 680L653 685L653 687L653 693L652 693L652 692L649 692L649 691L648 691L646 691L644 693L640 692L638 694L636 693L633 695L633 694L632 694L633 693L633 691L631 693L625 694L623 692L621 692L619 689L613 689L610 687L606 687L604 685L596 689L594 687L592 687L590 685L587 684L587 682L586 679L588 675L593 675L595 672L599 671L600 669L601 670L603 668L605 669L605 667L606 667L606 664L610 658Z", "M646 671L647 670L648 671L653 679L655 680L656 682L663 686L666 687L668 689L671 687L673 688L675 687L677 687L680 685L685 683L688 684L687 683L688 681L693 685L695 688L699 689L702 693L706 696L708 696L709 698L708 699L706 698L696 700L689 706L685 711L682 716L681 721L682 724L683 726L681 735L679 735L677 739L676 737L675 739L673 739L672 740L671 740L670 739L666 740L664 744L661 744L658 747L657 753L653 755L650 755L648 752L645 750L645 750L650 749L651 748L651 746L648 745L650 745L649 743L650 742L649 741L650 739L649 737L649 736L652 731L650 727L647 726L649 726L650 725L649 724L650 723L651 723L650 722L653 723L653 722L654 722L653 722L654 721L653 719L654 718L656 717L656 716L657 716L657 717L658 716L657 715L658 715L659 716L658 715L659 714L660 715L660 714L661 713L661 713L662 712L661 712L663 710L665 710L664 709L666 709L664 708L666 708L664 708L664 707L666 708L666 706L664 706L665 706L664 705L664 706L660 702L658 702L659 702L658 701L658 699L658 700L656 700L656 701L655 701L656 701L654 702L656 703L653 704L654 704L653 705L652 704L653 700L654 699L652 694L653 693L653 687L649 680L649 675L646 671Z", "M599 688L600 686L604 685L606 687L610 687L613 689L619 689L621 692L623 692L625 694L631 693L633 691L633 693L632 694L633 694L633 695L636 693L638 694L639 692L642 692L644 693L645 692L645 691L649 691L649 692L652 692L652 693L653 693L652 694L654 699L653 700L652 703L648 703L648 704L647 703L647 702L646 703L647 702L646 702L645 707L645 709L647 708L648 710L647 711L645 710L642 710L642 709L641 708L640 707L634 704L632 703L630 705L629 704L628 705L629 705L631 708L630 709L630 707L629 707L630 713L629 713L628 711L625 707L618 705L616 705L615 703L612 703L611 701L604 697L601 694L601 690L599 688Z", "M610 701L611 701L612 703L615 703L615 704L617 706L618 705L625 707L628 711L629 713L630 713L629 707L630 707L630 709L631 708L628 705L629 704L630 705L632 703L640 707L641 708L642 709L642 710L645 710L647 711L647 712L646 712L645 711L646 712L645 712L645 711L644 713L644 712L643 712L644 713L643 713L643 712L642 714L641 713L641 715L638 715L638 716L640 716L640 717L641 716L641 718L642 717L640 720L638 719L639 720L638 720L638 721L639 721L639 721L640 722L640 724L638 725L640 725L638 727L640 728L640 727L642 729L645 730L644 731L643 731L643 733L641 733L640 735L641 738L637 738L637 737L638 737L637 735L636 734L638 733L635 730L635 727L633 726L629 727L629 726L627 726L616 727L611 731L610 735L610 737L611 738L604 737L604 736L602 734L601 731L601 730L603 728L603 725L602 720L598 720L598 719L599 716L604 714L605 712L607 712L609 710L610 708L609 707L610 705L609 702L610 701Z", "M633 498L636 501L643 502L642 510L643 510L645 512L651 513L653 518L651 521L647 524L643 523L641 525L642 529L640 532L642 532L642 533L640 535L639 541L638 543L640 547L641 548L643 547L644 550L640 554L638 558L638 559L633 562L633 565L634 566L634 569L636 570L636 571L634 572L627 571L626 572L625 575L623 574L615 576L613 579L615 580L616 583L615 584L614 587L612 591L613 594L615 593L617 596L616 599L617 604L616 606L617 608L616 612L615 610L613 610L612 607L608 603L607 606L605 608L600 609L601 615L599 615L598 616L598 618L598 619L594 621L592 620L593 622L592 624L590 625L587 624L585 626L583 623L585 621L584 620L585 618L581 616L581 614L579 614L579 608L578 606L575 605L568 608L565 613L562 614L562 618L561 619L560 617L558 617L555 618L552 618L548 622L546 620L547 616L546 614L538 613L538 615L538 617L536 621L532 624L530 620L530 617L529 615L529 611L527 611L525 609L540 603L548 598L551 595L554 596L558 596L559 595L560 593L560 595L570 585L577 581L581 574L586 568L588 565L590 557L593 550L606 541L615 538L623 530L627 525L628 520L627 520L628 509L633 498ZM559 551L557 549L561 548L562 545L562 543L565 540L563 537L561 537L560 540L558 539L559 537L558 536L559 535L559 531L562 528L564 523L567 522L568 519L570 519L572 515L575 514L573 523L571 527L570 531L573 533L577 531L578 533L577 537L574 543L572 544L566 549L563 549L559 551Z", "M525 609L527 611L529 611L530 613L529 615L530 617L530 620L532 624L531 628L532 631L531 634L531 636L528 638L528 640L529 640L529 641L527 642L525 648L523 648L522 650L519 650L517 648L515 649L512 648L511 645L506 648L506 645L503 646L503 645L500 648L500 646L498 646L494 650L494 651L492 652L492 655L490 655L489 657L487 658L486 658L487 656L486 653L483 652L482 654L481 652L481 653L479 653L479 656L477 657L476 654L478 653L477 650L476 648L477 647L477 642L478 639L477 638L476 634L479 631L478 629L477 627L480 625L480 619L483 613L485 611L487 611L488 610L491 610L492 610L490 612L490 613L488 616L490 619L493 623L495 623L494 624L496 625L496 623L499 625L507 624L511 621L512 616L512 615L513 612L517 611L525 609Z", "M494 575L496 573L504 570L507 570L508 571L508 573L509 576L503 577L502 581L503 583L504 582L503 584L504 584L503 586L502 586L502 587L497 586L497 587L494 588L493 592L490 593L491 594L489 595L486 592L487 591L485 592L484 591L485 592L483 592L484 594L483 593L484 594L481 597L483 598L483 600L481 600L481 601L481 602L482 603L484 601L485 601L485 603L486 603L486 603L487 604L489 603L490 600L492 600L491 605L492 610L488 610L487 611L485 611L483 613L480 619L480 625L477 627L478 629L479 631L476 635L477 638L478 639L477 642L477 647L475 648L477 650L478 653L476 654L477 657L478 659L480 660L477 666L475 666L476 668L475 672L470 673L463 667L461 667L460 667L457 668L455 666L451 666L451 662L449 660L447 659L446 657L449 653L452 652L455 648L464 637L470 628L475 618L475 614L474 612L475 610L475 607L474 607L474 605L473 604L473 598L472 597L471 598L470 597L470 593L474 587L473 584L475 582L480 579L483 579L484 580L494 575ZM486 601L483 597L484 597L484 598L485 597L487 598L487 597L489 598L491 596L492 597L491 599L488 599L486 601Z", "M446 657L447 659L449 660L451 662L451 665L452 666L455 666L456 668L458 668L460 667L461 667L463 667L469 671L470 673L475 672L475 673L473 674L473 678L474 678L475 681L477 681L476 683L479 685L479 688L477 689L477 692L473 691L472 692L469 693L468 691L467 693L466 692L464 693L462 693L461 695L459 693L456 694L453 692L450 694L450 698L448 699L449 700L448 702L442 699L440 699L439 701L442 706L441 708L438 707L438 711L437 710L436 711L433 711L432 713L431 714L428 711L427 718L426 720L424 720L423 719L421 719L421 721L420 721L419 723L415 724L411 722L405 721L405 718L403 718L403 717L401 715L402 714L402 712L401 711L401 709L403 709L402 711L402 710L402 711L404 710L403 710L403 709L404 709L404 713L405 714L408 713L413 710L413 711L411 711L411 712L411 714L408 714L411 714L412 714L413 713L416 714L417 713L418 710L416 711L416 710L414 709L416 708L418 708L418 710L419 710L418 709L420 711L422 710L421 708L423 708L424 706L424 706L422 706L423 704L421 703L423 703L424 705L427 704L427 705L429 704L430 704L431 704L431 703L430 702L430 699L430 698L429 699L429 697L433 694L434 698L433 700L434 702L436 701L436 700L437 700L436 698L437 697L437 696L438 695L438 693L436 690L432 686L432 682L429 679L432 675L433 671L437 667L438 663L439 664L439 663L439 664L439 662L439 660L442 660L446 657Z", "M566 680L570 681L571 682L571 683L571 685L572 685L573 685L574 683L579 683L580 684L580 687L584 687L585 685L587 684L590 685L592 687L594 687L596 689L599 688L601 690L601 694L604 697L610 701L609 702L610 705L609 707L610 708L607 712L605 712L604 714L599 716L598 720L595 721L594 721L592 722L584 723L583 720L580 720L579 717L577 717L576 719L576 725L575 726L576 734L573 736L570 735L568 733L566 729L566 726L564 725L562 727L560 725L560 723L559 722L560 719L559 716L561 712L559 703L557 701L556 698L559 695L556 692L559 686L562 688L566 680Z", "M575 605L578 606L579 608L579 614L581 614L581 616L585 618L584 620L585 621L583 623L585 624L585 626L580 628L576 628L575 629L576 631L575 632L571 633L571 635L570 636L570 639L568 641L568 647L571 648L572 649L573 650L574 649L576 649L579 648L582 649L583 656L580 658L580 660L582 663L581 664L582 665L580 666L579 665L578 666L579 668L582 668L582 669L582 671L581 671L582 674L581 676L586 679L587 682L587 684L585 685L584 687L581 687L580 686L580 684L579 683L574 683L573 685L571 685L571 682L566 680L562 688L559 686L556 692L559 695L556 698L558 703L556 707L555 707L554 709L555 710L553 711L553 713L555 713L555 715L552 717L554 720L554 722L551 723L550 724L549 724L547 727L542 729L541 730L540 730L538 733L533 734L532 732L527 731L526 732L525 733L522 734L521 732L520 730L521 728L520 726L523 724L523 721L521 720L523 720L525 720L522 717L525 715L525 712L521 710L521 707L519 707L518 705L520 702L517 700L515 694L511 693L510 692L508 692L507 691L508 689L509 688L509 686L510 685L513 684L516 685L519 679L522 677L524 672L520 670L520 668L522 666L521 662L526 656L525 654L522 652L522 650L523 648L525 648L527 642L529 641L529 640L528 640L528 638L531 636L531 634L532 631L531 625L536 621L538 617L538 615L538 613L546 614L547 616L546 620L548 622L552 618L555 618L558 617L560 617L561 619L562 618L562 614L565 613L568 608L575 605Z", "M492 652L494 651L494 650L498 646L500 646L500 648L503 645L503 646L506 645L506 648L511 645L512 648L515 649L516 648L518 648L519 650L522 650L522 652L525 654L525 657L521 662L522 666L520 668L520 670L524 672L522 677L519 679L516 685L513 684L510 685L509 686L509 688L508 689L507 691L508 692L510 692L511 693L515 694L517 700L520 702L518 705L519 707L521 707L521 710L525 712L525 715L522 717L525 720L521 720L523 721L523 724L520 726L521 728L518 728L513 732L512 731L511 731L510 730L508 730L508 729L506 728L504 728L501 730L499 730L498 728L494 727L493 727L492 726L493 724L491 724L491 722L487 720L488 718L487 718L486 720L484 721L479 723L476 722L470 731L470 739L469 736L468 738L467 737L466 735L463 733L462 730L461 731L458 731L457 733L456 732L455 733L453 731L454 730L454 728L456 724L455 722L457 721L455 719L456 715L454 714L455 712L453 709L451 710L451 709L450 710L450 705L448 704L447 702L449 700L448 699L450 698L450 694L453 692L456 694L459 693L461 695L462 693L464 693L466 692L467 693L468 691L469 693L472 692L473 691L477 692L477 689L479 688L479 685L476 683L477 681L474 680L474 678L473 678L473 674L475 673L475 672L476 668L475 666L477 666L480 660L478 659L477 657L479 656L479 653L481 653L481 652L482 654L483 652L486 653L487 656L486 658L487 658L489 657L490 655L492 655L492 652Z", "M558 703L559 703L561 712L559 716L560 719L559 722L560 723L560 725L562 727L564 725L566 726L568 734L570 735L573 736L576 734L575 726L576 725L576 719L579 717L580 720L583 720L584 723L592 722L594 721L595 721L598 720L602 720L603 725L603 728L601 730L601 731L602 734L604 736L604 737L609 738L607 741L606 744L608 745L608 747L607 748L608 750L611 751L611 752L610 756L607 758L605 764L602 766L601 770L602 772L600 772L600 771L599 771L597 774L596 774L593 776L590 773L589 772L590 771L587 770L587 767L590 765L588 762L589 761L588 761L589 760L589 759L590 758L588 757L588 756L590 754L589 751L589 750L590 750L590 747L590 746L596 747L597 745L596 745L592 740L584 738L585 739L577 741L576 744L574 746L574 749L574 747L576 747L575 749L566 754L564 757L565 760L562 764L562 763L563 764L558 767L557 771L556 773L559 776L558 776L549 773L549 772L549 773L540 771L534 773L531 771L531 772L522 771L516 771L517 769L516 765L517 763L516 761L517 760L522 759L523 757L525 756L526 752L529 750L528 748L529 746L533 743L533 741L534 741L534 739L536 737L534 735L536 733L538 733L539 731L541 730L542 729L547 727L549 724L550 724L551 723L554 722L554 720L552 717L555 715L555 713L553 713L553 711L555 710L554 709L555 707L556 707L558 703Z", "M486 719L488 718L487 720L491 722L491 724L493 724L492 726L493 727L494 727L498 728L499 730L501 730L504 728L506 728L508 729L508 730L510 730L511 731L512 731L513 732L518 728L521 728L520 730L521 732L522 734L525 733L526 732L527 731L532 732L533 734L536 733L534 735L536 737L534 739L534 741L533 741L533 743L529 746L528 748L529 750L526 752L525 756L523 757L522 759L517 760L516 761L517 763L516 765L517 769L516 771L497 777L490 778L493 772L495 773L494 774L495 774L497 773L496 772L501 771L503 769L503 769L503 768L505 767L506 767L506 769L505 771L506 771L507 769L506 769L506 767L509 767L507 767L507 763L506 761L503 762L501 760L498 764L498 763L490 764L488 761L486 760L486 758L488 755L488 751L487 757L485 756L485 758L485 757L485 758L484 764L487 767L487 769L482 767L480 765L481 759L479 756L479 757L478 756L478 750L480 748L480 747L481 747L480 747L481 744L483 742L481 741L480 746L479 744L480 742L479 742L478 744L479 743L479 746L478 746L478 744L477 744L477 746L476 746L477 747L476 746L474 742L470 738L470 731L476 722L479 723L484 721L486 720L486 719Z", "M462 730L467 737L468 738L469 736L470 739L474 742L476 746L474 745L469 748L468 751L470 752L469 753L467 757L462 765L462 770L463 771L463 774L462 775L464 775L468 777L470 779L476 782L478 783L478 784L479 783L480 785L482 785L481 786L482 787L482 788L483 786L484 787L485 789L484 790L484 792L482 791L482 791L481 791L482 792L481 793L478 792L479 793L480 792L480 793L481 793L481 794L483 793L482 795L483 799L481 799L480 801L475 800L474 799L476 799L478 800L479 799L479 800L480 799L481 800L481 799L479 799L479 798L481 798L479 797L480 796L478 797L478 795L477 796L478 797L477 798L476 797L476 796L475 796L475 797L475 798L473 797L471 798L471 796L472 796L472 795L472 795L473 794L472 795L472 794L471 794L471 795L471 794L469 794L470 795L468 797L470 796L469 798L466 800L465 800L465 799L465 799L464 799L466 798L465 798L464 799L463 798L464 799L463 801L463 799L462 800L462 799L460 799L461 801L460 800L460 800L460 801L459 801L461 802L459 803L458 802L458 800L457 801L458 801L457 803L454 804L455 803L454 803L452 805L452 803L450 804L451 804L451 806L449 806L448 807L448 807L448 810L450 810L449 812L448 811L447 812L447 811L446 812L447 810L447 809L445 811L445 812L443 813L444 814L446 814L446 815L448 817L446 817L447 818L446 818L447 820L445 820L445 820L446 819L444 818L444 819L443 820L444 820L445 822L444 822L444 823L443 822L442 823L443 823L443 824L442 824L440 823L440 825L439 825L439 826L439 825L436 829L432 838L431 837L430 838L428 837L428 835L427 835L426 832L424 831L423 828L424 827L425 828L426 827L426 826L426 826L425 827L425 825L426 825L426 824L428 824L427 824L428 822L430 823L430 821L432 821L432 821L432 818L433 816L438 816L437 812L439 812L437 810L438 807L437 804L438 803L438 802L439 801L437 797L439 796L438 795L436 791L437 788L444 787L445 783L444 783L444 781L441 782L441 779L438 780L435 777L434 776L436 773L434 772L435 772L437 771L435 769L436 767L433 765L434 763L433 763L437 761L437 759L439 758L437 757L438 755L439 756L442 756L446 758L453 755L453 752L455 749L456 745L457 743L457 739L457 739L458 737L455 735L455 733L456 732L457 733L458 731L461 731L462 730Z", "M440 699L442 699L448 702L448 704L450 705L450 710L451 709L451 710L453 709L455 711L455 712L454 714L456 715L455 719L457 721L455 722L456 724L454 728L454 730L453 731L455 733L455 735L458 736L458 737L457 739L457 739L457 743L456 745L455 749L453 752L453 755L446 758L442 756L439 756L438 755L437 757L439 758L437 759L437 761L433 763L432 762L433 760L432 760L432 759L430 759L430 758L429 758L428 755L426 757L424 756L425 752L423 749L422 749L422 748L422 747L422 746L421 745L422 744L424 737L422 732L424 728L422 729L421 726L418 724L420 721L421 721L421 719L423 719L424 720L426 720L427 718L428 711L431 714L432 713L433 711L436 711L437 710L438 711L438 707L441 708L442 706L439 701L440 699Z", "M377 710L371 712L370 710L367 707L368 704L367 702L368 702L368 703L371 702L374 699L376 700L378 698L380 696L387 694L388 693L391 696L391 698L392 699L392 701L391 701L390 701L389 704L386 708L386 710L387 710L387 709L388 707L389 706L389 708L391 709L389 709L389 710L391 712L394 712L393 716L395 715L395 713L396 713L396 714L398 714L398 712L395 713L394 709L395 710L399 708L400 706L401 706L401 708L403 709L401 710L401 711L402 713L401 715L403 717L403 718L405 718L405 721L411 722L415 724L419 723L418 724L421 726L422 729L424 728L422 732L424 737L422 744L421 745L422 746L422 747L422 748L422 749L423 749L425 752L424 756L426 757L428 755L429 758L430 758L430 759L432 759L432 760L433 761L432 762L434 763L433 765L435 766L433 769L431 768L430 766L428 766L428 765L426 768L418 767L416 764L417 762L415 759L413 755L411 753L409 753L410 750L408 750L408 751L407 752L408 752L408 753L406 754L404 752L402 752L403 749L397 747L396 744L398 742L397 741L397 739L395 738L394 737L391 738L391 736L391 736L388 736L387 737L386 736L386 734L384 732L384 731L384 730L381 729L379 731L378 729L376 729L375 728L371 726L370 722L371 719L373 719L374 721L378 719L377 710Z", "M396 745L397 747L403 749L402 752L404 752L406 754L408 753L408 752L407 752L408 751L408 750L410 750L409 753L412 753L412 754L414 756L415 759L417 762L416 764L415 763L415 766L415 767L413 769L414 770L412 775L413 776L414 777L412 780L413 781L414 787L413 788L414 790L412 791L408 792L404 795L403 793L398 795L394 795L394 796L392 797L391 796L388 797L387 797L387 798L385 799L381 799L380 796L387 794L395 787L396 785L396 784L396 785L397 782L396 782L396 781L396 781L397 782L397 781L397 783L400 781L400 779L398 779L398 776L399 778L399 777L401 779L401 777L401 777L399 777L399 776L400 776L399 775L400 775L400 774L400 775L401 773L399 772L399 772L399 771L398 771L399 770L398 770L401 767L400 763L399 761L399 758L399 758L400 755L399 756L399 754L402 753L397 752L395 750L395 749L395 746L394 746L395 744L396 745Z", "M367 702L368 704L367 707L370 710L371 712L377 710L378 712L377 713L378 719L374 721L373 719L371 719L370 722L371 726L375 728L376 729L378 729L379 731L381 729L384 730L384 731L384 732L386 734L386 736L387 737L388 736L391 736L391 736L391 738L394 737L395 738L397 739L398 743L396 743L396 745L395 744L394 746L395 746L395 749L395 750L402 753L399 754L399 756L400 755L399 758L399 758L399 761L400 763L401 767L397 770L396 771L398 769L396 770L396 770L395 769L396 769L393 767L391 768L391 769L388 769L389 770L387 769L386 771L386 770L385 771L385 773L378 774L373 773L366 768L365 769L364 768L364 766L363 767L361 764L357 764L356 764L356 763L355 764L355 763L355 764L354 764L355 763L354 763L354 764L353 763L352 764L352 764L351 764L351 765L351 764L350 765L348 763L345 765L345 761L345 764L344 765L344 764L343 765L343 766L342 767L340 767L339 765L339 766L336 767L336 766L337 764L336 763L336 762L335 760L333 760L333 758L333 756L335 754L333 752L334 748L333 748L333 746L336 745L336 742L338 742L339 738L341 738L342 735L340 734L340 732L341 731L343 732L344 731L347 728L347 725L347 723L345 721L345 718L343 717L343 713L342 712L342 708L339 705L343 704L343 703L344 704L349 701L350 702L352 702L354 703L356 701L356 702L357 701L358 702L358 701L361 701L362 701L362 702L364 701L366 702L366 703L367 702ZM363 788L365 785L366 785L368 781L371 780L374 776L375 775L376 777L376 778L375 780L374 783L369 789L369 794L370 795L372 799L363 804L360 805L360 804L358 803L359 800L356 801L357 800L355 798L357 795L358 796L360 795L363 788Z", "M415 763L416 764L418 767L423 769L426 768L428 765L428 766L430 766L431 768L433 768L433 769L435 766L436 768L435 769L437 771L435 772L434 772L436 773L434 776L435 777L438 780L441 779L441 782L444 781L444 783L445 783L444 787L437 788L436 791L438 795L439 796L437 797L439 801L438 802L438 803L437 804L438 807L437 810L439 812L437 812L438 816L433 816L431 819L428 820L426 822L427 824L426 824L426 825L424 824L424 826L425 827L425 828L423 826L421 825L418 826L414 825L410 827L410 825L409 825L410 821L411 822L411 819L410 818L409 817L409 816L408 814L406 813L409 808L410 807L412 805L411 804L412 803L413 803L415 804L416 802L416 800L413 798L412 791L413 790L413 788L414 787L413 781L412 780L414 777L413 776L412 775L414 770L413 769L415 767L415 766L415 763Z", "M405 794L408 792L412 791L413 798L415 799L416 802L415 804L413 803L412 803L411 804L412 805L410 807L409 808L408 810L406 811L406 813L408 814L409 816L409 817L410 818L411 819L411 822L410 821L409 825L410 825L410 827L414 825L418 826L421 825L423 826L424 831L426 832L427 835L428 835L428 837L432 838L430 841L430 842L431 842L431 843L428 843L429 845L429 844L428 846L428 847L429 846L429 847L430 847L429 848L427 848L426 849L427 849L425 851L420 853L419 855L420 857L420 858L419 857L418 858L418 857L419 856L418 854L415 855L415 854L413 854L411 853L409 853L409 853L407 852L404 852L403 850L400 850L400 849L397 847L397 844L394 841L395 841L394 840L395 840L395 841L396 840L398 838L395 837L395 836L394 836L393 834L388 834L388 832L386 831L383 826L381 826L378 827L378 825L380 824L379 823L382 821L380 821L380 820L379 820L384 818L383 817L385 816L383 814L379 813L381 811L382 810L383 810L382 809L385 809L387 808L385 808L386 807L385 805L385 806L383 805L383 804L383 804L383 802L381 802L382 802L382 801L378 800L379 797L381 796L380 797L381 799L383 798L384 799L387 798L387 797L388 797L391 796L392 797L394 796L394 795L398 795L403 793L404 795L405 794ZM427 820L432 818L432 818L432 821L432 821L430 821L430 823L428 822L427 824L428 824L426 824L426 822L427 820Z", "M339 705L342 708L342 712L343 713L343 717L345 718L345 721L347 723L347 725L347 728L344 731L343 732L341 730L336 734L334 734L333 733L328 736L327 734L327 732L326 731L327 730L326 728L324 726L322 727L319 726L318 726L319 723L314 725L314 726L310 727L311 729L309 730L307 727L304 726L300 726L295 724L293 731L290 732L291 735L290 734L287 736L284 735L285 738L284 740L280 741L278 741L278 743L277 744L275 742L269 743L270 738L272 736L272 734L270 734L270 733L279 729L278 726L278 724L280 722L280 719L279 717L274 714L273 711L274 710L276 709L275 710L276 713L279 715L284 716L286 716L287 713L294 711L305 713L315 712L318 711L319 710L319 711L323 711L332 709L335 707L337 706L337 705L339 706L339 705Z", "M275 666L275 665L274 666L275 664L272 663L272 661L271 660L272 657L273 658L272 657L275 655L274 655L276 655L277 653L283 659L282 663L281 664L281 662L280 663L279 664L280 664L281 666L278 666L277 665L277 666L275 666ZM261 675L258 673L260 670L262 670L262 668L264 669L265 668L267 668L265 670L264 670L265 672L264 673L262 673L262 670L261 672L260 671L261 675ZM275 709L274 710L273 711L274 714L279 717L280 719L280 722L278 724L278 726L279 729L270 733L270 734L272 734L272 736L270 738L269 743L267 742L263 743L261 741L259 743L256 742L256 741L254 741L252 744L252 745L247 750L247 751L243 751L241 755L244 756L245 759L244 759L243 758L242 760L239 759L235 762L230 762L229 761L227 763L226 762L224 763L222 762L221 764L220 762L218 762L217 766L212 768L214 770L211 775L212 776L212 777L209 780L207 782L207 783L208 784L208 785L206 786L204 788L204 789L205 792L203 794L202 797L200 794L199 796L198 795L198 797L194 797L192 795L191 793L193 788L187 788L187 785L186 783L188 781L188 778L189 778L189 775L187 775L187 770L190 771L196 768L197 767L197 765L201 763L202 761L205 759L205 757L207 756L208 757L209 756L208 754L209 755L209 754L211 751L218 746L222 744L223 741L224 741L224 741L226 739L226 738L227 737L228 735L235 730L240 728L242 724L243 722L243 720L240 719L240 717L244 717L243 716L247 717L248 716L246 715L254 712L259 712L260 710L263 710L263 709L265 708L264 707L267 707L266 706L268 706L268 707L269 707L269 707L270 709L270 708L272 708L272 707L272 708L274 707L275 708L279 708L280 708L275 709Z", "M319 723L318 726L319 726L322 727L324 726L326 728L327 730L326 731L327 732L327 734L328 736L333 733L334 734L336 734L339 731L341 731L340 733L340 734L342 735L341 738L339 738L338 742L336 742L336 745L333 746L333 748L334 748L334 749L334 751L333 752L335 754L333 756L333 758L333 760L335 760L336 762L336 763L337 764L336 766L336 767L334 767L333 768L332 768L329 766L328 767L330 767L329 768L330 768L329 768L332 768L332 769L329 772L328 772L328 774L329 774L328 775L327 775L325 777L322 777L322 776L321 776L318 775L315 776L316 777L320 776L321 778L320 778L320 780L318 780L318 782L317 781L316 781L316 783L315 784L314 786L309 785L307 786L308 788L306 788L304 785L303 781L303 783L302 783L303 784L304 785L301 785L301 780L301 780L300 783L299 782L298 783L295 784L295 785L292 786L289 782L291 786L288 787L289 786L287 786L287 784L287 783L287 779L283 775L284 771L283 770L282 767L283 762L281 760L278 756L279 752L278 751L280 748L277 744L278 743L278 741L284 740L285 738L284 736L285 735L287 736L290 734L291 735L290 732L293 731L295 724L300 726L304 726L307 727L309 730L311 729L310 727L314 726L314 725L319 723Z", "M253 741L255 741L259 743L261 741L263 743L268 742L269 743L276 742L280 748L278 751L279 752L278 755L280 759L283 762L282 767L283 770L284 771L283 775L287 781L287 787L285 786L285 785L284 786L286 788L286 788L284 788L283 789L283 791L281 793L280 791L278 791L277 790L275 791L277 789L276 787L275 789L268 791L266 790L267 791L265 794L262 795L259 794L257 795L256 795L253 798L252 796L250 796L249 799L247 798L247 800L248 800L248 801L244 802L243 803L242 803L241 804L238 802L237 804L235 805L235 804L235 803L236 801L235 801L234 800L234 798L233 796L233 795L232 795L235 793L234 793L231 793L231 793L231 793L230 794L227 793L224 793L224 794L224 794L224 794L223 794L220 798L218 800L217 802L218 803L216 804L216 802L213 802L212 798L212 798L212 795L211 795L210 794L208 793L209 787L208 784L207 783L208 781L209 780L212 777L212 776L211 775L214 770L212 768L217 766L218 762L220 762L221 764L222 762L224 763L226 762L227 763L229 761L230 762L235 762L239 759L242 760L243 758L244 759L245 759L244 756L241 755L243 751L247 751L247 750L252 745L252 744L253 741ZM229 809L230 806L230 806L229 804L229 806L226 800L229 800L230 802L230 802L231 804L231 801L229 800L230 799L229 798L231 798L232 797L233 799L232 804L231 806L232 808L229 809ZM236 813L235 811L234 812L233 811L233 812L231 812L230 812L230 810L233 809L233 806L234 804L236 806L234 807L236 808L236 808L235 811L237 809L238 810L237 810L236 813Z", "M187 770L187 775L189 775L189 778L188 778L188 781L186 783L187 785L187 788L193 788L191 791L192 795L195 797L198 797L198 795L199 796L200 794L202 797L203 794L205 792L204 789L204 788L206 786L208 785L209 787L208 793L210 794L211 795L212 795L212 798L212 798L213 802L216 802L216 804L218 803L218 805L219 806L219 808L218 809L216 810L217 815L217 818L215 821L211 822L212 826L213 829L211 830L211 827L207 825L208 824L206 825L203 823L203 824L202 822L197 819L197 818L195 817L193 819L194 820L194 820L191 820L195 816L193 815L192 816L193 814L190 815L190 813L187 815L186 814L186 815L184 816L184 815L182 817L182 815L178 818L177 818L177 817L175 816L174 816L175 817L173 818L174 819L173 819L173 819L171 817L170 819L171 817L170 816L171 815L170 815L170 816L169 816L169 817L169 818L167 819L168 821L163 824L162 823L161 823L162 822L161 822L160 823L160 822L158 823L157 821L158 820L157 820L157 818L157 819L155 818L155 819L153 816L150 815L150 814L147 819L144 822L143 824L142 824L143 823L142 824L141 822L143 822L142 821L143 820L143 817L142 816L143 814L141 814L140 810L140 809L142 809L142 807L143 806L144 803L143 803L143 801L140 798L142 796L141 794L142 793L143 794L148 792L150 792L148 790L145 790L145 791L144 791L146 787L149 789L152 788L154 789L155 789L157 792L158 791L159 790L160 792L160 791L165 791L167 789L168 789L171 788L172 787L170 787L170 786L171 787L173 784L174 784L174 781L174 780L176 781L178 779L179 777L179 775L182 774L181 774L182 772L184 772L185 773L184 772L186 772L186 771L187 770ZM216 828L216 827L215 826L214 824L215 823L215 821L216 822L217 821L220 822L221 821L222 824L223 824L223 825L223 825L226 823L227 823L228 822L230 822L231 822L228 825L226 824L225 825L226 828L224 827L223 828L224 826L221 825L220 826L220 827L217 827L216 828Z", "M343 804L347 802L351 803L350 802L351 801L351 804L355 806L352 810L352 814L353 814L351 814L352 817L352 817L353 818L353 819L354 819L354 818L356 821L358 822L358 823L357 827L355 826L356 827L354 827L354 828L355 828L355 829L359 829L357 830L361 830L355 834L353 833L352 835L351 834L350 837L350 836L349 837L349 838L348 839L341 842L339 844L340 845L339 847L337 847L339 848L336 848L336 850L334 849L329 849L328 846L327 845L327 844L329 843L328 842L328 840L325 840L321 840L322 837L320 830L318 831L317 829L316 830L315 832L313 833L311 832L309 829L304 830L299 827L299 826L301 824L300 823L301 822L300 819L300 817L302 817L303 815L306 813L308 813L309 811L315 810L315 812L317 813L318 813L320 812L321 810L325 810L326 807L328 806L333 805L335 806L338 806L338 805L342 807L343 806L343 804Z", "M337 779L339 779L338 780L339 781L337 788L336 786L334 787L335 786L336 786L336 785L335 784L333 785L332 788L331 789L331 788L332 787L331 787L332 786L331 784L329 784L327 786L326 785L327 784L328 784L327 783L328 781L329 782L332 781L333 779L335 780L337 779ZM326 808L326 809L325 810L321 810L320 812L318 813L317 813L315 812L315 810L309 811L308 813L306 813L303 815L302 817L300 817L295 815L297 814L297 813L298 805L293 800L295 800L297 802L300 801L300 803L303 800L303 799L305 798L305 797L306 798L306 796L306 798L306 797L308 796L308 793L309 793L308 794L310 793L309 795L312 794L312 791L314 792L314 791L318 794L322 794L322 793L322 794L323 793L323 794L323 791L325 793L325 790L326 790L327 791L327 794L328 795L329 795L329 793L330 794L330 792L331 795L332 794L333 795L332 797L333 798L336 799L338 800L340 800L343 804L343 806L342 807L338 805L338 806L335 806L333 805L328 806L326 808Z", "M259 805L258 804L259 802L261 803L261 800L259 800L261 799L260 798L263 797L265 800L265 803L259 805ZM263 811L262 810L263 807L264 808L263 806L263 805L265 805L266 806L268 806L263 811ZM235 844L238 843L242 839L244 835L244 830L245 828L245 828L245 828L244 826L245 825L247 825L249 819L248 818L254 814L257 814L257 811L255 810L257 810L258 808L263 815L265 820L267 822L268 822L268 823L268 822L269 823L271 823L271 823L271 822L272 822L273 823L273 822L276 821L276 820L276 821L277 820L277 819L280 819L281 820L281 819L282 820L285 819L290 820L295 815L299 816L300 818L300 819L301 822L300 823L301 824L299 827L295 827L294 827L293 826L290 830L285 829L284 831L282 830L280 831L277 830L275 833L272 833L270 836L270 839L268 840L268 842L266 843L265 845L266 846L264 848L265 850L264 851L262 855L259 856L253 855L250 856L253 863L255 864L256 866L250 869L248 871L249 874L247 874L244 879L241 875L240 876L240 879L242 881L243 883L242 884L243 886L244 890L243 892L242 893L242 894L239 895L238 893L239 892L236 892L237 893L234 892L233 893L234 893L233 894L234 894L232 896L231 895L232 894L231 893L232 893L233 892L231 891L233 889L233 891L236 891L234 890L233 887L232 888L232 885L231 886L230 885L230 886L228 885L228 887L227 888L226 887L227 886L227 884L228 883L229 885L230 884L232 884L232 883L231 883L231 883L231 882L232 882L230 880L231 880L231 880L233 879L230 879L229 877L229 877L231 876L228 874L228 874L231 874L231 876L232 875L232 877L233 876L234 876L233 875L232 875L233 875L234 873L236 873L234 871L235 869L233 870L232 869L231 871L232 868L234 867L234 866L233 867L233 866L230 867L229 866L228 867L226 866L226 865L228 863L228 863L228 862L226 863L226 861L227 860L226 859L228 859L228 857L226 857L228 856L227 856L227 856L227 855L226 856L225 854L224 854L224 855L223 855L223 857L222 855L220 857L215 859L213 861L213 862L210 863L211 861L210 861L205 864L211 859L212 860L212 859L214 860L213 858L213 858L214 858L214 857L216 857L216 856L217 857L218 856L219 857L219 855L228 850L232 845L235 844Z", "M294 827L298 826L300 828L303 829L304 830L309 829L311 832L313 833L315 832L316 830L317 829L318 831L320 830L322 837L321 840L325 840L328 840L328 842L329 843L327 844L327 845L328 846L329 849L336 850L330 861L328 871L327 868L324 868L324 865L320 862L320 859L316 857L314 854L305 852L303 851L296 852L293 853L294 851L293 850L292 852L294 854L286 858L285 857L284 857L284 858L281 859L282 860L282 859L283 860L284 859L284 859L285 858L286 858L286 858L288 858L287 859L285 860L284 861L281 860L279 863L279 863L280 862L278 862L279 861L278 860L278 861L276 863L276 865L274 866L276 867L275 868L276 870L275 871L276 873L275 873L275 875L273 876L274 878L273 878L272 877L271 878L269 882L267 883L267 887L264 886L262 887L261 892L262 897L261 898L258 899L259 902L261 903L262 908L259 907L260 906L259 905L260 904L258 905L258 903L257 904L255 903L254 905L253 903L250 906L248 905L248 906L245 903L240 905L241 903L240 903L242 902L241 902L241 901L243 900L242 899L244 896L245 897L245 896L245 896L245 894L242 894L242 893L243 892L244 890L243 886L242 884L243 883L242 881L240 879L240 876L241 875L244 879L247 874L249 874L248 871L250 869L256 866L255 864L253 863L250 856L253 855L259 856L262 855L264 851L265 850L264 848L266 846L265 845L266 843L268 842L268 840L270 839L270 836L272 833L275 833L277 830L280 831L282 830L284 831L285 829L290 830L292 827L294 827Z", "M129 824L131 823L133 824L134 822L135 822L135 823L134 824L137 823L137 825L134 827L133 826L133 827L136 826L136 827L138 824L140 823L139 824L140 824L139 825L140 824L141 825L140 826L141 825L141 826L142 826L144 825L146 821L149 821L149 822L148 823L149 824L147 825L148 826L147 828L148 828L147 829L145 830L146 832L148 831L147 833L148 833L147 834L148 834L148 836L149 836L150 840L151 840L153 845L154 845L155 844L158 845L157 847L158 850L157 851L158 853L155 853L149 852L146 853L143 855L143 856L142 857L141 862L140 862L138 864L140 865L140 868L139 869L140 870L138 870L138 872L140 872L138 874L141 875L139 881L135 880L132 878L130 878L129 876L128 881L124 880L123 881L123 882L119 885L120 888L120 888L113 888L115 888L114 887L115 886L115 885L114 882L113 882L113 881L112 880L112 879L111 879L110 874L112 873L112 871L113 872L113 870L114 871L115 868L116 870L117 868L117 867L119 866L118 865L121 864L121 858L119 857L114 861L114 860L113 858L111 858L107 855L93 856L93 854L97 852L98 853L98 852L98 852L100 851L100 849L97 850L98 849L96 849L96 847L97 847L97 847L99 847L100 846L100 844L102 843L103 842L104 843L104 844L104 845L106 845L106 848L112 846L113 847L113 846L114 846L114 845L114 845L114 845L114 843L115 843L114 843L116 842L115 840L112 842L111 843L108 842L107 840L108 840L109 842L113 840L117 836L117 833L116 833L116 831L118 831L118 828L120 828L121 826L124 827L127 826L129 825L128 825L129 824Z", "M93 855L107 855L111 858L113 858L114 860L114 861L119 857L121 858L121 864L118 865L119 866L117 867L117 868L116 870L115 868L114 871L113 870L113 872L112 871L112 873L110 874L111 879L107 878L105 874L105 875L103 874L104 875L104 877L99 881L98 880L98 881L97 881L99 882L102 889L103 890L103 891L96 890L92 887L91 887L91 885L86 882L87 881L88 880L88 877L85 877L81 876L80 874L80 871L77 868L79 865L82 868L83 868L81 866L82 865L81 865L82 865L83 860L81 860L81 859L79 857L80 856L79 855L80 854L82 856L82 857L83 857L82 855L81 855L82 855L81 852L83 853L82 852L83 852L82 849L84 851L84 852L85 850L87 850L87 851L88 851L89 853L87 855L88 855L89 854L89 856L92 857L93 856L93 855Z", "M56 788L55 788L56 789L54 791L57 789L56 791L55 791L56 792L55 792L56 793L55 794L56 795L55 794L56 796L55 796L55 796L54 797L54 797L54 797L53 796L54 796L54 795L54 794L53 793L54 792L52 792L53 793L52 795L51 794L52 793L51 792L52 791L51 792L50 791L51 792L50 793L51 793L50 794L50 793L50 794L49 793L48 794L47 793L48 792L48 793L50 792L49 789L50 789L50 787L51 788L52 786L50 787L50 785L52 781L52 782L52 780L54 781L53 781L51 778L50 779L52 773L53 773L54 773L57 773L56 773L57 771L59 771L58 770L60 769L60 770L61 770L61 771L62 770L62 771L62 771L60 772L62 773L61 774L61 775L60 775L59 774L60 775L59 775L61 776L61 779L60 779L60 780L59 783L55 786L56 788ZM46 812L46 810L46 811L44 810L44 811L46 795L47 796L47 798L49 796L49 798L50 797L51 799L50 797L49 795L51 796L51 797L52 797L51 799L52 798L52 799L52 797L54 797L54 799L52 800L53 802L51 803L51 805L50 804L51 807L50 807L50 809L48 809L49 810L48 811L47 810L46 812ZM75 839L73 837L73 836L72 835L71 837L71 835L73 835L72 834L71 834L71 832L72 832L71 832L73 832L72 830L74 828L78 829L77 831L76 832L79 833L77 834L79 835L79 836L76 837L75 839ZM55 877L54 876L54 874L55 875L57 876L57 875L56 874L56 873L57 872L58 873L58 872L59 872L57 870L58 868L59 868L59 866L59 864L62 863L63 862L64 864L64 862L65 862L63 860L66 860L66 862L65 863L66 863L65 864L65 865L63 865L64 866L63 867L63 868L62 868L63 870L59 875L55 877ZM70 863L71 863L72 860L73 861L72 863L73 864L74 863L73 864L75 864L76 863L78 864L78 862L79 862L79 865L77 868L80 871L80 874L81 876L85 877L88 877L88 880L87 881L86 882L90 884L91 887L93 887L94 889L102 891L102 893L101 894L97 896L96 898L98 897L99 899L98 900L99 899L101 900L105 897L107 897L110 899L112 904L112 907L110 909L111 910L111 911L108 913L106 913L106 914L104 916L102 916L102 916L100 917L100 915L98 914L98 910L99 911L101 910L102 908L103 906L101 905L102 904L101 903L96 903L92 905L88 905L88 907L87 909L86 909L85 912L82 914L81 915L78 918L78 918L78 918L76 919L76 918L78 916L80 913L81 911L80 911L79 910L81 909L81 910L82 910L84 906L82 908L81 908L81 906L80 906L80 905L79 905L80 904L78 902L78 901L76 901L76 902L75 900L74 900L71 893L70 894L70 890L72 888L71 886L72 884L73 884L72 884L73 883L72 883L72 882L74 883L74 882L75 883L75 883L75 883L75 885L77 884L77 885L76 887L76 889L78 889L77 888L77 887L81 890L80 891L81 892L80 894L79 893L79 892L79 892L79 894L79 895L79 895L80 895L80 896L80 897L79 896L79 898L80 898L82 900L82 898L83 899L84 897L85 898L85 897L87 898L88 898L90 900L91 899L89 897L89 896L88 896L88 895L87 894L87 891L88 889L88 887L86 886L84 884L81 886L81 885L82 884L79 884L80 883L79 883L78 883L78 881L77 883L78 884L77 885L77 884L76 884L77 883L76 881L77 881L76 880L77 880L77 879L78 880L77 879L78 878L79 878L77 878L76 880L75 879L75 877L74 877L74 880L72 880L72 881L71 879L73 880L74 878L72 877L70 877L71 875L70 873L70 875L69 873L68 874L69 873L68 874L66 873L66 872L66 872L66 871L66 869L68 869L67 868L69 867L67 867L66 866L67 865L66 862L68 862L68 862L69 862L70 863ZM37 901L36 901L36 897L37 896L36 895L38 896L38 895L37 894L36 894L36 893L36 892L35 893L35 892L34 892L34 892L34 891L35 890L36 891L37 890L37 891L38 890L37 889L37 886L38 885L38 887L39 887L38 885L40 882L39 880L41 877L40 880L41 881L41 884L39 886L39 888L39 889L40 890L43 888L44 888L44 890L42 893L41 893L40 891L40 894L39 894L39 895L39 896L40 898L38 898L37 901ZM21 918L20 918L19 916L15 916L14 917L11 916L12 913L13 914L12 915L13 915L14 916L15 914L14 915L13 914L14 914L14 913L15 913L14 913L15 913L15 912L16 911L14 911L14 910L15 909L14 905L15 904L17 905L17 907L19 905L18 906L19 906L19 907L20 905L21 907L21 906L23 906L21 905L23 903L23 904L24 905L23 906L25 905L24 907L24 906L26 906L25 907L25 909L25 910L28 913L28 914L24 914L23 913L21 913L21 915L22 916L22 917L21 918Z", "M154 876L157 879L158 883L160 885L161 888L163 890L162 891L162 896L166 900L163 901L161 904L162 904L161 906L158 909L158 911L156 911L154 914L154 918L151 917L150 920L149 920L149 922L148 922L148 924L149 928L150 930L152 930L152 934L154 936L152 939L151 939L150 941L153 945L154 947L151 948L148 946L146 950L144 950L142 949L140 952L134 952L131 951L128 949L128 948L126 948L125 946L124 946L124 948L122 948L122 949L118 949L118 950L117 951L114 950L111 946L112 946L112 944L114 942L116 942L115 940L116 940L116 938L117 939L117 938L118 939L119 938L118 938L117 936L120 934L119 933L123 928L123 925L122 925L122 924L123 923L122 923L123 923L122 921L123 921L125 917L127 916L126 915L128 916L128 914L128 914L117 916L117 914L125 909L125 906L124 905L126 903L124 900L124 900L121 899L121 897L117 895L117 894L116 894L115 889L114 888L120 888L120 888L119 885L123 882L123 881L124 880L128 881L129 876L130 878L132 878L139 882L141 882L142 884L147 887L148 885L149 882L146 879L147 876L148 876L151 875L154 876ZM111 930L111 929L110 931L106 930L105 931L104 932L105 930L103 928L102 931L103 931L104 933L102 936L101 937L101 935L100 935L99 938L100 938L99 939L99 938L97 941L96 941L97 942L96 943L96 942L95 942L95 944L93 945L92 944L92 945L92 945L91 945L90 945L91 943L91 944L92 943L91 942L90 942L91 941L89 942L92 938L92 938L93 939L92 938L94 937L93 938L94 939L95 938L93 937L93 937L92 936L91 937L90 936L90 933L94 924L93 922L92 922L92 921L93 921L93 923L98 920L101 920L102 921L102 924L103 925L102 927L107 925L109 922L113 922L113 924L115 922L115 922L117 921L114 928L115 928L114 929L114 931L111 932L111 930Z", "M179 841L180 840L180 841L181 840L183 841L184 841L187 843L190 849L189 854L190 856L189 856L188 860L183 859L185 861L182 862L181 864L179 864L178 863L176 863L177 870L181 871L184 869L185 869L186 870L186 869L187 870L186 869L187 869L187 870L188 869L191 872L191 871L192 871L192 871L197 871L197 870L199 870L197 872L197 874L195 876L195 878L193 880L196 880L199 879L200 880L196 882L197 883L199 883L200 884L200 884L200 882L201 882L201 883L203 884L205 882L204 883L205 884L203 885L201 885L199 889L199 888L198 889L202 892L202 891L203 891L203 893L205 891L205 893L206 893L206 892L209 893L206 893L205 894L205 895L203 894L204 896L204 896L205 896L202 899L202 899L202 900L201 900L202 900L202 901L202 900L203 901L203 899L204 899L205 900L203 903L202 902L201 904L200 902L200 903L199 904L198 902L199 905L197 903L197 906L198 906L197 907L196 907L196 906L196 901L193 901L191 900L190 900L188 904L181 904L180 906L177 905L177 902L175 900L172 902L168 902L167 900L163 897L162 891L163 890L161 888L160 885L158 883L157 879L153 875L150 875L148 876L147 876L146 879L149 882L148 885L147 887L139 881L140 880L141 875L138 874L140 872L138 872L138 870L140 870L139 869L140 868L140 865L138 864L140 862L141 862L142 857L143 856L143 855L149 852L155 853L158 853L157 851L158 850L157 847L158 845L161 846L162 846L164 848L172 848L172 847L174 845L174 845L175 843L176 842L176 841L178 841L177 840L179 841Z", "M177 904L180 906L181 904L188 904L190 900L191 900L193 901L196 901L196 907L198 906L197 907L197 908L196 908L196 910L195 909L193 912L192 911L191 914L190 913L192 914L191 916L188 917L187 919L187 923L188 922L188 923L189 924L187 926L185 925L185 927L184 928L185 927L186 928L186 927L186 928L185 929L187 929L184 930L183 933L183 935L182 935L181 939L174 965L175 964L174 965L174 971L175 974L174 979L174 981L173 981L174 984L171 987L171 989L170 988L170 990L169 990L170 993L169 993L169 993L170 995L168 996L169 999L167 1001L168 1003L167 1004L165 1001L162 1002L161 1000L161 999L161 999L159 997L157 997L157 994L159 993L158 990L159 988L158 985L157 984L154 985L152 983L151 984L149 982L149 976L146 976L147 974L144 974L141 972L141 970L143 967L142 967L140 963L136 962L135 958L131 955L131 953L133 951L133 952L138 952L139 951L140 952L142 949L144 950L146 950L148 946L151 948L154 947L153 945L150 941L151 939L152 939L154 936L152 934L152 930L150 930L149 928L148 924L148 922L149 922L149 920L150 920L151 917L154 918L154 914L156 911L158 911L158 909L161 906L162 904L161 904L163 901L167 900L168 902L175 900L177 902L177 904Z", "M100 952L97 950L97 948L96 946L98 945L97 944L97 944L99 944L100 945L99 943L100 943L100 944L101 943L102 945L101 945L101 947L102 947L103 948L101 949L101 950L100 952ZM124 946L126 946L126 948L128 948L128 949L132 952L131 955L135 958L136 962L140 963L142 967L143 967L141 970L141 972L144 974L147 974L146 976L149 976L149 982L151 984L152 983L155 985L157 984L158 985L159 988L158 990L159 993L157 994L157 996L154 995L151 998L149 1001L149 1004L154 1006L154 1007L152 1008L152 1010L155 1009L155 1010L151 1013L149 1013L148 1016L147 1016L147 1017L146 1017L146 1018L145 1019L140 1022L137 1023L134 1025L133 1025L132 1026L132 1027L130 1027L130 1029L129 1028L128 1029L129 1025L128 1024L133 1019L134 1016L134 1014L136 1011L136 1005L134 999L131 996L131 990L127 991L124 988L127 985L129 985L132 987L131 988L132 989L131 990L134 989L138 983L136 980L133 979L132 978L130 977L127 979L126 981L126 983L123 987L123 988L123 991L122 990L121 992L121 992L121 993L120 994L121 994L121 995L120 994L120 995L121 996L120 996L121 1000L123 1002L122 1002L123 1007L126 1010L129 1010L128 1012L128 1014L127 1014L128 1015L127 1015L125 1016L124 1018L122 1016L120 1017L120 1016L120 1014L117 1011L111 1011L107 1010L107 1012L104 1011L103 1011L104 1010L103 1010L104 1009L102 1009L102 1008L104 1007L101 1006L103 1005L98 1000L97 1000L97 999L99 1000L100 998L101 999L102 1000L102 999L102 1000L104 1001L106 999L109 994L110 990L110 986L109 983L108 982L106 979L105 979L106 979L105 978L103 976L101 976L100 973L104 965L102 960L101 959L103 955L102 953L101 954L101 953L101 951L104 950L106 950L106 950L107 951L108 951L111 949L111 947L114 950L117 951L118 950L118 949L122 949L122 948L124 948L124 946ZM84 973L84 971L83 971L83 970L82 971L82 969L83 969L82 969L82 968L82 970L81 970L81 968L82 967L83 967L86 970L86 969L86 968L87 968L86 970L87 970L87 971L85 971L84 973ZM75 985L74 984L73 985L72 984L71 983L73 982L73 980L74 978L78 977L79 975L78 973L79 974L80 975L78 977L78 979L77 978L76 979L76 981L75 982L76 983L75 985Z", "M804 911L805 909L804 907L807 906L813 899L816 892L816 891L815 889L816 888L817 887L818 887L817 888L821 892L823 891L823 893L825 896L824 899L825 901L825 903L824 905L825 905L824 908L821 911L822 912L820 914L819 918L818 919L814 925L808 926L803 925L803 925L804 928L803 930L800 929L803 934L802 934L802 936L798 937L797 939L796 939L796 939L793 937L790 937L790 936L789 936L791 942L788 942L788 943L786 942L785 944L784 943L783 944L785 947L781 949L778 949L777 953L778 954L768 951L766 952L765 956L763 955L763 956L765 959L769 963L769 966L770 969L772 971L774 971L774 972L775 976L771 974L768 969L764 971L764 972L765 973L763 974L763 975L762 975L761 976L762 979L760 980L758 983L758 987L756 989L755 990L756 991L754 990L756 991L757 993L757 995L758 996L759 993L762 992L763 996L758 1001L757 1001L753 1004L750 1008L747 1008L744 1010L742 1009L742 1006L743 1003L742 1002L743 1001L742 1002L742 1001L741 1002L741 1000L743 998L740 998L741 997L741 995L741 995L739 995L740 993L739 991L741 988L744 990L742 989L745 987L744 985L744 986L743 984L744 983L744 984L745 984L745 984L746 984L745 983L745 982L746 983L748 980L750 980L751 980L750 979L752 978L754 976L755 974L754 973L754 972L753 972L752 966L749 960L748 954L750 954L752 957L756 953L758 955L759 954L761 950L765 948L764 945L765 944L767 945L767 943L767 944L768 943L771 944L773 942L774 942L776 938L777 939L779 938L780 938L782 933L782 931L778 929L775 928L774 929L771 928L769 923L769 921L771 920L769 916L769 912L772 914L779 913L781 913L780 914L781 915L782 914L785 916L786 916L784 917L783 921L782 922L784 923L785 925L788 925L789 924L794 922L798 919L798 920L800 920L799 918L798 919L797 917L799 913L802 913L804 911Z"];
+        const JP_MAP_H = 1035;
+        function renderStats() {
+            const o = loadStats(), body = document.getElementById('st-body');
+            const ids = Object.keys(o.s).filter(id => stationById.get(id));
+            const byPref = {};
+            ids.forEach(id => { const p = stationById.get(id).pref || ''; byPref[p] = (byPref[p] || 0) + 1; });
+            const prefN = JP_PREFS.filter(p => byPref[p]).length;
+            const max = Math.max(1, ...Object.values(byPref));
+            let html = `<div class="st-nums"><div><b>${o.d}<small>回</small></b><span>抽選した</span></div><div><b>${ids.length}<small>駅</small></b><span>出会った駅</span></div><div><b>${prefN}<small>/47</small></b><span>都道府県</span></div></div>`;
+            html += '<div class="st-h">出会った駅の都道府県</div><div class="st-mapw"><div class="st-tip"><span>地図をタップすると<br>都道府県と駅の数が出ます</span></div>';
+            // 一県一マスの抽象的な地図（北海道だけ 2×2）。位置はおおよその地理に合わせてある
+            html += `<svg class="st-map" viewBox="0 0 1000 ${JP_MAP_H}" role="img" aria-label="都道府県の地図">`;
+            JP_PREFS.forEach((p, k) => {
+                const c = byPref[p] || 0;
+                html += `<path data-p="${k}" class="${c ? 'v' : ''}" style="--a:${c ? (.3 + .7 * c / max).toFixed(2) : 0}" d="${JP_PATHS[k]}"/>`;
+            });
+            html += '<rect class="ok-frame" x="713" y="865" width="138" height="167" rx="14"/><text class="ok-lb" x="725" y="855">沖縄</text>';   // 沖縄の差し込み
+            html += '</svg></div><div style="height:18px"></div>';
+            const top = Object.entries(byPref).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            if (top.length) {
+                html += '<div class="st-h">よく出る都道府県</div><div class="st-top">';
+                top.forEach(([p, c]) => { html += `<div><b>${p}</b><i style="width:${Math.round(60 * c / top[0][1]) + 4}%"></i><span>${c}駅</span></div>`; });
+                html += '</div>';
+            }
+            html += '<div class="st-note">この端末の中だけに記録されます</div>';
+            body.innerHTML = html;
+            const map = body.querySelector('.st-map'), tip = body.querySelector('.st-tip');
+            // 押した点のまわり（半径 18px）も見て、いちばん近い県を選ぶ。小さな県（東京・大阪・香川など）は優先して当たりやすく
+            const prefPaths = [...map.querySelectorAll('path[data-p]')];
+            const bbA = new Map(prefPaths.map(pa => { const b = pa.getBBox(); return [pa, Math.max(1, b.width * b.height)]; }));
+            const hitTest = e => {
+                const m = map.getScreenCTM(); if (!m || !prefPaths[0].isPointInFill) return e.target.closest && e.target.closest('[data-p]');
+                const inv = m.inverse(), R = 18, sc = Math.hypot(inv.a, inv.b);
+                const toSvg = (x, y) => { const pt = map.createSVGPoint(); pt.x = x; pt.y = y; return pt.matrixTransform(inv); };
+                const samples = [[0, 0]];
+                for (let ring = 1; ring <= 3; ring++) for (let k = 0; k < 8; k++) { const a = (k + ring * .5) / 8 * Math.PI * 2; samples.push([Math.cos(a) * R * ring / 3, Math.sin(a) * R * ring / 3, 4 - ring]); }
+                const hits = [];
+                prefPaths.forEach(pa => {
+                    let sc0 = 0;
+                    let dmin = 99;
+                    samples.forEach(([dx, dy, w], i) => { if (pa.isPointInFill(toSvg(e.clientX + dx, e.clientY + dy))) { sc0 += i === 0 ? 14 : w; dmin = Math.min(dmin, Math.hypot(dx, dy)); } });
+                    if (sc0) hits.push([sc0 / Math.pow(bbA.get(pa), .75), pa, dmin + Math.sqrt(bbA.get(pa)) * .02]);
+                });
+                if (!hits.length) return [];
+                hits.sort((a, b) => b[0] - a[0]);
+                const first = hits.shift();
+                hits.sort((a, b) => a[2] - b[2]);   // 二度目からは、指に近い順（同じくらいなら小さい県から）
+                return [first[1]].concat(hits.map(h => h[1]));
+            };
+
+            const show = c => {
+                const k = +c.dataset.p, p = JP_PREFS[k], n = byPref[p] || 0;
+                map.querySelectorAll('.hl').forEach(x => x.classList.remove('hl'));
+                c.classList.add('hl'); c.parentNode.appendChild(c);
+                tip.innerHTML = `<b>${p}</b><em>${n ? n + '<small>駅</small>' : 'まだ<small>出会っていません</small>'}</em>`;
+                tip.classList.remove('pop'); void tip.offsetWidth; tip.classList.add('pop');
+            };
+            const pick = e => { const list = hitTest(e); if (!list || !list.length) return; show(list[0]); haptic(5); };
+            map.addEventListener('click', pick);
+        }
+
+        // ---- 路線から探す：選んだ路線の路線図をそのまま開く ----
+        const wait = ms => new Promise(r => setTimeout(r, ms));
+        async function browseLine(line) {
+            await wait(380);   // 路線一覧が下がりきるのを待ってから
+            openRouteDirect(line);
+        }
+
         // ---- 左のメニュー・使い方・このサイトについて ----
         // アイコンはページの中に持っておく（ファイル一つで開いても表示されるように）
         const APP_ICON = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2048 2048"><rect width="2048" height="2048" fill="#f7f6f2"/><path d="M-1418 1635L2886 720" stroke="#8f76d6" stroke-width="210"/><path d="M-1366 1880L2938 965" stroke="#ff9500" stroke-width="210"/><path d="M303 -852L1217 3452" stroke="#b6007a" stroke-width="210"/><circle cx="760" cy="1300" r="530" fill="#f7f6f2"/><circle cx="760" cy="1300" r="490" fill="#263a6e"/><circle cx="760" cy="1300" r="350" fill="#f7f6f2"/><circle cx="760" cy="1300" r="160" fill="#263a6e"/><path d="M879 590L909 412" stroke="#263a6e" stroke-width="90" stroke-linecap="round"/><path d="M1095 663L1179 504" stroke="#263a6e" stroke-width="90" stroke-linecap="round"/><path d="M1278 800L1407 675" stroke="#263a6e" stroke-width="90" stroke-linecap="round"/></svg>');
@@ -5349,7 +6006,7 @@
         side.querySelectorAll('.sd-item').forEach(b => b.addEventListener('click', () => {
             const go = b.dataset.go;
             showSide(false);
-            setTimeout(() => { if (go === 'hist') showHist(true); else if (go === 'tut') showGuide(true); else showAbout(true); }, 180);
+            setTimeout(() => { ({ hist: () => showHist(true), tut: () => showGuide(true), about: () => showAbout(true), find: openSearch, lines: () => openLineModal(true), fav: () => openSheet(favModal), stats: () => openSheet(statsModal), set: () => openSheet(setModal) })[go](); }, 180);
         }));
         function showAbout(on) {
             clearTimeout(abTimer);
