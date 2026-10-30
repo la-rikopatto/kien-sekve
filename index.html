@@ -118,9 +118,9 @@
         html.dark #ten-btn { background: #1e2a3d; color: #5ea8ff; }
         #draw-btn { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
         /* 長押しで出る 5連・10連 の選択：ボタンのすぐ上に浮かぶ */
-        #multi-menu { position: absolute; right: 0; bottom: calc(100% + 10px); transform-origin: calc(100% - 46px) 100%; display: flex; gap: 6px; padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.05); z-index: 30; animation: mm-in .22s cubic-bezier(.2,.8,.2,1); }
+        #multi-menu { position: absolute; left: 0; bottom: calc(100% + 10px); transform-origin: 46px 100%; display: flex; gap: 6px; padding: 6px; background: #fff; border-radius: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.18), 0 0 0 1px rgba(0,0,0,.05); z-index: 30; animation: mm-in .22s cubic-bezier(.2,.8,.2,1); }
         #multi-menu[hidden] { display: none; }
-        #multi-menu::after { content: ''; position: absolute; right: 39px; top: 100%; border: 7px solid transparent; border-top-color: #fff; }
+        #multi-menu::after { content: ''; position: absolute; left: 39px; top: 100%; border: 7px solid transparent; border-top-color: #fff; }
         #multi-menu button { border: 0; font: inherit; font-size: 1rem; font-weight: 800; letter-spacing: .05em; color: #007AFF; background: #eef4ff; padding: 10px 16px; border-radius: 10px; cursor: pointer; transition: transform .1s; }
         #multi-menu button:active { transform: scale(.96); }
         #multi-menu button.cur { color: #fff; background: #007AFF; }   /* いま選んでいる回数 */
@@ -750,18 +750,22 @@
         html.dark #fav-btn.on { color: #f5a623; }
         /* 設定 */
         .set-body { padding: 6px 16px calc(18px + env(safe-area-inset-bottom)); }
-        .set-row { display: flex; align-items: center; gap: 14px; padding: 14px 4px; border-bottom: 1px solid #f1f2f4; cursor: pointer; }
+        .set-row { position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 4px; border-bottom: 1px solid #f1f2f4; cursor: pointer; }
         .set-row:last-child { border-bottom: 0; }
         html.dark .set-row { border-color: #2a2d33; }
         .set-row div { flex: 1; min-width: 0; }
         .set-row b { display: block; font-size: .98rem; color: #111827; }
         .set-row span { display: block; font-size: .75rem; color: #9ca3af; margin-top: 2px; }
         html.dark .set-row b { color: #f3f4f6; }
-        .tg { appearance: none; -webkit-appearance: none; flex: none; width: 50px; height: 30px; border-radius: 15px; background: #e5e7eb; position: relative; cursor: pointer; transition: background .25s; margin: 0; }
-        .tg::before { content: ''; position: absolute; left: 2px; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18); transition: transform .28s cubic-bezier(.3,1.3,.5,1); }
-        .tg:checked { background: #34c759; }
-        .tg:checked::before { transform: translateX(20px); }
-        html.dark .tg { background: #3a3d44; }
+        /* スイッチ：本物のチェックボックスは見えなくして、隣の span で描く（iPhone の Safari は input の ::before を描かないため） */
+        .tg-in { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+        .tg { flex: none; width: 50px; height: 30px; border-radius: 15px; background: #d1d5db; position: relative; transition: background .25s; }
+        .tg::before { content: ''; position: absolute; left: 2px; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); transition: transform .28s cubic-bezier(.3,1.3,.5,1); }
+        .tg-in:checked + .tg { background: #007AFF; }
+        .tg-in:checked + .tg::before { transform: translateX(20px); }
+        .tg-in:focus-visible + .tg { box-shadow: 0 0 0 3px rgba(0,122,255,.35); }
+        html.dark .tg { background: #4b5058; }
+        html.dark .tg-in:checked + .tg { background: #0a84ff; }
         /* きろく */
         .st-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 16px 16px calc(18px + env(safe-area-inset-bottom)); }
         .st-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
@@ -773,7 +777,8 @@
         html.dark .st-nums b { color: #f3f4f6; }
         .st-h { font-size: .78rem; font-weight: 800; color: #9ca3af; letter-spacing: .06em; margin: 4px 2px 10px; }
         .st-mapw { position: relative; margin-bottom: 8px; }
-        .st-map { display: block; width: 100%; height: auto; cursor: pointer; -webkit-tap-highlight-color: transparent; overflow: visible; }
+        .st-map { display: block; width: 100%; height: auto; touch-action: pan-y; cursor: pointer; -webkit-tap-highlight-color: transparent; overflow: visible; }
+        .st-map path[data-p] { touch-action: none; }
         .st-map path { fill: #cdd3dc; stroke: #fff; stroke-width: 1.2; stroke-linejoin: round; transition: fill .2s; }   /* 境目は細く（小さな県が線に食われないように） */
         html.dark .st-map path { fill: #3b414c; stroke: #1c1e23; }
         .st-map path.v { fill: color-mix(in srgb, #007AFF calc(var(--a) * 100%), #a9cbff); }
@@ -815,7 +820,8 @@
         html.dark #sh-close { background: #2a2d33; color: #9ca3af; }
         .sh-body { padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); overflow-y: auto; }
         .sh-prev { position: relative; width: min(100%, calc(44dvh * .8)); aspect-ratio: 4 / 5; margin: 0 auto 16px; border-radius: 12px; overflow: hidden; background: #efe9de; box-shadow: 0 10px 30px rgba(60,45,20,.16); }
-        .sh-prev img { width: 100%; height: 100%; display: block; transition: opacity .2s ease; }
+        .sh-prev img { width: 100%; height: 100%; display: block; object-fit: cover; transition: opacity .2s ease; }
+        html.dark .sh-prev { background: linear-gradient(#070910, #0d111b 55%, #151a26); box-shadow: 0 10px 30px rgba(0,0,0,.45); }   /* 夜の画像の縁に、明るい下地がにじまないように */
         .sh-prev.busy img { opacity: .55; }
         .sh-prev[data-err]::after { content: attr(data-err); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 20px; text-align: center; font-size: .8rem; color: #8b847a; }
         .sh-prev.busy::before { content: ''; position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; margin: -13px; border-radius: 50%; border: 3px solid rgba(139,132,122,.3); border-top-color: #8b847a; animation: sh-spin .8s linear infinite; }
@@ -947,8 +953,8 @@
         </div>
 
         <div id="draw-wrap">
-            <button id="draw-btn">抽選開始</button>
             <button id="ten-btn" type="button" aria-label="何回抽選するか"></button>
+            <button id="draw-btn">抽選開始</button>
             <div id="multi-menu" hidden><button type="button" data-n="1">単発</button><button type="button" data-n="5">5連</button><button type="button" data-n="7">7連</button><button type="button" data-n="10">10連</button></div>
         </div>
 
@@ -1020,7 +1026,7 @@
                 <ul>
                     <li>何も選ばずに「抽選開始」を押すと、全国の駅から一つ選びます。</li>
                     <li>「地域」と「範囲」で、地方・都道府県・主な都市にしぼれます。「複数の都道府県を選ぶ…」では、いくつかの県をまとめて選べます。</li>
-                    <li>右のボタンで回数を選べます（単発・5連・7連・10連）。5連以上では、最後に流れた駅がそのまま結果になり、一覧が開きます。カードの右下の「◯連の結果」から、あとで一覧を開き直せます。</li>
+                    <li>左のボタンで回数を選べます（単発・5連・7連・10連）。5連以上では、最後に流れた駅がそのまま結果になり、一覧が開きます。カードの右下の「◯連の結果」から、あとで一覧を開き直せます。</li>
                 </ul>
                 <div class="gd-fig" data-fig="count"></div>
                 <h4>路線で抽選する</h4>
@@ -1098,9 +1104,12 @@
         <div class="sm-panel" role="dialog" aria-modal="true" aria-label="設定">
             <div class="sm-head"><span style="flex:1">設定</span><button class="gx" data-close type="button" aria-label="閉じる">✕</button></div>
             <div class="set-body">
-                <label class="set-row"><div><b>効果音</b><span>抽選中の「カチカチ」と、止まったときの音</span></div><input class="tg" type="checkbox" data-set="sound"></label>
-                <label class="set-row"><div><b>振動</b><span>ボタンを押したときの小さな振動</span></div><input class="tg" type="checkbox" data-set="haptic"></label>
-                <label class="set-row"><div><b>読みがなを隠しておく</b><span>駅名の読み方を当てて遊ぶときに。タップで表示</span></div><input class="tg" type="checkbox" data-set="yomi"></label>
+                <label class="set-row"><div><b>効果音</b><span>抽選中の「カチカチ」と、止まったときの音</span></div><input class="tg-in" type="checkbox" data-set="sound"><span class="tg" aria-hidden="true"></span></label>
+                <label class="set-row"><div><b>振動</b><span>ボタンを押したときの小さな振動</span></div><input class="tg-in" type="checkbox" data-set="haptic"><span class="tg" aria-hidden="true"></span></label>
+                <label class="set-row"><div><b>読みがなを隠しておく</b><span>駅名の読み方を当てて遊ぶときに。タップで表示</span></div><input class="tg-in" type="checkbox" data-set="yomi"><span class="tg" aria-hidden="true"></span></label>
+                <label class="set-row"><div><b>新幹線を除く</b><span>新幹線しか止まらない駅は抽選に出ません</span></div><input class="tg-in" type="checkbox" data-set="noShin"><span class="tg" aria-hidden="true"></span></label>
+                <label class="set-row"><div><b>路面電車を除く</b><span>路面電車の停留場は抽選に出ません</span></div><input class="tg-in" type="checkbox" data-set="noTram"><span class="tg" aria-hidden="true"></span></label>
+                <label class="set-row"><div><b>同じ駅を出さない</b><span>一度出た駅は、範囲の駅をひと通り出し終えるまで出ません</span></div><input class="tg-in" type="checkbox" data-set="noRep"><span class="tg" aria-hidden="true"></span></label>
             </div>
         </div>
     </div>
@@ -1203,7 +1212,7 @@
             }, true);
         })();
         // ---- 設定（効果音・振動・読みがな）：この端末に保存 ----
-        const SET = { sound: true, haptic: true, yomi: false };
+        const SET = { sound: true, haptic: true, yomi: false, noShin: false, noTram: false, noRep: false };
         try { Object.assign(SET, JSON.parse(localStorage.getItem('tsugi-settings') || '{}')); } catch (e) {}
         const saveSet = () => { try { localStorage.setItem('tsugi-settings', JSON.stringify(SET)); } catch (e) {} };
         // ---- 黒夜モード：端末の設定に合わせる（自動）／いつも明るい／いつも暗い を切り替えられる ----
@@ -1398,7 +1407,21 @@
         });
         rebuildScope();   // 起動時：地域なしの範囲（主な都市）を入れておく
         // 抽选池：既存の地域・カテゴリはこれまで通り（ビット）。都道府県・複数選択は住所の都道府県で絞り込む
+        // 設定の「新幹線を除く」「路面電車を除く」：その種類の路線しか通らない駅を抽選から外す（ほかの路線も通る駅は残す）
+        const TRAM_LINES = new Set(['東京さくらトラム', '東急世田谷線', '阪堺電軌上町線', '阪堺電軌阪堺線', '京福電鉄嵐山本線', '京福電鉄北野線', '函館市電', '札幌市電', '富山地鉄市内線', '富山地鉄富山都心線', '富山港線', '万葉線', '福井鉄道福武線', '芳賀・宇都宮LRT', '豊橋鉄道東田本線', '岡山電気軌道東山線', '岡山電気軌道清輝橋線', '広電１号線', '広電２号線', '広電３号線', '広電５号線', '広電６号線', '広電７号線', '広電８号線', '広電９号線', '広島電鉄循環線', '伊予鉄道環状線', '伊予鉄道市駅線', '伊予鉄道松山駅前線', '伊予鉄道本町線', '土佐電気鉄道ごめん線', '土佐電気鉄道伊野線', '土佐電気鉄道桟橋線', '長崎電軌１系統', '長崎電軌３系統', '長崎電軌４系統', '長崎電軌５系統', '熊本市電Ａ系統', '熊本市電Ｂ系統', '鹿児島市電１系統', '鹿児島市電２系統']);
+        const isShinLine = n => /新幹線$/.test(n);
+        function trimKinds(pool) {
+            if (!SET.noShin && !SET.noTram) return pool;
+            const out = pool.filter(s => s.lines.some(l => !(SET.noShin && isShinLine(l.name)) && !(SET.noTram && TRAM_LINES.has(l.name))));
+            return out.length ? out : pool;   // 全部消えてしまう範囲なら、除かずにそのまま
+        }
         function getPool() {
+            const v = selectEl.value;
+            if (v === 'l' && lineScope) return getPoolRaw();   // 路線を自分で選んだときは、その路線をそのまま使う
+            if (v === '10') return getPoolRaw();   // 「札幌市電」の範囲も同じ
+            return trimKinds(getPoolRaw());
+        }
+        function getPoolRaw() {
             const v = selectEl.value;
             if (v === 'l' && lineScope) { const ids = new Set(lineScope.map(l => l.idx)); return stationList.filter(s => s.lines.some(l => ids.has(l.idx))); }
             if (!regionEl.value && !v) return stationList;   // 地域も範囲も選ばないときは全国からランダム
@@ -5236,7 +5259,7 @@
             mmOutTimer = setTimeout(() => { multiMenu.hidden = true; multiMenu.classList.remove('out'); }, 140);
         }
         const tenBtn = document.getElementById('ten-btn');
-        // 何回抽選するか：右のボタンで選ぶ（単発・5連・7連・10連）。左の大きいボタンはその回数で抽選する
+        // 何回抽選するか：左のボタンで選ぶ（単発・5連・7連・10連）。右の大きいボタンはその回数で抽選する
         let drawCount = 1;
         // 回数を変えたとき：ボタンの文字が下から入れ替わる（古い文字は上へ抜ける）
         function rollText(el, html) {
@@ -5338,8 +5361,24 @@
         let histTimer = 0;
         function loadHist() { try { const a = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
         function saveHist(a) { try { localStorage.setItem(HIST_KEY, JSON.stringify(a.slice(0, HIST_MAX))); } catch (e) {} }
+        // 設定の「同じ駅を出さない」：出た駅を覚えておき、範囲の駅をひと通り出し終えるまで候補から外す
+        const REP_KEY = 'tsugi-norep';
+        let repSeen = new Set(), repLast = new Set();
+        try { repSeen = new Set(JSON.parse(localStorage.getItem(REP_KEY) || '[]')); } catch (e) {}
+        const saveRep = () => { try { localStorage.setItem(REP_KEY, JSON.stringify([...repSeen])); } catch (e) {} };
+        function freshPool(pool, need) {
+            if (!SET.noRep) return pool;
+            const fresh = pool.filter(s => !repSeen.has(s.id));
+            if (fresh.length >= Math.min(need, pool.length)) return fresh;
+            // 出し終えたら、この範囲はまた最初から。ただし直前に出た駅がすぐまた出ないよう、それだけは残す
+            const keep = pool.length - repLast.size >= need ? repLast : new Set();
+            pool.forEach(s => { if (!keep.has(s.id)) repSeen.delete(s.id); }); saveRep();
+            return pool.filter(s => !keep.has(s.id));
+        }
         function addHist(stations, n) {
             recStats(stations);
+            repLast = new Set(stations.map(s => s.id));
+            if (SET.noRep) { stations.forEach(s => repSeen.add(s.id)); saveRep(); }
             const t = Date.now(), a = loadHist();
             const add = stations.map((st, i) => ({ id: st.id, t, n: n > 1 ? n : 0, k: i }));
             saveHist(add.concat(a));
@@ -5441,7 +5480,7 @@
             audioUnlock();
             showMultiMenu(false);
 
-            const pool = (poolOverride || getPool()).filter(Boolean);
+            const pool = freshPool((poolOverride || getPool()).filter(Boolean), count);
             if (pool.length === 0) {
                 wardEl.textContent = '候補がありません';
                 return;
@@ -5521,7 +5560,17 @@
             clearTimeout(searchModal._t);
             slotCard.classList.add('away');   // 履歴と同じく、カードを少し下げておき、駅を選んだら戻ってくる動きにする
             searchModal.hidden = false; void searchModal.offsetWidth; searchModal.classList.add('on');
-            setTimeout(() => srInput.focus(), 60);
+            setTimeout(() => { srInput.focus({ preventScroll: true }); const p = document.getElementById('kb-proxy'); if (p) p.remove(); }, 60);
+        }
+        function kbProxy() {
+            let p = document.getElementById('kb-proxy');
+            if (!p) {
+                p = document.createElement('input');
+                p.id = 'kb-proxy'; p.type = 'text'; p.setAttribute('aria-hidden', 'true'); p.tabIndex = -1;
+                p.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;font-size:16px;border:0;padding:0;pointer-events:none;';
+                document.body.appendChild(p);
+            }
+            p.focus({ preventScroll: true });
         }
         function closeSearch() { srInput.blur(); searchModal.classList.remove('on'); if (!sheetPicking) slotCard.classList.remove('away'); clearTimeout(searchModal._t); searchModal._t = setTimeout(() => { searchModal.hidden = true; }, 420); }
         function showStationDirect(st) {
@@ -5863,6 +5912,7 @@
             SET[c.dataset.set] = c.checked; saveSet();
             if (c.dataset.set === 'yomi' && !isDrawing) setYomiOff(SET.yomi);
             if (c.dataset.set === 'haptic' && c.checked) haptic(10);
+            if (c.dataset.set === 'noRep' && !c.checked) { repSeen.clear(); saveRep(); }   // 切ったら覚えていた駅も忘れる
         }));
 
         // ---- 行きたい駅：カード右上の星で入れたり外したり ----
@@ -5883,7 +5933,6 @@
             a = has ? a.filter(f => f.id !== st.id) : [{ id: st.id, t: Date.now() }].concat(a);
             saveFav(a); syncFav(st); haptic(10);
             favBtn.classList.remove('pop'); void favBtn.offsetWidth; if (!has) favBtn.classList.add('pop');
-            toast(has ? '行きたい駅から外しました' : '行きたい駅に入れました');
         });
         const favList = document.getElementById('fav-list');
         function renderFav() {
@@ -5958,7 +6007,8 @@
                 const samples = [[0, 0]];
                 for (let ring = 1; ring <= 3; ring++) for (let k = 0; k < 8; k++) { const a = (k + ring * .5) / 8 * Math.PI * 2; samples.push([Math.cos(a) * R * ring / 3, Math.sin(a) * R * ring / 3, 4 - ring]); }
                 const hits = [];
-                prefPaths.forEach(pa => {
+                const near = rects ? prefPaths.filter(pa => { const r = rects.get(pa); return e.clientX > r.left - R && e.clientX < r.right + R && e.clientY > r.top - R && e.clientY < r.bottom + R; }) : prefPaths;   // 指の近くの県だけ調べる（なぞるときに重くならないように）
+                near.forEach(pa => {
                     let sc0 = 0;
                     let dmin = 99;
                     samples.forEach(([dx, dy, w], i) => { if (pa.isPointInFill(toSvg(e.clientX + dx, e.clientY + dy))) { sc0 += i === 0 ? 14 : w; dmin = Math.min(dmin, Math.hypot(dx, dy)); } });
@@ -5971,15 +6021,30 @@
                 return [first[1]].concat(hits.map(h => h[1]));
             };
 
+            let rects = null, cur = null;
             const show = c => {
+                if (c === cur) return; cur = c;
                 const k = +c.dataset.p, p = JP_PREFS[k], n = byPref[p] || 0;
                 map.querySelectorAll('.hl').forEach(x => x.classList.remove('hl'));
                 c.classList.add('hl'); c.parentNode.appendChild(c);
                 tip.innerHTML = `<b>${p}</b><em>${n ? n + '<small>駅</small>' : 'まだ<small>出会っていません</small>'}</em>`;
                 tip.classList.remove('pop'); void tip.offsetWidth; tip.classList.add('pop');
             };
-            const pick = e => { const list = hitTest(e); if (!list || !list.length) return; show(list[0]); haptic(5); };
-            map.addEventListener('click', pick);
+            const pick = e => { const list = hitTest(e); if (!list || !list.length) return; if (list[0] !== cur) { show(list[0]); haptic(5); } };
+            // 押したまま指をすべらせると、指の下の県へ次々に切り替わる
+            let down = false, raf = 0, last = null;
+            map.addEventListener('pointerdown', e => {
+                rects = new Map(prefPaths.map(pa => [pa, pa.getBoundingClientRect()]));
+                pick(e);
+                // 陸の上で押したときだけ、なぞって切り替える（海のところは今までどおり画面をスクロールできる）
+                if (e.target.closest && e.target.closest('path[data-p]')) { down = true; try { map.setPointerCapture(e.pointerId); } catch (x) {} }
+            });
+            map.addEventListener('pointermove', e => {
+                if (!down) return;
+                last = { clientX: e.clientX, clientY: e.clientY, target: e.target };
+                if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (last) pick(last); });
+            });
+            ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => map.addEventListener(t, () => { down = false; last = null; }));
         }
 
         // ---- 路線から探す：選んだ路線の路線図をそのまま開く ----
@@ -6005,6 +6070,7 @@
         side.querySelector('.sd-back').addEventListener('click', () => showSide(false));
         side.querySelectorAll('.sd-item').forEach(b => b.addEventListener('click', () => {
             const go = b.dataset.go;
+            if (go === 'find') kbProxy();   // iOS はタップ中に focus しないとキーボードが出ないため、先に仮の入力欄で開いておく
             showSide(false);
             setTimeout(() => { ({ hist: () => showHist(true), tut: () => showGuide(true), about: () => showAbout(true), find: openSearch, lines: () => openLineModal(true), fav: () => openSheet(favModal), stats: () => openSheet(statsModal), set: () => openSheet(setModal) })[go](); }, 180);
         }));
@@ -6040,7 +6106,7 @@
         const FIG = {
             icon: '<img class="app-ic" alt="" style="width:120px;height:120px;border-radius:28px;box-shadow:0 12px 30px rgba(38,57,107,.2)">',
             scope: '<div style="display:flex;flex-direction:column;gap:8px;position:relative"><div class="tf-sel"><small>地域</small><b>関東</b><i>▾</i></div><div class="tf-sel"><small>範囲</small><b>東京都</b><i>▾</i></div><div class="tf-sel" style="opacity:.6"><small>範囲</small><b style="font-size:.75rem">複数の都道府県を選ぶ…</b><i>▾</i></div>' + tap(180, 52) + '</div>',
-            count: '<div style="display:flex;gap:14px;align-items:center"><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;position:relative"><div style="display:flex;gap:5px"><span class="tf-btn" style="width:96px;background:#007AFF;color:#fff;font-size:.75rem">10連で抽選</span><span class="tf-btn" style="width:50px;background:#e6f0ff;color:#007AFF;font-size:.72rem">10連▾</span></div><div class="tf-menu"><span>単発</span><span>5連</span><span>7連</span><span class="on">10連</span></div>' + tap(118, 4) + '</div><div class="tf-card" style="width:116px;height:130px"><span class="tf-ym" style="font-size:.5rem">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1.05rem">青山一丁目</span><span class="tf-pill">≡ 10連の結果</span>' + tap(72, 96, .8) + '</div></div>',
+            count: '<div style="display:flex;gap:14px;align-items:center"><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;position:relative"><div style="display:flex;gap:5px"><span class="tf-btn" style="width:50px;background:#e6f0ff;color:#007AFF;font-size:.72rem">10連▾</span><span class="tf-btn" style="width:96px;background:#007AFF;color:#fff;font-size:.75rem">10連で抽選</span></div><div class="tf-menu"><span>単発</span><span>5連</span><span>7連</span><span class="on">10連</span></div>' + tap(12, 4) + '</div><div class="tf-card" style="width:116px;height:130px"><span class="tf-ym" style="font-size:.5rem">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1.05rem">青山一丁目</span><span class="tf-pill">≡ 10連の結果</span>' + tap(72, 96, .8) + '</div></div>',
             swipe: '<div class="tf-card clip" style="width:262px;height:160px"><div class="tf-l tf-xa"><span class="tf-ym">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1.3rem">青山一丁目</span>' + '<div class="tf-row">' + B('#f39700', '東京メトロ銀座線') + B('#8f76d6', '東京メトロ半蔵門線') + '</div><div class="tf-row">' + B('#b6007a', '都営大江戸線') + '</div>' + '</div><div class="tf-l tf-xb"><span class="tf-ym">こうらくえん</span><span class="tf-nm" style="font-size:1.3rem">後楽園</span>' + '<div class="tf-row">' + B('#e60012', '東京メトロ丸ノ内線') + B('#00ada9', '東京メトロ南北線') + '</div><div class="tf-row">' + B('#b6007a', '都営大江戸線', 1) + B('#0079c2', '都営三田線', 1) + '</div>' + '</div><span class="tf-drag"></span></div>',
             map: '<div style="display:flex;align-items:center;gap:6px"><div class="tf-card" style="width:116px;height:124px;position:relative"><span class="tf-ym" style="font-size:.5rem">あおやまいっちょうめ</span><span class="tf-nm" style="font-size:1rem">青山一丁目</span><div class="tf-row"><span class="tf-b tf-glow" style="background:#b6007a;--c:#b6007a">都営大江戸線</span></div>' + tt(43, 76, 0) + tt(43, 76, .75) + '</div><span style="color:#9ca3af;font-weight:900">›</span><div class="tf-rv tf-rvin"><div class="hd"><span class="pl"><small>とえいおおえどせん</small>都営大江戸線</span><span class="nt">現在地：青山一丁目 ／ 全38駅</span></div><div class="ls"><i class="ln"></i>' + [['E-22', '麻布十番', '<b style="background:#00ada9"></b>'], ['E-23', '六本木', '<b style="background:#b5b5ac"></b>'], ['E-24', '青山一丁目', '<b style="background:#8f76d6"></b><b style="background:#f39700"></b>', 1], ['E-25', '国立競技場', '']].map(([n, k, d, c]) => `<div class="r${c ? ' cur' : ''}"><i class="dt"></i><span class="no">${n}</span><span class="nm">${k}</span>${c ? '<em>現在地</em>' : ''}<span class="ds">${d}</span></div>`).join('') + tt(62, 84, 1.9) + '</div></div></div>',
             hollow: '<div class="tf-card clip" style="width:262px;height:156px"><div class="tf-l" style="justify-content:flex-start;padding-top:18px"><div style="position:relative;height:44px;width:100%"><div class="tf-l tf-fa"><span class="tf-ym">こうらくえん</span><span class="tf-nm" style="font-size:1.3rem">後楽園</span></div><div class="tf-l tf-fb"><span class="tf-ym">かすが</span><span class="tf-nm" style="font-size:1.3rem">春日</span></div></div><div class="tf-row" style="margin-top:12px">' + B('#e60012', '東京メトロ丸ノ内線') + B('#00ada9', '東京メトロ南北線') + '</div><div class="tf-row" style="margin-top:5px;position:relative">' + B('#b6007a', '都営大江戸線', 1) + '<span class="tf-b h tf-glowh" style="border-color:#0079c2;--c:#0079c2">都営三田線</span>' + tt(92, -6, .98) + '</div></div></div>',
@@ -6053,7 +6119,7 @@
         const TUT = [
             { fig: FIG.icon, h: 'ようこそ「次はどこへ」へ', p: '知らない駅をランダムに選ぶ、駅ガチャです。全国およそ9000駅から、次に降りる駅を決めます。' },
             { fig: FIG.scope, h: 'どこから抽選するか', p: '何も選ばなければ全国から。「地域」と「範囲」で地方・都道府県・都市にしぼれます。複数の県をまとめて選ぶこともできます。' },
-            { fig: FIG.count, h: '回数を選ぶ', p: '右のボタンで単発・5連・7連・10連を選べます。5連以上の結果は一覧で開き、カード右下のボタンからあとで見直せます。' },
+            { fig: FIG.count, h: '回数を選ぶ', p: '左のボタンで単発・5連・7連・10連を選べます。5連以上の結果は一覧で開き、カード右下のボタンからあとで見直せます。' },
             { fig: FIG.swipe, h: '右にスワイプしてさかのぼる', p: 'カードを右にスワイプすると、抽選中に流れていった駅に一つずつ戻れます。左にスワイプすると元に戻ります。' },
             { fig: FIG.map, h: 'バッジから路線図へ', p: '路線のバッジを一度タップすると選ばれ、もう一度タップすると路線図が開きます。路線図の駅をタップすると、その駅に切り替わります。' },
             { fig: FIG.hollow, h: '白抜きのバッジ', p: '近くの別の駅で乗り換えられる路線です。たとえば後楽園の三田線は、となりの春日駅から。タップすると、その駅の名前に切り替わります。' },
