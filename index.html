@@ -7,6 +7,15 @@
     <!-- 開いた瞬間、何も描かれる前の地の色。ここが白いままだと、暗い起動画面の前に一瞬明るく光る -->
     <meta name="color-scheme" content="light dark">
     <style>html { background: #fafafa; } @media (prefers-color-scheme: dark) { html { background: #0f1115; } }</style>
+    <script>
+        // 表示の明暗（端末に合わせる／いつも明るい／いつも暗い）を、何も描かれる前に決める。端末が暗くても、アプリで明るいを選んでいれば最初から明るく（上の帯の色も）
+        (function () { try {
+            const m = localStorage.getItem('tsugi-theme') || 'auto';
+            const dark = m === 'dark' || (m === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+            const r = document.documentElement; r.classList.toggle('dark', dark); r.style.background = dark ? '#0f1115' : '#fafafa'; r.style.colorScheme = dark ? 'dark' : 'light';
+            window.__themeEarly = dark;
+        } catch (e) {} })();
+    </script>
     <title>次はどこへ — 駅ガチャ｜全国の駅をランダムに選ぶ</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -45,6 +54,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+    <script>try { if (window.__themeEarly !== undefined) document.querySelectorAll('meta[name="theme-color"]').forEach(x => { x.content = window.__themeEarly ? '#0f1115' : '#fafafa'; }); } catch (e) {}</script>
     <link rel="icon" type="image/png" href="icon-192.png">
     <meta property="og:type" content="website">
     <meta property="og:title" content="次はどこへ — 駅ガチャ">
@@ -871,6 +881,17 @@
         #sh-go { width: 100%; border: 0; border-radius: 12px; padding: 13px 0; font: inherit; font-size: 1rem; font-weight: 700; letter-spacing: .06em; color: #fff; background: #007AFF; cursor: pointer; transition: opacity .2s, transform .15s; }
         #sh-go:disabled { opacity: .5; }
         #sh-go:active { transform: scale(.98); }
+        .sh-row { display: flex; gap: 10px; }
+        .sh-row #sh-go { flex: 1; width: auto; }
+        #sh-link { flex: none; width: 52px; border: 0; border-radius: 12px; display: grid; place-items: center; color: #007AFF; background: rgba(0,122,255,.1); cursor: pointer; transition: transform .15s, background .2s, color .2s; }
+        #sh-link:active { transform: scale(.94); }
+        #sh-link svg { grid-area: 1 / 1; transition: opacity .2s, transform .25s cubic-bezier(.3,1.4,.5,1); }
+        #sh-link .ok { opacity: 0; transform: scale(.5); }
+        #sh-link.done { color: #34c759; background: rgba(52,199,89,.12); }
+        #sh-link.done .lk { opacity: 0; transform: scale(.5); }
+        #sh-link.done .ok { opacity: 1; transform: none; }
+        html.dark #sh-link { background: rgba(10,132,255,.18); color: #4da3ff; }
+        html.dark #sh-link.done { background: rgba(48,209,88,.16); color: #30d158; }
         #about-modal { position: fixed; inset: 0; z-index: 75; display: flex; align-items: flex-end; justify-content: center; }
         #about-modal[hidden] { display: none; }
         #about-modal .sm-backdrop { opacity: 0; transition: opacity .3s ease; }
@@ -939,7 +960,7 @@
             #splash { display: flex; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; background: #fafafa; animation: sp-safety .3s 5s forwards; }
             #splash.gone { display: none; }
         }
-        @media (display-mode: standalone) and (prefers-color-scheme: dark) { #splash { background: #0f1115; } #splash .sp-icon { box-shadow: none; } }
+        html.dark #splash { background: #0f1115; } html.dark #splash .sp-icon { box-shadow: none; }   /* 起動画面もアプリで選んだ明暗に合わせる */
         #splash .sp-icon { width: 112px; height: 112px; border-radius: 25px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.06), 0 6px 20px rgba(0,0,0,.07); }
         #splash svg { display: block; width: 100%; height: 100%; }
         #splash svg g, #splash svg circle { transform-box: view-box; }
@@ -1176,7 +1197,10 @@
             <div class="sh-body">
                 <div class="sh-prev"><img id="sh-img" alt=""></div>
                 <div class="sh-copies" id="sh-copies"></div>
-                <button id="sh-go" type="button">シェアする</button>
+                <div class="sh-row">
+                    <button id="sh-go" type="button">シェアする</button>
+                    <button id="sh-link" type="button" aria-label="リンクをコピー" title="リンクをコピー"><svg class="lk" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/></svg><svg class="ok" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+                </div>
             </div>
         </div>
     </div>
@@ -1328,6 +1352,9 @@
             xfer: xs.map((i, n) => ({ idx: i, name: LINES[i][0], bg: LINES[i][1], text: LINES[i][2], hollow: true, src: xsrc[n] || '' }))
         }));
         const stationById = new Map(stationList.map(s => [s.id, s]));
+        // 一本の線として扱う二つの路線（予讃線：高松〜松山〜宇和島）：両方が通る駅（松山）では徽章を一つに
+        const ONE_BADGE = [['JR予讃線', 'JR予讃・内子線']];
+        stationList.forEach(s => ONE_BADGE.forEach(([a, b]) => { if (s.lines.some(l => l.name === a) && s.lines.some(l => l.name === b)) s.lines = s.lines.filter(l => l.name !== b); }));
         // pool index = bit: 0 メトロ・都営, 1 山手線内, 2 23区, 3 大阪市内, 4 大阪メトロ, 5 京阪神, 6 東京都全域, 7 一都三県, 8 札幌市内, 9 札幌地下鉄, 10 札幌市電, 11 道央, 12 道南, 13 旭川地区, 14 道北, 15 道東, 16 道内全域
         const dataPools = [];
         for (let i = 0; i < 17; i++) dataPools[i] = stationList.filter(s => (s.f >> i) & 1);
@@ -1808,7 +1835,7 @@
         let rvVariants = [], rvVar = 0, rvDetached = [], rvLineObj = null, rvCur = new Set(), rvNoCur = false;
         let rvFlip = false;   // 今の画面の路線を、データと上下逆に表示しているか
         // 本線から分かれて、先でまた本線に戻る支線（予讃線の海線：向井原→伊予大洲、函館本線の砂原線：大沼→森）。支線の画面の下の端に、本線へ戻る胶囊を出す
-        const REJOIN = { 'JR予讃・内子線': { '向井原': '伊予大洲' }, 'JR函館本線': { '大沼': '森' } };
+        const REJOIN = { 'JR予讃・内子線': { '向井原': '伊予大洲' }, 'JR予讃線': { '向井原': '伊予大洲' }, 'JR函館本線': { '大沼': '森' } };
         const branchPoint = seg => (seg[0] || '').replace(/\s*から分岐$/, '');
         function stopCode(seg, n) { return Array.isArray(seg[2]) ? (seg[2][n] || '') : (seg[2] ? seg[2] + String(n + 1).padStart(2, '0') : n + 1); }
         // 一个「走法」= 本线全程，或「分歧站 + 支线」（只显示支线）
@@ -1826,7 +1853,10 @@
             '東武伊勢崎線': [{ line: '東武スカイツリーライン' }, { seg: 0 }],   // 東武動物公園で名前と色が変わるだけの一本の路線。どちらから開いても全線を表示
             // 東京の地下でそのまま続く一本の線（駅番号も JO で通し）。駅ではその区間の名前のまま、線路詳情は久里浜〜千葉の全線
             'JR横須賀線': [{ seg: 0 }, { line: 'JR総武快速線' }],
-            'JR総武快速線': [{ line: 'JR横須賀線' }, { seg: 0 }]
+            'JR総武快速線': [{ line: 'JR横須賀線' }, { seg: 0 }],
+            // 予讃線：松山で駅番号が Y から U に変わるが、一本の線として高松〜宇和島を通して表示
+            'JR予讃線': [{ seg: 0 }, { line: 'JR予讃・内子線' }],
+            'JR予讃・内子線': [{ line: 'JR予讃線' }, { seg: 0 }]
         };
         // 直通で続いていく路線：線路詳情の上下の端に、前後の路線へ切り替える胶囊を置く（rev: データの向きが逆）
         const THROUGH_CHAINS = [
@@ -1856,6 +1886,7 @@
             "JR宗谷本線": [{"c": "#f7931d", "st": ["旭川", "旭川四条", "新旭川"]}],   // 旭川〜新旭川は石北本線と同じ A（橙）
             "JR千歳線": [{"c": "#00b2eb", "st": ["新千歳空港"]}],   // 南千歳〜新千歳空港 AP（水色）
             "JR予讃・内子線": [{"c": "#98a9d6", "st": ["高野川", "伊予上灘", "下灘", "串", "喜多灘", "伊予長浜", "伊予出石", "伊予白滝", "八多喜", "春賀", "五郎"]}],   // 向井原〜伊予長浜〜伊予大洲（海線）S（グレー）
+            "JR予讃線":  [{"c": "#98a9d6", "st": ["高野川", "伊予上灘", "下灘", "串", "喜多灘", "伊予長浜", "伊予出石", "伊予白滝", "八多喜", "春賀", "五郎"]}],   // 予讃線の画面から開いた海線（予讃・内子線とつながる一本の線として）
             "名鉄三河線": [{"c": "#654e9e", "st": ["碧南", "碧南中央", "新川町", "北新川", "高浜港", "三河高浜", "吉浜", "小垣江", "刈谷市", "刈谷", "重原", "知立"]}, {"c": "#9aab43", "st": ["三河知立", "三河八橋", "若林", "竹村", "土橋", "上挙母", "豊田市", "梅坪", "越戸", "平戸橋", "猿投"]}],   // 知立〜碧南 海線（紫）、知立〜猿投 山線（黄緑）
             "近江鉄道本線": [{"c": "#f01008", "st": ["米原", "フジテック前", "鳥居本", "彦根", "ひこね芹川", "彦根口", "高宮"]}, {"c": "#3461b6", "st": ["尼子", "豊郷", "愛知川", "五箇荘", "河辺の森", "八日市"]}, {"c": "#fdc740", "st": ["長谷野", "大学前", "京セラ前", "桜川", "朝日大塚", "朝日野", "日野", "水口松尾", "水口", "水口石橋", "水口城南", "貴生川"]}],   // 米原〜高宮 赤、高宮〜八日市 青、八日市〜貴生川 黄
             "養老鉄道養老線": [{"c": "#2ca6e0", "st": ["桑名", "播磨", "下深谷", "下野代", "多度", "美濃松山", "石津", "美濃山崎", "駒野", "美濃津屋", "養老", "美濃高田", "烏江", "大外羽", "友江", "美濃青柳", "西大垣", "大垣"]}, {"c": "#e3007f", "st": ["室", "北大垣", "東赤坂", "広神戸", "北神戸", "池野", "北池野", "美濃本郷", "揖斐"]}],   // 桑名〜大垣 水色、大垣〜揖斐 ピンク
@@ -2496,7 +2527,9 @@
             rvBody.scrollTop = 0;
             rvLineObj = line;
             rvCur = rvNoCur ? new Set() : new Set([baseStation, shownStation, shownPartner].filter(Boolean).map(s => normStop(splitBracket(s.kanji).main)));   // 路線から探したときは、今の駅がその路線になければ「現在地」を付けない
-            const segs = STOPS[line.idx] || [];
+            let segs = STOPS[line.idx] || [];
+            // つながる先の路線の支線（予讃・内子線の海線）も、この画面から行けるように加える
+            (GAP_CONNECT[line.name] || []).filter(p => p.line).forEach(p => { const pl = lineObjByName(p.line); if (pl) segs = segs.concat((STOPS[pl.idx] || []).slice(1)); });
             if (!segs.length) { rvBody.innerHTML = '<div class="rv-empty">この路線の駅データがありません。</div>'; rvVariants = []; return; }
             const m = makeVariants(segs, line);
             rvVariants = m.vs; rvDetached = m.detached;
@@ -3825,7 +3858,7 @@
             const fs = [...ul.querySelectorAll(`.rv-forkrow[data-v="${fromVar}"] .rv-fork`)];
             if (fs.length < 2) return fs[0] || null;
             const st = [...ul.querySelectorAll(':scope > .rv-st')].find(r => r.querySelector('.nm').textContent === bpName);
-            if (!st) return fs[0];
+            if (!st) { const v = rvVariants[rvVar]; return v && v.rejoin && v.rejoin === bpName ? fs[fs.length - 1] : fs[0]; }   // 合流する駅（伊予大洲など）は支線の画面にないので、下の端の胶囊に合わせる
             return fs.sort((a, b) => Math.abs(a.closest('.rv-forkrow').offsetTop - st.offsetTop) - Math.abs(b.closest('.rv-forkrow').offsetTop - st.offsetTop))[0];
         }
         // 同じ駅から分かれる別の支線へ（成田線：成田空港方面 ⇔ 我孫子方面）：二つの支線が入れ替わる。
@@ -5126,7 +5159,8 @@
             const skSeen = new Set(), sk = [];
             st.lines.filter(isSKl).forEach(l => { const c = l.bg.toLowerCase(); if (!skSeen.has(c)) { skSeen.add(c); sk.push({ l, h: false }); } });
             // 名前が変わるだけでつながっている一本の線（横須賀線と総武快速線など、同じ色）は、つなぎ目の駅でも一本に
-            const joined = (a, b) => (GAP_CONNECT[a.name] || []).some(p => p.line === b.name) && a.bg.toLowerCase() === b.bg.toLowerCase();
+            const SAME_LINE = [['JR予讃線', 'JR予讃・内子線']];   // 路線図では別々だが、絵では一本の線として描く
+            const joined = (a, b) => a.bg.toLowerCase() === b.bg.toLowerCase() && ((GAP_CONNECT[a.name] || []).some(p => p.line === b.name) || SAME_LINE.some(([x, y]) => (a.name === x && b.name === y) || (a.name === y && b.name === x)) || THROUGH_CHAINS.some(c => { const i = c.findIndex(x => x.n === a.name), j = c.findIndex(x => x.n === b.name); return i >= 0 && j >= 0 && Math.abs(i - j) === 1; }));
             const own = st.lines.filter(l => !isSKl(l)).filter((l, i, arr) => !arr.some((o, j) => j < i && joined(o, l)));
             let lines = own.map(l => ({ l, h: false })).concat((st.xfer || []).map(l => ({ l, h: true })));
             for (let k = lines.length - 1; k > 0; k--) { const j = Math.floor(rnd() * (k + 1)); [lines[k], lines[j]] = [lines[j], lines[k]]; }
@@ -5335,6 +5369,23 @@
                 if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
             } catch (e) { if (e && e.name === 'AbortError') return; }
             showShareImage(blob);
+        });
+
+        // リンクをコピー：この駅を開くリンク（?eki=…）。コピーできたら、しばらくチェックの印に
+        const shLink = document.getElementById('sh-link'); let shLinkT = 0;
+        shLink.addEventListener('click', async () => {
+            const st = shSt; if (!st) return;
+            // 友だちを誘う一文を添えて、そのまま送れるように
+            const nm = splitBracket(st.kanji).main;
+            const url = '駅ガチャ回したら「' + nm + '」が出た！今度の休み、一緒に行ってみない？どんな町か、ここから見てみて〜\n' + stationUrl(st);
+            let ok = false;
+            try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {
+                try { const ta = document.createElement('textarea'); ta.value = url; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;'; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove(); } catch (e2) {}
+            }
+            if (!ok) return;
+            haptic(8);
+            shLink.classList.add('done'); shLink.setAttribute('aria-label', 'コピーしました');
+            clearTimeout(shLinkT); shLinkT = setTimeout(() => { shLink.classList.remove('done'); shLink.setAttribute('aria-label', 'リンクをコピー'); }, 1600);
         });
 
         // 抽選で止まる直前に流れていった駅（右へ払うと、ひとつずつさかのぼって見られる）
