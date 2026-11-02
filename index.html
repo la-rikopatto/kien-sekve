@@ -5047,13 +5047,10 @@
         const SHARE_COPIES = [
             { l: '次は', r: 'へ。' },
             { l: '今度、', r: '行かない？' },
-            { l: '一緒に', r: 'へ行こう。' },
-            { l: 'ちょっと', r: 'まで。' },
-            { l: '次の休みは', r: 'へ。' },
-            { l: 'ねえ、', r: 'で降りてみない？' }
+            { l: '一緒に', r: 'へ行こう。' }
         ];
         let shareCopyIdx = 0;
-        try { shareCopyIdx = Math.min(SHARE_COPIES.length - 1, Math.max(0, +localStorage.getItem('tsugi-share-copy') || 0)); } catch (e) {}
+        try { const v = +localStorage.getItem('tsugi-share-copy') || 0; shareCopyIdx = v >= 0 && v < SHARE_COPIES.length ? v : 0; } catch (e) {}   // 前に選んでいたことばが今はないときは「次は」に
         const SHARE_COPY = SHARE_COPIES[0];
         async function makeShareImage(st, copy = SHARE_COPY, noIcon) {
             const FF = '"Noto Sans JP", "Noto Sans CJK JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif';
@@ -5183,25 +5180,40 @@
             const track = (t, cx, y, sp) => { const ws = [...t].map(ch => ctx.measureText(ch).width); const tw = ws.reduce((a, b) => a + b, 0) + sp * (ws.length - 1); let x = cx - tw / 2; [...t].forEach((ch, k) => { ctx.fillText(ch, x, y); x += ws[k] + sp; }); };
             const nm = splitBracket(st.kanji), ym = splitBracket(st.yomi);
             ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-            ctx.fillStyle = C.sub; ctx.font = `500 28px ${FF}`; track(ym.main, W / 2, 945, 9);
+            // 駅名はいつも真ん中。左右のことば（「一緒に」「へ行こう。」など）のうち長いほうが画面に収まるように、
+            // まずことばを少し小さくし、それでも足りなければ駅名を小さくする
+            let cf = 32; ctx.font = `500 ${cf}px ${FF}`;
+            const cw0 = Math.max(ctx.measureText(copy.l).width, ctx.measureText(copy.r).width);
             let ks = 112; ctx.font = `700 ${ks}px ${FF}`;
-            const nw = [...nm.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + 14 * ([...nm.main].length - 1);
-            if (nw > W - 340) ks = Math.floor(ks * (W - 340) / nw);   // 左右の「次は」「へ。」が入る余白を残す
-            ctx.font = `700 ${ks}px ${FF}`; ctx.fillStyle = C.ink; track(nm.main, W / 2, 945 + 34 + ks * .86, ks * .12);
+            const nw = [...nm.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + ks * .12 * ([...nm.main].length - 1);
+            const roomAt = f => W - 120 - 2 * (cw0 * f / 32 + 40);
+            if (nw > roomAt(cf)) cf = 26;
+            if (nw > roomAt(cf)) ks = Math.floor(ks * roomAt(cf) / nw);
+            const ncx = W / 2;
+            // よみがな：駅名が小さくなったら少しだけ小さく（読める大きさは残す）。字間をつめて駅名より広がりすぎないように。
+            // 駅名の上に、駅名と下の県名の間と同じくらいの間をあけて置く
+            { let ys = Math.min(28, Math.max(20, ks * .42)), yt = Math.min(9, ys * .32);
+              ctx.font = `700 ${ks}px ${FF}`; const nameW = [...nm.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + ks * .12 * ([...nm.main].length - 1);
+              const yw = () => { ctx.font = `500 ${ys}px ${FF}`; return [...ym.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + yt * ([...ym.main].length - 1); };
+              const lim = Math.max(nameW * 1.1, 260);
+              if (yw() > lim) { yt = Math.max(1.5, yt * .35); if (yw() > lim) ys = Math.max(18, ys * lim / yw()); }
+              const nb = 945 + 34 + ks * .86, gap = ks >= 100 ? 34 : Math.max(20, ks * .45);
+              ctx.fillStyle = C.sub; ctx.font = `500 ${ys}px ${FF}`; track(ym.main, ncx, nb - ks * .86 - gap, yt); }
+            ctx.font = `700 ${ks}px ${FF}`; ctx.fillStyle = C.ink; track(nm.main, ncx, 945 + 34 + ks * .86, ks * .12);
             // 駅名の左右に、淡く小さく「次は」「へ。」（一続きの文として読めるように、駅名と同じ並びの高さで）
-            { const nb = 945 + 34 + ks * .86, half = Math.min(nw, W - 200) / 2 * (ks / 112 > 0 ? 1 : 1);
+            { const nb = 945 + 34 + ks * .86;
               ctx.font = `700 ${ks}px ${FF}`; const realW = [...nm.main].reduce((a, ch) => a + ctx.measureText(ch).width, 0) + ks * .12 * ([...nm.main].length - 1);
-              ctx.font = `500 32px ${FF}`; ctx.fillStyle = C.sub;
+              ctx.font = `500 ${cf}px ${FF}`; ctx.fillStyle = C.sub;
               // そろえすぎない：「次は」は駅名の左上に浮かせ、「へ。」は右下へ少し落とす
               // 駅名の高さの真ん中にそろえ、駅名から少し離す
               const my = nb - ks * .37; ctx.textBaseline = 'middle';
-              ctx.textAlign = 'right'; ctx.fillText(copy.l, W / 2 - realW / 2 - 40, my);
-              ctx.textAlign = 'left'; ctx.fillText(copy.r, W / 2 + realW / 2 + 36, my);
+              ctx.textAlign = 'right'; ctx.fillText(copy.l, ncx - realW / 2 - 40, my);
+              ctx.textAlign = 'left'; ctx.fillText(copy.r, ncx + realW / 2 + 36, my);
               ctx.textBaseline = 'alphabetic';
               ctx.textAlign = 'left'; }
-            let by = 945 + 34 + ks * .86 + 70;
-            if (nm.sub) { ctx.font = `500 32px ${FF}`; ctx.fillStyle = C.sub; track(nm.sub, W / 2, by, 4); by += 50; }
-            ctx.fillStyle = C.faint; ctx.font = `500 22px ${FF}`; track(st.pref || '', W / 2, by, 10);
+            let by = 945 + 34 + ks * .86 + (ks >= 100 ? 70 : Math.max(48, ks * .62));   // 駅名が小さいときは、下の県名も同じくらい寄せる
+            if (nm.sub) { ctx.font = `500 32px ${FF}`; ctx.fillStyle = C.sub; track(nm.sub, ncx, by, 4); by += 50; }
+            ctx.fillStyle = C.faint; ctx.font = `500 22px ${FF}`; track(st.pref || '', ncx, by, 10);
             // 落款：小さなロゴだけ
             // アイコンの地の色（角の四角と輪のまわりの縁取り）を、その場所の紙の色に置きかえて描く
             const ls = 56, lx = W / 2 - ls / 2, ly = H - 56 - ls;
@@ -5275,6 +5287,9 @@
             if (!blob) return;
             const file = new File([blob], st.kanji + '駅.png', { type: 'image/png' });
             try {
+                // 画像に、この駅を開くリンク（?eki=…）を添えて渡す。添えられない端末では画像だけ
+                const withUrl = { files: [file], text: st.kanji + '駅 ｜ 次はどこへ', url: stationUrl(st) };
+                if (navigator.canShare && navigator.canShare(withUrl)) { await navigator.share(withUrl); return; }
                 if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file] }); return; }
             } catch (e) { if (e && e.name === 'AbortError') return; }
             showShareImage(blob);
