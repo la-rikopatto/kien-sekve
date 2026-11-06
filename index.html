@@ -1672,9 +1672,8 @@
                 rv.hidden = true;
                 if (orig) orig.style.visibility = '';
                 rvOpen = false; rvBusy = false;
-                // 線路一覧で換えた駅は元の地区／範囲に属さないので両方の欄を空にする
-                regionEl.value = '';
-                rebuildScope();
+                // 線路一覧で換えた駅が今の地区／範囲の外なら両方の欄を空にする（範囲の中ならそのまま）
+                if (!getPoolRaw().includes(st)) { regionEl.value = ''; rebuildScope(); }
                 showStationDirect(st);
             });
         }
@@ -5761,14 +5760,20 @@
                 }
                 spinTimer = requestAnimationFrame(frame);
             };
+            // 出す駅は先に全部決めておく。日本語フォントは文字ごとに後から読み込まれるので、ゆっくり見える終わりの方の駅は今のうちに読み込んでおく
+            // （読み込み前は別のフォントで出て、読み込み終わると字形と幅が変わって名前が跳んで見えるため）
+            const seq = [];
+            { let lid = lastId;
+              for (let k = 0; k < totalSteps; k++) {
+                  const avoid = multi ? seq.slice(-(multi - 1)) : [];
+                  let pk, tries = 0;
+                  do { pk = pool[Math.floor(Math.random() * pool.length)]; } while (pool.length > 1 && (pk.id === lid || avoid.includes(pk)) && ++tries < 200);
+                  seq.push(pk); lid = pk.id;
+              } }
+            try { if (document.fonts && document.fonts.load) { const tx = seq.slice(-16).map(s => s.kanji + s.yomi + (s.ward || '') + s.pref).join(''); ['900 48px', '700 14px', '500 12px'].forEach(w => document.fonts.load(w + ' "Noto Sans JP"', tx).catch(() => {})); } } catch (e) {}
             const spin = () => {
-                let pick;
                 if (step === totalSteps - 1) spinLine = null;   // 最後の駅はふつうの表示
-                const avoid = multi ? recent.slice(-(multi - 1)) : [];
-                let tries = 0;
-                do {
-                    pick = pool[Math.floor(Math.random() * pool.length)];
-                } while (pool.length > 1 && (pick.id === lastId || avoid.includes(pick)) && ++tries < 200);
+                const pick = seq[step];
                 recent.push(pick);
                 lastId = pick.id;
                 if (spinTrail && currentStation && step > 0) spinTrail.push(currentStation);   // 直前に表示していた駅を覚えておく
@@ -6134,7 +6139,7 @@
             await sheetDownThenSwap(m.querySelector('.sm-panel'), anim => {
                 m.hidden = true; anim.cancel();
                 multiResults = null; setListBtn();
-                regionEl.value = ''; rebuildScope();
+                if (!getPoolRaw().includes(st)) { regionEl.value = ''; rebuildScope(); }   // 今の範囲の中の駅なら範囲はそのまま
                 showStationDirect(st);
             });
             sheetPicking = false;
