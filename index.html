@@ -1141,7 +1141,7 @@
                 <h4>表示を変える</h4>
                 <div class="gd-fig" data-fig="yomi"></div>
                 <ul>
-                    <li>駅名の上の読みがなをタップすると隠せます。もう一度タップすると表示されます。読み方を当てて遊ぶときにどうぞ。</li>
+                    <li>駅名の上の読みがなをタップすると隠せます。隠したままほかの駅に移っても隠れたままで、もう一度タップすると表示に戻ります。読み方を当てて遊ぶときにどうぞ。</li>
                 </ul>
                 <div class="gd-fig" data-fig="theme"></div>
                 <ul>
@@ -1153,7 +1153,7 @@
                     <li>メニューの「抽選の履歴」に、最近の100件が残ります（この端末だけに保存）。</li>
                     <li>メニューの「駅を探す」で駅名・よみ・ローマ字から、「路線から探す」で路線を選んで路線図から、抽選せずに駅を見られます。</li>
                     <li>カード右上の☆を押すと「行きたい駅」に残ります。二駅以上あれば、その中から抽選することもできます。「きろく」では、抽選した回数と出会った駅・都道府県が見られます。</li>
-                    <li>「設定」で、効果音・振動・読みがなを最初から隠すかどうかを変えられます。</li>
+                    <li>「設定」で、効果音・振動などを変えられます。</li>
                     <li>Safari の共有ボタンから「ホーム画面に追加」すると、アプリのように使えます。2回目からは電波がなくても開けます。</li>
                 </ul>
                 <button type="button" id="gd-tour" class="gd-tour">はじめの説明をもう一度見る</button>
@@ -1183,7 +1183,6 @@
             <div class="set-body">
                 <label class="set-row"><div><b>効果音</b><span>抽選中の「カチカチ」と、止まったときの音</span></div><input class="tg-in" type="checkbox" data-set="sound"><span class="tg" aria-hidden="true"></span></label>
                 <label class="set-row"><div><b>振動</b><span>ボタンを押したときの小さな振動</span></div><input class="tg-in" type="checkbox" data-set="haptic"><span class="tg" aria-hidden="true"></span></label>
-                <label class="set-row"><div><b>読みがなを隠しておく</b><span>駅名の読み方を当てて遊ぶときに。タップで表示</span></div><input class="tg-in" type="checkbox" data-set="yomi"><span class="tg" aria-hidden="true"></span></label>
                 <label class="set-row"><div><b>新幹線を除く</b><span>新幹線しか止まらない駅は抽選に出ません</span></div><input class="tg-in" type="checkbox" data-set="noShin"><span class="tg" aria-hidden="true"></span></label>
                 <label class="set-row"><div><b>路面電車を除く</b><span>路面電車の停留場は抽選に出ません</span></div><input class="tg-in" type="checkbox" data-set="noTram"><span class="tg" aria-hidden="true"></span></label>
                 <label class="set-row"><div><b>同じ駅を出さない</b><span>一度出た駅は、範囲の駅をひと通り出し終えるまで出ません</span></div><input class="tg-in" type="checkbox" data-set="noRep"><span class="tg" aria-hidden="true"></span></label>
@@ -4884,7 +4883,8 @@
                 hit = e.clientX >= b.left - 16 && e.clientX <= b.right + 16;
             }
             if (!hit) return false;
-            setYomiOff(!slotCard.classList.contains('yomi-off'));
+            SET.yomi = !slotCard.classList.contains('yomi-off'); saveSet();   // 隠したらほかの駅でも隠したまま、もう一度押すまで続ける
+            setYomiOff(SET.yomi);
             return true;
         }
         // 読みを隠す状態はカードと線路一覧で共通
@@ -4921,7 +4921,7 @@
         });
 
         function updateUI(station) {
-            setYomiOff(SET.yomi);   // 読みを隠すのは今の駅だけ（設定で「隠しておく」なら、どの駅も最初は隠す）
+            setYomiOff(SET.yomi);   // 読みを隠していれば、次の駅も隠したまま
             syncFav(station);
             baseStation = station;
             selectedKey = null; document.body.classList.remove('focus');
@@ -5765,7 +5765,7 @@
             const seq = [];
             { let lid = lastId;
               for (let k = 0; k < totalSteps; k++) {
-                  const avoid = multi ? seq.slice(-(multi - 1)) : [];
+                  const avoid = seq.slice(-Math.min(pool.length - 1, totalSteps));   // 単抽でも連抽でも、一回の抽選の中で同じ駅は二度出さない（駅が少ない範囲では、出せるだけ間を空ける）
                   let pk, tries = 0;
                   do { pk = pool[Math.floor(Math.random() * pool.length)]; } while (pool.length > 1 && (pk.id === lid || avoid.includes(pk)) && ++tries < 200);
                   seq.push(pk); lid = pk.id;
@@ -6159,7 +6159,6 @@
         // ---- 設定 ----
         setModal.querySelectorAll('[data-set]').forEach(c => c.addEventListener('change', () => {
             SET[c.dataset.set] = c.checked; saveSet();
-            if (c.dataset.set === 'yomi' && !isDrawing) setYomiOff(SET.yomi);
             if (c.dataset.set === 'haptic' && c.checked) haptic(10);
             if (c.dataset.set === 'noRep' && !c.checked) { repSeen.clear(); saveRep(); }   // 切ったら覚えていた駅も忘れる
         }));
