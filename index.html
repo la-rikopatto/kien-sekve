@@ -3981,6 +3981,9 @@
             if (!nodes.length) return;
             const base = ul.style.getPropertyValue('--c') || rvLineObj.bg;
             const forks = [...ul.querySelectorAll(':scope > .rv-forkrow')];
+            const spurs = [...ul.querySelectorAll(':scope > .rv-spur')];
+            // 分かれ目の高さ：胶囊は真ん中、一駅の枝は線が曲がり始めるところの少し先（下の枝なら丸より上、上の枝なら丸より下）
+            const junY = f => f.classList.contains('rv-spur') ? f.offsetTop + f.offsetHeight / 2 + (f.classList.contains('up') ? 10 : -10) : f.offsetTop + f.offsetHeight / 2;
             const isLink = n => n.classList.contains('rv-link');
             const enter = n => isLink(n) ? n.offsetTop : n.offsetTop + n.offsetHeight / 2;
             const exit = n => isLink(n) ? n.offsetTop + n.offsetHeight : n.offsetTop + n.offsetHeight / 2;
@@ -3995,11 +3998,12 @@
                     // 直通の延長線：色の移り変わりは駅の丸の中で済ませるので、丸から先は直通先の色一色
                     if (isLink(b2) && b2.classList.contains('thr')) s = Object.assign({}, s, { thin: b2.classList.contains('part') });
                     // 端の駅とまっすぐの直通の間に、横へ分かれる直通の胶囊があるとき：分かれ目までは自分の線の色、そこから先が直通先の色（分かれる線が自分の路線から分かれて見えるように）
-                    const between = forks.filter(f => f.offsetTop > exit(a) - 1 && f.offsetTop < enter(b2));
+                    // 端の一駅の枝（綾瀬→北綾瀬）も同じ：枝が分かれるところまでは自分の線の色、そこから先が直通先の色
+                    const between = forks.concat(spurs).sort((p, q) => p.offsetTop - q.offsetTop).filter(f => f.offsetTop > exit(a) - 1 && f.offsetTop < enter(b2));
                     if (between.length && isLink(a) !== isLink(b2) && !s.dash) {
                         const sb = Object.assign({}, s, { c: base, thin: false });
-                        if (isLink(a)) { const yF = between[0].offsetTop + between[0].offsetHeight / 2, sb2 = Object.assign({}, sb, { c: b2.dataset.c || base }); edges.push({ y1: exit(a), y2: yF - 8, s }, { y1: yF - 8, y2: yF + 8, s: Object.assign({}, s, { from: s.c, to: sb2.c, thin: false }) }, { y1: yF + 8, y2: enter(b2), s: sb2 }); }   // 胶囊を過ぎた先は、その先の駅の区間の色（路線の色にすると、区間ごとに色の違う路線で、駅の手前だけ別の色になる）
-                        else { const yF = between[between.length - 1].offsetTop + between[between.length - 1].offsetHeight / 2; edges.push({ y1: exit(a), y2: yF - 8, s: sb }, { y1: yF - 8, y2: yF + 8, s: Object.assign({}, s, { from: base, to: s.c, thin: false }) }, { y1: yF + 8, y2: enter(b2), s }); }
+                        if (isLink(a)) { const yF = junY(between[0]), sb2 = Object.assign({}, sb, { c: b2.dataset.c || base }); edges.push({ y1: exit(a), y2: yF - 8, s }, { y1: yF - 8, y2: yF + 8, s: Object.assign({}, s, { from: s.c, to: sb2.c, thin: false }) }, { y1: yF + 8, y2: enter(b2), s: sb2 }); }   // 胶囊を過ぎた先は、その先の駅の区間の色（路線の色にすると、区間ごとに色の違う路線で、駅の手前だけ別の色になる）
+                        else { const yF = junY(between[between.length - 1]); edges.push({ y1: exit(a), y2: yF - 8, s: sb }, { y1: yF - 8, y2: yF + 8, s: Object.assign({}, s, { from: base, to: s.c, thin: false }) }, { y1: yF + 8, y2: enter(b2), s }); }
                     } else
                     edges.push({ y1: exit(a), y2: enter(b2), s });
                     if (isLink(b2)) edges.push({ y1: enter(b2), y2: exit(b2), s: styleOf(b2) });
